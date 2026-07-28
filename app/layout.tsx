@@ -4,8 +4,8 @@ import Header from "./Header";
 import Providers from "./providers";
 
 export const metadata = {
-  title: "Superblog",
-  description: "A blog app using Next.js and Prisma",
+  title: "Luh Educa",
+  description: "Plataforma de educação online",
 };
 
 export default function RootLayout({
