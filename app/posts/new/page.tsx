@@ -34,6 +34,21 @@ export default function NewPost() {
             className="w-full px-4 py-2 border rounded-lg"
           />
         </div>
+        <div>
+          <label htmlFor="files" className="block text-lg font-medium mb-2">
+            Attachments
+          </label>
+          <input
+            type="file"
+            id="files"
+            name="files"
+            multiple
+            className="w-full px-4 py-2 border rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          />
+          <p className="mt-2 text-sm text-gray-500">
+            Up to 5 files, 4MB each. Images, PDF, text, and common Office documents.
+          </p>
+        </div>
         <button type="submit" className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600">
           Create Post
         </button>

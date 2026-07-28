@@ -1,7 +1,14 @@
 export const dynamic = "force-dynamic"; // This disables SSG and ISR
 
 import prisma from "@/lib/prisma";
+import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 export default async function Post({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -11,12 +18,20 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
     where: { id: postId },
     include: {
       author: true,
+      attachments: true,
     },
   });
 
   if (!post) {
     notFound();
   }
+
+  const imageAttachments = post.attachments.filter((a) =>
+    a.contentType.startsWith("image/")
+  );
+  const otherAttachments = post.attachments.filter(
+    (a) => !a.contentType.startsWith("image/")
+  );
 
   // Server action to delete the post
   async function deletePost() {
@@ -52,6 +67,54 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
             <p className="italic text-gray-500">No content available for this post.</p>
           )}
         </div>
+
+        {imageAttachments.length > 0 && (
+          <div className="mt-8 space-y-4 border-t pt-6">
+            <h2 className="text-xl font-semibold text-gray-900">Images</h2>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {imageAttachments.map((attachment) => (
+                <a
+                  key={attachment.id}
+                  href={attachment.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block overflow-hidden rounded-lg border"
+                >
+                  <Image
+                    src={attachment.url}
+                    alt={attachment.fileName}
+                    width={800}
+                    height={600}
+                    className="h-auto w-full object-cover"
+                  />
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {otherAttachments.length > 0 && (
+          <div className="mt-8 space-y-3 border-t pt-6">
+            <h2 className="text-xl font-semibold text-gray-900">Files</h2>
+            <ul className="space-y-2">
+              {otherAttachments.map((attachment) => (
+                <li key={attachment.id}>
+                  <a
+                    href={attachment.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between rounded-lg border px-4 py-3 text-blue-600 hover:bg-blue-50"
+                  >
+                    <span className="truncate font-medium">{attachment.fileName}</span>
+                    <span className="ml-4 shrink-0 text-sm text-gray-500">
+                      {formatFileSize(attachment.size)}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </article>
 
       {/* Delete Button */}
