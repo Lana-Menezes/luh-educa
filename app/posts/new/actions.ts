@@ -55,12 +55,13 @@ export async function createPost(formData: FormData) {
     files.map(async (file) => {
       const safeName = sanitizeFileName(file.name);
       const blob = await put(`posts/${Date.now()}-${safeName}`, file, {
-        access: "public",
+        access: "private",
         contentType: file.type,
       });
 
       return {
-        url: blob.url,
+        // Store pathname for private get(); private blob URLs are not publicly readable
+        url: blob.pathname,
         fileName: file.name,
         contentType: file.type,
         size: file.size,

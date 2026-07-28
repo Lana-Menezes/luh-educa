@@ -1,13 +1,16 @@
 export const dynamic = "force-dynamic"; // This disables SSG and ISR
 
 import prisma from "@/lib/prisma";
-import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
 
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function attachmentHref(id: number): string {
+  return `/api/attachments/${id}`;
 }
 
 export default async function Post({ params }: { params: Promise<{ id: string }> }) {
@@ -75,16 +78,15 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
               {imageAttachments.map((attachment) => (
                 <a
                   key={attachment.id}
-                  href={attachment.url}
+                  href={attachmentHref(attachment.id)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block overflow-hidden rounded-lg border"
                 >
-                  <Image
-                    src={attachment.url}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={attachmentHref(attachment.id)}
                     alt={attachment.fileName}
-                    width={800}
-                    height={600}
                     className="h-auto w-full object-cover"
                   />
                 </a>
@@ -100,7 +102,7 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
               {otherAttachments.map((attachment) => (
                 <li key={attachment.id}>
                   <a
-                    href={attachment.url}
+                    href={attachmentHref(attachment.id)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-between rounded-lg border px-4 py-3 text-blue-600 hover:bg-blue-50"
