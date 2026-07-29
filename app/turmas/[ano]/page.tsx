@@ -32,7 +32,12 @@ export default async function TurmaAnoPage({
       </div>
 
       <div className="mt-6 min-h-0 flex-1 overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-sm">
-        <table className="w-full text-left text-sm">
+        <table className="w-full table-fixed text-left text-sm">
+          <colgroup>
+            <col className="w-1/3" />
+            <col className="w-1/3" />
+            <col className="w-1/3" />
+          </colgroup>
           <thead className="sticky top-0 z-10 border-b border-gray-200 bg-gray-50 text-gray-600">
             <tr>
               <th className="px-4 py-3 font-medium">#</th>
@@ -46,20 +51,28 @@ export default async function TurmaAnoPage({
                 key={aluno.id}
                 className="border-b border-gray-100 last:border-0 hover:bg-blue-50"
               >
-                <td className="p-0" colSpan={3}>
+                <td className="p-0">
                   <Link
                     href={`/turmas/${ano}/${aluno.id}`}
-                    className="flex w-full items-center text-inherit"
+                    className="block px-4 py-3 text-gray-500"
                   >
-                    <span className="w-16 shrink-0 px-4 py-3 text-gray-500">
-                      {index + 1}
-                    </span>
-                    <span className="min-w-0 flex-1 px-4 py-3 font-medium text-gray-900">
-                      {aluno.nome}
-                    </span>
-                    <span className="w-28 shrink-0 px-4 py-3 text-gray-600 sm:w-32">
-                      {aluno.matricula}
-                    </span>
+                    {index + 1}
+                  </Link>
+                </td>
+                <td className="p-0">
+                  <Link
+                    href={`/turmas/${ano}/${aluno.id}`}
+                    className="block px-4 py-3 font-medium text-gray-900"
+                  >
+                    {aluno.nome}
+                  </Link>
+                </td>
+                <td className="p-0">
+                  <Link
+                    href={`/turmas/${ano}/${aluno.id}`}
+                    className="block px-4 py-3 text-gray-600"
+                  >
+                    {aluno.matricula}
                   </Link>
                 </td>
               </tr>
