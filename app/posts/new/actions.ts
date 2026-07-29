@@ -30,8 +30,8 @@ function sanitizeFileName(name: string): string {
 
 export async function createPost(formData: FormData) {
   const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    throw new Error("Você precisa estar autenticado para criar uma avaliação");
+  if (!session?.user?.id) {
+    redirect("/login");
   }
 
   const files = formData

@@ -98,10 +98,10 @@ function PostsList() {
 
 export default function PostsPage() {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-start p-8">
+    <div className="flex min-h-0 flex-1 flex-col items-center justify-start overflow-y-auto bg-gray-50 p-8">
       <Suspense
         fallback={
-          <div className="flex items-center justify-center min-h-screen">
+          <div className="flex min-h-[50vh] items-center justify-center">
             <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
             <p className="ml-3 text-gray-600">Carregando página...</p>
           </div>

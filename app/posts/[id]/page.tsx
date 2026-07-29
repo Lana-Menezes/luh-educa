@@ -1,6 +1,8 @@
 export const dynamic = "force-dynamic"; // This disables SSG and ISR
 
 import prisma from "@/lib/prisma";
+import { authOptions } from "@/auth";
+import { getServerSession } from "next-auth";
 import { notFound, redirect } from "next/navigation";
 
 function formatFileSize(bytes: number): string {
@@ -16,6 +18,7 @@ function attachmentHref(id: number): string {
 export default async function Post({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const postId = parseInt(id);
+  const session = await getServerSession(authOptions);
 
   const post = await prisma.post.findUnique({
     where: { id: postId },
@@ -29,6 +32,10 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
     notFound();
   }
 
+  const canDelete = Boolean(
+    session?.user?.id && post.authorId === session.user.id
+  );
+
   const imageAttachments = post.attachments.filter((a) =>
     a.contentType.startsWith("image/")
   );
@@ -40,6 +47,22 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
   async function deletePost() {
     "use server";
 
+    const currentSession = await getServerSession(authOptions);
+
+    // Sem sessão ativa, nenhuma ação é permitida — mesmo sendo o autor no banco
+    if (!currentSession?.user?.id) {
+      redirect("/login");
+    }
+
+    const existingPost = await prisma.post.findUnique({
+      where: { id: postId },
+      select: { authorId: true },
+    });
+
+    if (!existingPost || existingPost.authorId !== currentSession.user.id) {
+      throw new Error("Você não tem permissão para excluir esta avaliação");
+    }
+
     await prisma.post.delete({
       where: {
         id: postId,
@@ -50,7 +73,7 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-8">
+    <div className="flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto bg-gray-50 p-8">
       <article className="max-w-3xl w-full bg-white shadow-lg rounded-lg p-8">
         {/* Post Title */}
         <h1 className="text-5xl font-extrabold text-gray-900 mb-4">
@@ -119,15 +142,16 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
         )}
       </article>
 
-      {/* Delete Button */}
-      <form action={deletePost} className="mt-6">
-        <button
-          type="submit"
-          className="px-6 py-3 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-colors"
-        >
-          Excluir avaliação
-        </button>
-      </form>
+      {canDelete && (
+        <form action={deletePost} className="mt-6">
+          <button
+            type="submit"
+            className="px-6 py-3 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-colors"
+          >
+            Excluir avaliação
+          </button>
+        </form>
+      )}
     </div>
   );
 }
