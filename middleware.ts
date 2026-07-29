@@ -8,5 +8,13 @@ export default withAuth({
 });
 
 export const config = {
-  matcher: ["/posts/new", "/users/new"],
+  matcher: [
+    /*
+     * Protege toda a plataforma. Público apenas:
+     * - /login, /register
+     * - /api/auth/* (NextAuth)
+     * - assets estáticos do Next
+     */
+    "/((?!login|register|api/auth|_next/static|_next/image|favicon.ico|.*\\.png$).*)",
+  ],
 };
