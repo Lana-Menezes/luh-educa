@@ -1,38 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
-const anosValidos = new Set([5, 6, 7, 8, 9]);
-
-const NOMES = [
-  "Ana Souza",
-  "Bruno Lima",
-  "Carla Mendes",
-  "Diego Alves",
-  "Eduarda Costa",
-  "Felipe Rocha",
-  "Gabriela Nunes",
-  "Henrique Silva",
-  "Isabela Martins",
-  "João Pereira",
-  "Karen Oliveira",
-  "Lucas Ferreira",
-  "Marina Santos",
-  "Nicolas Barbosa",
-  "Olivia Ribeiro",
-  "Pedro Carvalho",
-  "Rafaela Gomes",
-  "Samuel Araujo",
-  "Tatiana Moreira",
-  "Vinicius Teixeira",
-];
-
-function getAlunosMock(ano: number) {
-  return NOMES.map((nome, index) => ({
-    id: ano * 100 + index + 1,
-    nome,
-    matricula: `${ano}${String(index + 1).padStart(3, "0")}`,
-  }));
-}
+import { ANOS_VALIDOS, getAlunosMock } from "@/lib/alunos-mock";
 
 export default async function TurmaAnoPage({
   params,
@@ -42,7 +10,7 @@ export default async function TurmaAnoPage({
   const { ano: anoParam } = await params;
   const ano = parseInt(anoParam, 10);
 
-  if (!anosValidos.has(ano)) {
+  if (!ANOS_VALIDOS.has(ano)) {
     notFound();
   }
 
@@ -59,7 +27,7 @@ export default async function TurmaAnoPage({
         </Link>
         <h1 className="mt-4 text-3xl font-bold text-gray-900">{ano}º ano</h1>
         <p className="mt-2 text-gray-600">
-          Lista de alunos ({alunos.length})
+          Lista de alunos ({alunos.length}) — clique em um aluno para ver o desempenho
         </p>
       </div>
 
@@ -76,11 +44,24 @@ export default async function TurmaAnoPage({
             {alunos.map((aluno, index) => (
               <tr
                 key={aluno.id}
-                className="border-b border-gray-100 last:border-0 hover:bg-gray-50"
+                className="border-b border-gray-100 last:border-0 hover:bg-blue-50"
               >
-                <td className="px-4 py-3 text-gray-500">{index + 1}</td>
-                <td className="px-4 py-3 font-medium text-gray-900">{aluno.nome}</td>
-                <td className="px-4 py-3 text-gray-600">{aluno.matricula}</td>
+                <td className="p-0" colSpan={3}>
+                  <Link
+                    href={`/turmas/${ano}/${aluno.id}`}
+                    className="flex w-full items-center text-inherit"
+                  >
+                    <span className="w-16 shrink-0 px-4 py-3 text-gray-500">
+                      {index + 1}
+                    </span>
+                    <span className="min-w-0 flex-1 px-4 py-3 font-medium text-gray-900">
+                      {aluno.nome}
+                    </span>
+                    <span className="w-28 shrink-0 px-4 py-3 text-gray-600 sm:w-32">
+                      {aluno.matricula}
+                    </span>
+                  </Link>
+                </td>
               </tr>
             ))}
           </tbody>
