@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
+import { registerUser } from "./actions";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -12,14 +13,25 @@ export default function RegisterPage() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     try {
       event.preventDefault();
-      const formData = new FormData(event.currentTarget);
+      setError(null);
+
+      const form = event.currentTarget;
+      const formData = new FormData(form);
+
+      const result = await registerUser(formData);
+      if (result.error) {
+        setError(result.error);
+        return;
+      }
+
       const signInResult = await signIn("credentials", {
-        ...Object.fromEntries(formData),
+        email: formData.get("email"),
+        password: formData.get("password"),
         redirect: false,
       });
 
       if (signInResult?.error) {
-        setError("Failed to sign in after registration");
+        setError("Account created, but sign in failed. Please try logging in.");
         return;
       }
 
@@ -75,8 +87,23 @@ export default function RegisterPage() {
                 name="password"
                 type="password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                autoComplete="new-password"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
+              />
+            </div>
+            <div>
+              <label htmlFor="confirmPassword" className="sr-only">
+                Confirm password
+              </label>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                required
+                autoComplete="new-password"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                placeholder="Confirm password"
               />
             </div>
           </div>
