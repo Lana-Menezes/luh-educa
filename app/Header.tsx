@@ -17,7 +17,7 @@ export default function Header() {
             href="/posts" 
             className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
           >
-            Posts
+            Avaliações
           </Link>
           {session ? (
             <>
@@ -25,7 +25,7 @@ export default function Header() {
                 href="/posts/new" 
                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
               >
-                New Post
+                Nova avaliação
               </Link>
               <div className="flex items-center space-x-4">
                 <div className="text-sm text-gray-500">
@@ -36,13 +36,13 @@ export default function Header() {
                   onClick={() => signOut()}
                   className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
                 >
-                  Sign Out
+                  Sair
                 </button>
               </div>
             </>
           ) : (
             <Link href="/login" className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
-              Sign In
+              Acessar
             </Link>
           )}
         </div>

@@ -59,7 +59,7 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
 
         {/* Author Information */}
         <p className="text-lg text-gray-600 mb-4">
-          by <span className="font-medium text-gray-800">{post.author?.name || "Anonymous"}</span>
+          por <span className="font-medium text-gray-800">{post.author?.name || "Anônimo"}</span>
         </p>
 
         {/* Content Section */}
@@ -67,13 +67,13 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
           {post.content ? (
             <p>{post.content}</p>
           ) : (
-            <p className="italic text-gray-500">No content available for this post.</p>
+            <p className="italic text-gray-500">Nenhum conteúdo disponível para esta avaliação.</p>
           )}
         </div>
 
         {imageAttachments.length > 0 && (
           <div className="mt-8 space-y-4 border-t pt-6">
-            <h2 className="text-xl font-semibold text-gray-900">Images</h2>
+            <h2 className="text-xl font-semibold text-gray-900">Imagens</h2>
             <div className="grid gap-4 sm:grid-cols-2">
               {imageAttachments.map((attachment) => (
                 <a
@@ -97,7 +97,7 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
 
         {otherAttachments.length > 0 && (
           <div className="mt-8 space-y-3 border-t pt-6">
-            <h2 className="text-xl font-semibold text-gray-900">Files</h2>
+            <h2 className="text-xl font-semibold text-gray-900">Arquivos</h2>
             <ul className="space-y-2">
               {otherAttachments.map((attachment) => (
                 <li key={attachment.id}>
@@ -125,7 +125,7 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
           type="submit"
           className="px-6 py-3 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-colors"
         >
-          Delete Post
+          Excluir avaliação
         </button>
       </form>
     </div>

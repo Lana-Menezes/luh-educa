@@ -31,7 +31,7 @@ function sanitizeFileName(name: string): string {
 export async function createPost(formData: FormData) {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
-    throw new Error("You must be logged in to create a post");
+    throw new Error("Você precisa estar autenticado para criar uma avaliação");
   }
 
   const files = formData
@@ -39,15 +39,15 @@ export async function createPost(formData: FormData) {
     .filter((entry): entry is File => entry instanceof File && entry.size > 0);
 
   if (files.length > MAX_FILES) {
-    throw new Error(`You can upload at most ${MAX_FILES} files`);
+    throw new Error(`Você pode enviar no máximo ${MAX_FILES} arquivos`);
   }
 
   for (const file of files) {
     if (file.size > MAX_FILE_SIZE) {
-      throw new Error(`"${file.name}" exceeds the 4MB size limit`);
+      throw new Error(`"${file.name}" excede o limite de 4MB`);
     }
     if (!isAllowedFileType(file.type)) {
-      throw new Error(`"${file.name}" has an unsupported file type`);
+      throw new Error(`"${file.name}" possui um tipo de arquivo não suportado`);
     }
   }
 

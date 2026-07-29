@@ -10,11 +10,11 @@ export async function registerUser(formData: FormData) {
   const confirmPassword = String(formData.get("confirmPassword") ?? "");
 
   if (!name || !email || !password || !confirmPassword) {
-    return { error: "Name, email, password, and confirmation are required" };
+    return { error: "Nome, e-mail, senha e confirmação são obrigatórios" };
   }
 
   if (password !== confirmPassword) {
-    return { error: "Passwords do not match" };
+    return { error: "As senhas não coincidem" };
   }
 
   const existingUser = await prisma.user.findUnique({
@@ -22,7 +22,7 @@ export async function registerUser(formData: FormData) {
   });
 
   if (existingUser) {
-    return { error: "An account with this email already exists" };
+    return { error: "Já existe uma conta com este e-mail" };
   }
 
   await prisma.user.create({

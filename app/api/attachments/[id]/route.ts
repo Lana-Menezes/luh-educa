@@ -10,7 +10,7 @@ export async function GET(
   const attachmentId = parseInt(id, 10);
 
   if (Number.isNaN(attachmentId)) {
-    return NextResponse.json({ error: "Invalid attachment id" }, { status: 400 });
+    return NextResponse.json({ error: "ID de anexo inválido" }, { status: 400 });
   }
 
   const attachment = await prisma.postAttachment.findUnique({
@@ -18,13 +18,13 @@ export async function GET(
   });
 
   if (!attachment) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ error: "Não encontrado" }, { status: 404 });
   }
 
   const result = await get(attachment.url, { access: "private" });
 
   if (!result || result.statusCode !== 200 || !result.stream) {
-    return NextResponse.json({ error: "File not found" }, { status: 404 });
+    return NextResponse.json({ error: "Arquivo não encontrado" }, { status: 404 });
   }
 
   return new NextResponse(result.stream, {
