@@ -13,11 +13,13 @@ export default function DashboardPage() {
   return (
     <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          Dashboard{" "}
+          <span className="text-blue-600">Colégio Bom Jesus</span>
+        </h1>
         <p className="mt-2 text-gray-600">
           Métricas escolares de desempenho pela TRI (Teoria de Resposta ao Item) · {data.periodo}
         </p>
-        <p className="mt-1 text-sm text-gray-500">{data.escola}</p>
       </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

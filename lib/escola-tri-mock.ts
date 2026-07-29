@@ -50,7 +50,7 @@ export type EscolaTRIMock = {
 };
 
 export const escolaTRIMock: EscolaTRIMock = {
-  escola: "Luh Educa — Unidade Centro",
+  escola: "Colégio Bom Jesus",
   periodo: "1º semestre 2026",
   totalAlunosAvaliados: 486,
   mediaGeralTRI: 542.3,

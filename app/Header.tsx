@@ -7,7 +7,7 @@ export default function Header() {
   const { data: session } = useSession();
 
   return (
-    <header className="w-full shrink-0 bg-white shadow-md py-4 px-8">
+    <header className="w-full shrink-0 border-b border-gray-200 bg-white py-4 px-8 shadow-sm">
       <nav className="flex justify-between items-center">
         <Link href="/" className="text-xl font-bold text-gray-800 hover:text-blue-600 transition-colors">
           Luh Educa
