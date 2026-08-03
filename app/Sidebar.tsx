@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   ChevronLeft,
   ChevronRight,
   LayoutDashboard,
+  UserRound,
   Users,
 } from "lucide-react";
 
@@ -20,6 +22,7 @@ const STORAGE_KEY = "luh-educa-sidebar-collapsed";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
@@ -40,6 +43,9 @@ export default function Sidebar() {
   if (hiddenPaths.some((path) => pathname.startsWith(path))) {
     return null;
   }
+
+  const isPerfilActive =
+    pathname === "/perfil" || pathname.startsWith("/perfil/");
 
   return (
     <aside
@@ -71,7 +77,7 @@ export default function Sidebar() {
         </button>
       </div>
 
-      <nav className={`flex flex-col gap-1 p-2 ${collapsed ? "items-center" : ""}`}>
+      <nav className={`flex flex-1 flex-col gap-1 p-2 ${collapsed ? "items-center" : ""}`}>
         {navItems.map(({ href, label, icon: Icon }) => {
           const isActive =
             pathname === href || pathname.startsWith(`${href}/`);
@@ -96,6 +102,37 @@ export default function Sidebar() {
           );
         })}
       </nav>
+
+      <div
+        className={`mt-auto border-t border-gray-100 p-2 ${
+          collapsed ? "flex justify-center" : ""
+        }`}
+      >
+        {!collapsed && (
+          <p className="mb-1 px-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
+            Conta
+          </p>
+        )}
+        <Link
+          href="/perfil"
+          title="Perfil"
+          aria-label="Perfil"
+          className={`flex items-center rounded-lg text-sm font-medium transition-colors ${
+            collapsed ? "justify-center p-2.5" : "gap-3 px-3 py-2.5"
+          } ${
+            isPerfilActive
+              ? "bg-brand-soft text-brand"
+              : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+          }`}
+        >
+          <UserRound className="h-5 w-5 shrink-0" aria-hidden />
+          {!collapsed && (
+            <span className="min-w-0 truncate">
+              {session?.user?.name || "Perfil"}
+            </span>
+          )}
+        </Link>
+      </div>
     </aside>
   );
 }
