@@ -3,6 +3,25 @@
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  /* Design system — Luh Educa */
+  --color-brand: #173efd;
+  --color-brand-hover: #1232d4;
+  --color-brand-soft: #e8ecff;
+  --color-brand-muted: #c5cefe;
+
+  --color-danger: #fd0601;
+  --color-danger-hover: #d40501;
+  --color-danger-soft: #ffe5e4;
+
+  --color-accent: #ffd103;
+  --color-accent-hover: #e6bc00;
+  --color-accent-soft: #fff6cc;
+  --color-accent-ink: #9a7b00;
+
+  --color-success: #00ce00;
+  --color-success-hover: #00b000;
+  --color-success-soft: #e0ffe0;
 }
 
 /*

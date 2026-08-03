@@ -86,7 +86,7 @@ export default function Sidebar() {
                 collapsed ? "justify-center p-2.5" : "gap-3 px-3 py-2.5"
               } ${
                 isActive
-                  ? "bg-blue-50 text-blue-700"
+                  ? "bg-brand-soft text-brand"
                   : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
               }`}
             >

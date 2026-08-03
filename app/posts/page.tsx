@@ -50,7 +50,7 @@ function PostsList() {
     <>
       {isLoading ? (
         <div className="flex items-center justify-center space-x-2 min-h-[200px]">
-          <div className="w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-6 h-6 border-4 border-brand border-t-transparent rounded-full animate-spin"></div>
           <p className="text-gray-600">Carregando...</p>
         </div>
       ) : (
@@ -102,7 +102,7 @@ export default function PostsPage() {
       <Suspense
         fallback={
           <div className="flex min-h-[50vh] items-center justify-center">
-            <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-10 h-10 border-4 border-brand border-t-transparent rounded-full animate-spin"></div>
             <p className="ml-3 text-gray-600">Carregando página...</p>
           </div>
         }

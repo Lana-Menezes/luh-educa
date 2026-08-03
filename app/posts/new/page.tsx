@@ -43,13 +43,13 @@ export default function NewPost() {
             id="files"
             name="files"
             multiple
-            className="w-full px-4 py-2 border rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            className="w-full px-4 py-2 border rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-brand-soft file:text-brand hover:file:bg-brand-muted"
           />
           <p className="mt-2 text-sm text-gray-500">
             Até 5 arquivos, 4MB cada. Imagens, PDF, texto e documentos Office comuns.
           </p>
         </div>
-        <button type="submit" className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600">
+        <button type="submit" className="w-full bg-brand text-white py-3 rounded-lg hover:bg-brand-hover">
           Criar avaliação
         </button>
       </Form>

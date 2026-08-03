@@ -35,7 +35,7 @@ export default async function AlunoDashboardPage({
     <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-8">
       <Link
         href={`/turmas/${ano}`}
-        className="text-sm font-medium text-blue-600 hover:underline"
+        className="text-sm font-medium text-brand hover:underline"
       >
         ← Voltar para {ano}º ano
       </Link>
@@ -98,7 +98,7 @@ export default async function AlunoDashboardPage({
                 </div>
                 <div className="mt-2 h-2 overflow-hidden rounded-full bg-gray-100">
                   <div
-                    className="h-full rounded-full bg-blue-500"
+                    className="h-full rounded-full bg-brand"
                     style={{ width: `${disciplina.progresso}%` }}
                   />
                 </div>
@@ -121,7 +121,7 @@ export default async function AlunoDashboardPage({
                   {formatMedia(item.media)}
                 </span>
                 <div
-                  className="w-full rounded-t-md bg-blue-500"
+                  className="w-full rounded-t-md bg-brand"
                   style={{
                     height: `${(item.media / maxEvolucao) * 100}%`,
                     minHeight: "8px",

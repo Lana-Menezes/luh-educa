@@ -29,13 +29,13 @@ export default async function TurmaAnoPage({
       <div>
         <Link
           href="/turmas"
-          className="text-sm font-medium text-blue-600 hover:underline"
+          className="text-sm font-medium text-brand hover:underline"
         >
           ← Voltar para turmas
         </Link>
         <h1 className="mt-4 text-3xl font-bold text-gray-900">
           {ano}º ano{" "}
-          <span className="text-blue-600">Colégio Bom Jesus</span>
+          <span className="text-brand">Colégio Bom Jesus</span>
         </h1>
         <p className="mt-2 text-gray-600">
           Dashboard TRI da turma · {alunos.length} alunos
@@ -57,7 +57,7 @@ export default async function TurmaAnoPage({
             <p className="text-sm text-gray-500">vs. média da escola</p>
             <p
               className={`mt-1 text-2xl font-bold ${
-                deltaEscola >= 0 ? "text-emerald-700" : "text-amber-700"
+                deltaEscola >= 0 ? "text-success" : "text-accent-ink"
               }`}
             >
               {deltaEscola >= 0 ? "+" : ""}
@@ -102,7 +102,7 @@ export default async function TurmaAnoPage({
                   key={area.codigo}
                   className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2"
                 >
-                  <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-brand">
                     {area.codigo}
                   </p>
                   <p className="mt-0.5 text-xs text-gray-600">{area.nome}</p>
@@ -129,7 +129,7 @@ export default async function TurmaAnoPage({
                   </div>
                   <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-gray-100">
                     <div
-                      className="h-full rounded-full bg-blue-500"
+                      className="h-full rounded-full bg-brand"
                       style={{
                         width: `${(faixa.percentual / maxFaixa) * 100}%`,
                       }}
@@ -175,7 +175,7 @@ export default async function TurmaAnoPage({
               {alunos.map((aluno, index) => (
                 <tr
                   key={aluno.id}
-                  className="border-b border-gray-100 last:border-0 hover:bg-blue-50"
+                  className="border-b border-gray-100 last:border-0 hover:bg-brand-soft"
                 >
                   <td className="p-0">
                     <Link

@@ -9,7 +9,7 @@ export default function Header() {
   return (
     <header className="w-full shrink-0 border-b border-gray-200 bg-white py-4 px-8 shadow-sm">
       <nav className="flex justify-between items-center">
-        <Link href="/" className="text-xl font-bold text-gray-800 hover:text-blue-600 transition-colors">
+        <Link href="/" className="text-xl font-bold text-gray-800 hover:text-brand transition-colors">
           Luh Educa
         </Link>
         <div className="flex items-center space-x-4">
@@ -17,7 +17,7 @@ export default function Header() {
             <>
               <Link 
                 href="/posts/new" 
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                className="bg-brand text-white px-4 py-2 rounded-lg hover:bg-brand-hover transition"
               >
                 Nova avaliação
               </Link>
@@ -28,14 +28,14 @@ export default function Header() {
                 </div>
                 <button
                   onClick={() => signOut()}
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+                  className="bg-danger text-white px-4 py-2 rounded-lg hover:bg-danger-hover transition"
                 >
                   Sair
                 </button>
               </div>
             </>
           ) : (
-            <Link href="/login" className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
+            <Link href="/login" className="bg-brand text-white px-4 py-2 rounded-lg hover:bg-brand-hover transition">
               Acessar
             </Link>
           )}

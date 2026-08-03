@@ -16,9 +16,9 @@ export default function TurmasPage() {
           <Link
             key={ano}
             href={`/turmas/${ano}`}
-            className="group flex flex-col items-center justify-center rounded-xl border border-gray-200 bg-white p-8 shadow-sm transition hover:border-blue-300 hover:shadow-md"
+            className="group flex flex-col items-center justify-center rounded-xl border border-gray-200 bg-white p-8 shadow-sm transition hover:border-brand-muted hover:shadow-md"
           >
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 text-blue-600 transition group-hover:bg-blue-100">
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft text-brand transition group-hover:bg-brand-muted">
               <GraduationCap className="h-6 w-6" aria-hidden />
             </span>
             <span className="mt-4 text-xl font-semibold text-gray-900">

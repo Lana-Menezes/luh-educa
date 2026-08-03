@@ -15,7 +15,7 @@ export default function DashboardPage() {
       <div>
         <h1 className="text-3xl font-bold text-gray-900">
           Dashboard{" "}
-          <span className="text-blue-600">Colégio Bom Jesus</span>
+          <span className="text-brand">Colégio Bom Jesus</span>
         </h1>
         <p className="mt-2 text-gray-600">
           Métricas escolares de desempenho pela TRI (Teoria de Resposta ao Item) · {data.periodo}
@@ -34,7 +34,7 @@ export default function DashboardPage() {
         </div>
         <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">vs. média nacional</p>
-          <p className="mt-2 text-3xl font-bold text-emerald-700">
+          <p className="mt-2 text-3xl font-bold text-success">
             +{formatTRI(deltaNacional)}
           </p>
           <p className="mt-1 text-xs text-gray-500">
@@ -81,7 +81,7 @@ export default function DashboardPage() {
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-brand">
                       {area.codigo}
                     </p>
                     <h3 className="mt-1 text-sm font-medium text-gray-900">
@@ -101,7 +101,7 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <dt>Δ escola</dt>
-                    <dd className="font-medium text-emerald-700">
+                    <dd className="font-medium text-success">
                       +{formatTRI(delta)}
                     </dd>
                   </div>
@@ -148,7 +148,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="mt-2 h-2 overflow-hidden rounded-full bg-gray-100">
                   <div
-                    className="h-full rounded-full bg-blue-500"
+                    className="h-full rounded-full bg-brand"
                     style={{ width: `${(faixa.percentual / maxFaixa) * 100}%` }}
                   />
                 </div>
@@ -174,7 +174,7 @@ export default function DashboardPage() {
                   {formatTRI(item.mediaTRI)}
                 </span>
                 <div
-                  className="w-full rounded-t-md bg-blue-500"
+                  className="w-full rounded-t-md bg-brand"
                   style={{
                     height: `${(item.mediaTRI / maxMediaAno) * 100}%`,
                     minHeight: "12px",

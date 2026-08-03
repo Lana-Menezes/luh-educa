@@ -128,7 +128,7 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
                     href={attachmentHref(attachment.id)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between rounded-lg border px-4 py-3 text-blue-600 hover:bg-blue-50"
+                    className="flex items-center justify-between rounded-lg border px-4 py-3 text-brand hover:bg-brand-soft"
                   >
                     <span className="truncate font-medium">{attachment.fileName}</span>
                     <span className="ml-4 shrink-0 text-sm text-gray-500">
@@ -146,7 +146,7 @@ export default async function Post({ params }: { params: Promise<{ id: string }>
         <form action={deletePost} className="mt-6">
           <button
             type="submit"
-            className="px-6 py-3 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-colors"
+            className="px-6 py-3 bg-danger text-white font-semibold rounded-lg hover:bg-danger-hover transition-colors"
           >
             Excluir avaliação
           </button>
