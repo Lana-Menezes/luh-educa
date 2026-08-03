@@ -10,11 +10,9 @@ export default withAuth({
 export const config = {
   matcher: [
     /*
-     * Protege toda a plataforma. Público apenas:
-     * - /login, /register
-     * - /api/auth/* (NextAuth)
-     * - assets estáticos do Next
+     * Público: home (/), login, register, api/auth e assets.
+     * Demais rotas exigem autenticação (portal).
      */
-    "/((?!login|register|api/auth|_next/static|_next/image|favicon.ico|.*\\.png$).*)",
+    "/((?!$|login|register|api/auth|_next/static|_next/image|favicon.ico|.*\\.png$).*)",
   ],
 };

@@ -1,12 +1,24 @@
-// app/layout.tsx
 import "./globals.css";
-import Header from "./Header";
-import Sidebar from "./Sidebar";
+import { Figtree, Syne } from "next/font/google";
 import Providers from "./providers";
+import AppShell from "./AppShell";
+
+const display = Syne({
+  subsets: ["latin"],
+  variable: "--font-display",
+  weight: ["600", "700", "800"],
+});
+
+const sans = Figtree({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  weight: ["400", "500", "600", "700"],
+});
 
 export const metadata = {
-  title: "Luh Educa",
-  description: "Plataforma de educação online",
+  title: "Luh Educa | Consultoria em TRI",
+  description:
+    "Consultoria especializada na implementação da Teoria de Resposta ao Item com o método Luh Educa.",
 };
 
 export default function RootLayout({
@@ -16,17 +28,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body>
+      <body className={`${display.variable} ${sans.variable} antialiased`}>
         <Providers>
-          <div className="flex h-dvh flex-col overflow-hidden">
-            <Header />
-            <div className="flex min-h-0 flex-1">
-              <Sidebar />
-              <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
-                {children}
-              </main>
-            </div>
-          </div>
+          <AppShell>{children}</AppShell>
         </Providers>
       </body>
     </html>

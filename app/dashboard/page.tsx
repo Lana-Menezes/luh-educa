@@ -3,8 +3,17 @@ import {
   formatPercent,
   formatTRI,
 } from "@/lib/escola-tri-mock";
+import { checkPostTableExists } from "@/lib/db-utils";
+import { redirect } from "next/navigation";
 
-export default function DashboardPage() {
+export const dynamic = "force-dynamic";
+
+export default async function DashboardPage() {
+  const tableExists = await checkPostTableExists();
+  if (!tableExists) {
+    redirect("/setup");
+  }
+
   const data = escolaTRIMock;
   const maxMediaAno = Math.max(...data.desempenhoPorAno.map((item) => item.mediaTRI));
   const maxFaixa = Math.max(...data.distribuicaoFaixas.map((item) => item.percentual));
