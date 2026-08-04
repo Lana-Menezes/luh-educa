@@ -1,26 +1,21 @@
 import Link from "next/link";
+import InteractiveDotGrid from "./InteractiveDotGrid";
+import FaqSection from "./FaqSection";
 
 export default function HomePage() {
   return (
     <div className="bg-white text-gray-900">
       <section className="relative isolate min-h-dvh overflow-hidden">
-        <div className="absolute inset-0 luh-animate-pan">
+        <div className="absolute inset-0">
           <div className="absolute inset-0 bg-[linear-gradient(135deg,#0b1f8f_0%,#173efd_42%,#0a1660_100%)]" />
           <div
-            className="absolute inset-0 opacity-35"
+            className="absolute inset-0 opacity-35 luh-animate-fade-in"
             style={{
               backgroundImage:
                 "radial-gradient(circle at 20% 20%, #ffd10355 0%, transparent 42%), radial-gradient(circle at 80% 10%, #00b80033 0%, transparent 35%), radial-gradient(circle at 70% 80%, #ffffff22 0%, transparent 40%)",
             }}
           />
-          <div
-            className="absolute inset-0 opacity-[0.18]"
-            style={{
-              backgroundImage:
-                "linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px)",
-              backgroundSize: "48px 48px",
-            }}
-          />
+          <InteractiveDotGrid className="luh-animate-fade-in" />
         </div>
 
         <div className="relative mx-auto flex min-h-dvh max-w-6xl flex-col justify-end px-6 pb-16 pt-28 md:justify-center md:px-8 md:pb-24 md:pt-24">
@@ -130,6 +125,8 @@ export default function HomePage() {
           acompanhamento para gestão e professores.
         </p>
       </section>
+
+      <FaqSection />
 
       <section className="relative overflow-hidden bg-brand">
         <div

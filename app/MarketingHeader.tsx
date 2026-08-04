@@ -29,6 +29,12 @@ export default function MarketingHeader() {
           >
             TRI
           </a>
+          <a
+            href="#faq"
+            className="hidden text-sm font-medium text-white/85 transition hover:text-white sm:inline"
+          >
+            FAQ
+          </a>
           <Link
             href={portalHref}
             className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand-soft"
