@@ -12,10 +12,10 @@ export default function MarketingHeader() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-gray-200/70 bg-[#f7f5f0]/90 backdrop-blur-md">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 md:px-8">
+      <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="font-[family-name:var(--font-display)] text-xl font-bold tracking-tight text-brand md:text-2xl"
+          className="font-[family-name:var(--font-display)] text-xl font-bold tracking-tight text-gray-900 md:text-2xl"
         >
           Luh Educa
         </Link>

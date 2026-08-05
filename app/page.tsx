@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Hero from "./Hero";
 import FaqSection from "./FaqSection";
+import TriCurveSection from "./TriCurveSection";
 
 export default function HomePage() {
   return (
@@ -72,6 +73,8 @@ export default function HomePage() {
           </ol>
         </div>
       </section>
+
+      <TriCurveSection />
 
       <section className="mx-auto max-w-6xl px-6 py-20 md:px-8 md:py-28">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">
