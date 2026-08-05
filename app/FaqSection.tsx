@@ -14,8 +14,8 @@ const faqs = [
     question: "O que diferencia o método Luh Educa?",
     answer:
       "O método conecta calibração de itens, leitura da régua de proficiência e rotina de decisão na escola. Além da consultoria, o Portal Luh Educa apoia a gestão com dashboards da escola, da turma e do aluno.",
-    tone: "bg-accent-soft text-gray-900",
-    mark: "text-accent-ink",
+    tone: "bg-brand-muted/40 text-gray-900",
+    mark: "text-brand",
   },
   {
     question: "Quanto tempo leva para implementar?",
@@ -35,8 +35,8 @@ const faqs = [
     question: "Quem deve participar do processo?",
     answer:
       "Idealmente gestão pedagógica, coordenação e professores das áreas envolvidas. A formação conjunta é parte do método: sem leitura pedagógica compartilhada, o dado da TRI perde potência na sala de aula.",
-    tone: "bg-accent-soft text-gray-900",
-    mark: "text-accent-ink",
+    tone: "bg-brand-muted/40 text-gray-900",
+    mark: "text-brand",
   },
   {
     question: "Como acesso o Portal Luh Educa?",

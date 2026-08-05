@@ -1,50 +1,11 @@
 import Link from "next/link";
-import InteractiveDotGrid from "./InteractiveDotGrid";
+import Hero from "./Hero";
 import FaqSection from "./FaqSection";
 
 export default function HomePage() {
   return (
     <div className="bg-white text-gray-900">
-      <section className="relative isolate min-h-dvh overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,#0b1f8f_0%,#173efd_42%,#0a1660_100%)]" />
-          <div
-            className="absolute inset-0 opacity-35 luh-animate-fade-in"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle at 20% 20%, #ffd10355 0%, transparent 42%), radial-gradient(circle at 80% 10%, #00b80033 0%, transparent 35%), radial-gradient(circle at 70% 80%, #ffffff22 0%, transparent 40%)",
-            }}
-          />
-          <InteractiveDotGrid className="luh-animate-fade-in" />
-        </div>
-
-        <div className="relative mx-auto flex min-h-dvh max-w-6xl flex-col justify-end px-6 pb-16 pt-28 md:justify-center md:px-8 md:pb-24 md:pt-24">
-          <p className="luh-animate-fade-up font-[family-name:var(--font-display)] text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
-            Luh Educa
-          </p>
-          <h1 className="luh-animate-fade-up luh-delay-1 mt-5 max-w-3xl font-[family-name:var(--font-display)] text-2xl font-semibold leading-tight text-white sm:text-3xl md:text-4xl">
-            Consultoria para implementar a TRI com método próprio.
-          </h1>
-          <p className="luh-animate-fade-up luh-delay-2 mt-4 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
-            Ajudamos escolas a adotar a Teoria de Resposta ao Item com clareza
-            pedagógica, escala comparável e rotina de acompanhamento.
-          </p>
-          <div className="luh-animate-fade-up luh-delay-3 mt-8 flex flex-wrap gap-3">
-            <a
-              href="#metodo"
-              className="rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-gray-900 transition hover:bg-accent-hover"
-            >
-              Conhecer o método
-            </a>
-            <Link
-              href="/login"
-              className="rounded-lg border border-white/40 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
-            >
-              Acessar o portal
-            </Link>
-          </div>
-        </div>
-      </section>
+      <Hero />
 
       <section id="metodo" className="mx-auto max-w-6xl px-6 py-20 md:px-8 md:py-28">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">
@@ -85,7 +46,7 @@ export default function HomePage() {
               </p>
             </li>
             <li>
-              <p className="font-[family-name:var(--font-display)] text-5xl font-bold text-accent-ink/40">
+              <p className="font-[family-name:var(--font-display)] text-5xl font-bold text-brand-muted">
                 02
               </p>
               <h3 className="mt-3 text-xl font-semibold text-gray-900">
@@ -128,15 +89,8 @@ export default function HomePage() {
 
       <FaqSection />
 
-      <section className="relative overflow-hidden bg-brand">
-        <div
-          className="absolute inset-0 opacity-40"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 15% 50%, #ffd10366 0%, transparent 40%), radial-gradient(circle at 90% 20%, #00b80044 0%, transparent 35%)",
-          }}
-        />
-        <div className="relative mx-auto flex max-w-6xl flex-col gap-6 px-6 py-20 md:flex-row md:items-end md:justify-between md:px-8 md:py-24">
+      <section id="contato" className="bg-brand">
+        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-20 md:flex-row md:items-end md:justify-between md:px-8 md:py-24">
           <div className="max-w-xl">
             <h2 className="font-[family-name:var(--font-display)] text-3xl font-bold text-white md:text-4xl">
               Entre no Portal Luh Educa

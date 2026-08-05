@@ -10,9 +10,9 @@ export default withAuth({
 export const config = {
   matcher: [
     /*
-     * Público: home (/), login, register, api/auth e assets.
+     * Público: home (/), quem-somos, login, register, api/auth e assets.
      * Demais rotas exigem autenticação (portal).
      */
-    "/((?!$|login|register|api/auth|_next/static|_next/image|favicon.ico|.*\\.png$).*)",
+    "/((?!$|quem-somos|login|register|api/auth|_next/static|_next/image|favicon.ico|.*\\.png$).*)",
   ],
 };

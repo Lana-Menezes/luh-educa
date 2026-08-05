@@ -9,10 +9,10 @@ const authPaths = ["/login", "/register", "/setup"];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isHome = pathname === "/";
+  const isMarketing = pathname === "/" || pathname.startsWith("/quem-somos");
   const isAuth = authPaths.some((path) => pathname.startsWith(path));
 
-  if (isHome) {
+  if (isMarketing) {
     return (
       <div className="min-h-dvh overflow-x-hidden overflow-y-auto bg-white">
         <MarketingHeader />

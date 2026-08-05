@@ -1,9 +1,9 @@
 import "./globals.css";
-import { Figtree, Syne } from "next/font/google";
+import { Figtree, Fraunces } from "next/font/google";
 import Providers from "./providers";
 import AppShell from "./AppShell";
 
-const display = Syne({
+const display = Fraunces({
   subsets: ["latin"],
   variable: "--font-display",
   weight: ["600", "700", "800"],
