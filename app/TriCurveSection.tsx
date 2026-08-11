@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 
-const CYAN = "#00a8b5";
-const MAGENTA = "#c2185b";
+const CURVE = "#173efd";
+const INFO = "#00b800";
 const THETA_MIN = -3;
 const THETA_MAX = 3;
 const POINTS = 120;
@@ -194,7 +194,7 @@ export default function TriCurveSection() {
                 <path
                   d={iPath}
                   fill="none"
-                  stroke={MAGENTA}
+                  stroke={INFO}
                   strokeWidth={2}
                   strokeDasharray="6 4"
                   className="tri-curve-path"
@@ -202,7 +202,7 @@ export default function TriCurveSection() {
                 <path
                   d={pPath}
                   fill="none"
-                  stroke={CYAN}
+                  stroke={CURVE}
                   strokeWidth={2.5}
                   className="tri-curve-path"
                 />
@@ -276,7 +276,7 @@ export default function TriCurveSection() {
               </p>
               <p
                 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-bold tabular-nums transition-colors duration-300 md:text-5xl"
-                style={{ color: CYAN }}
+                style={{ color: CURVE }}
               >
                 {formatBr(chart.pAtTheta * 100, 1)}%
               </p>
@@ -315,14 +315,14 @@ export default function TriCurveSection() {
               <div className="flex items-center gap-2.5">
                 <span
                   className="h-0.5 w-6 rounded-full"
-                  style={{ backgroundColor: CYAN }}
+                  style={{ backgroundColor: CURVE }}
                 />
                 curva característica
               </div>
               <div className="flex items-center gap-2.5">
                 <span
                   className="h-0 w-6 border-t-2 border-dashed"
-                  style={{ borderColor: MAGENTA }}
+                  style={{ borderColor: INFO }}
                 />
                 curva de informação, normalizada ao pico
               </div>
@@ -359,7 +359,7 @@ function SliderRow({
         </span>
         <span
           className="text-sm font-semibold tabular-nums"
-          style={{ color: CYAN }}
+          style={{ color: CURVE }}
         >
           {valueLabel}
         </span>
