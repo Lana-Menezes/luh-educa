@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
@@ -9,12 +10,21 @@ const authPaths = ["/login", "/register", "/setup"];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const scrollRef = useRef<HTMLDivElement>(null);
   const isMarketing = pathname === "/" || pathname.startsWith("/quem-somos");
   const isAuth = authPaths.some((path) => pathname.startsWith(path));
 
+  useEffect(() => {
+    scrollRef.current?.scrollTo(0, 0);
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   if (isMarketing) {
     return (
-      <div className="min-h-dvh overflow-x-hidden overflow-y-auto bg-white">
+      <div
+        ref={scrollRef}
+        className="min-h-dvh overflow-x-hidden overflow-y-auto bg-white"
+      >
         <MarketingHeader />
         {children}
       </div>
