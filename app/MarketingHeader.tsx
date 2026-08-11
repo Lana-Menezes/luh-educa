@@ -11,7 +11,7 @@ export default function MarketingHeader() {
     "hidden text-sm font-medium text-gray-700 transition hover:text-brand sm:inline";
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-gray-200/70 bg-[#f7f5f0]/90 backdrop-blur-md">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-brand-muted/40 bg-[#eef1ff]/90 backdrop-blur-md">
       <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link
           href="/"

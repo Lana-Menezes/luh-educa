@@ -111,9 +111,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="border-t border-gray-200 bg-white">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-8 text-sm text-gray-500 md:flex-row md:items-center md:justify-between md:px-8">
-          <p className="font-[family-name:var(--font-display)] font-semibold text-gray-800">
+      <footer className="bg-brand">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 border-t border-white/15 px-6 py-8 text-sm text-white/75 md:flex-row md:items-center md:justify-between md:px-8">
+          <p className="font-[family-name:var(--font-display)] font-semibold text-white">
             Luh Educa
           </p>
           <p>Consultoria em TRI · Método Luh Educa</p>

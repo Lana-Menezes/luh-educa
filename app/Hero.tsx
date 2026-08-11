@@ -3,11 +3,19 @@ import { ArrowRight, BarChart3, Users, Target } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-[#f7f5f0] pb-16 pt-28 lg:pb-24 lg:pt-32">
+    <section className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-[#eef1ff] pb-16 pt-28 lg:pb-24 lg:pt-32">
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage:
+            "linear-gradient(145deg, #e4e9ff 0%, #eef1ff 42%, #dce4ff 78%, #e8ecff 100%), radial-gradient(ellipse 60% 50% at 85% 20%, #c5cefe66 0%, transparent 55%), radial-gradient(ellipse 50% 45% at 10% 80%, #173efd18 0%, transparent 50%)",
+        }}
+      />
+
       <div className="relative z-10 mx-auto w-full max-w-7xl flex-1 px-4 sm:px-6 lg:px-8">
         <div className="grid h-full items-center gap-12 py-12 lg:grid-cols-2 lg:gap-16 lg:py-16">
           <div className="flex flex-col justify-center">
-            <div className="inline-flex w-fit items-center gap-2 rounded-full bg-brand-soft px-4 py-1.5 text-sm font-medium text-brand">
+            <div className="inline-flex w-fit items-center gap-2 rounded-full bg-white/80 px-4 py-1.5 text-sm font-medium text-brand ring-1 ring-brand-muted/60">
               <Target className="h-4 w-4" />
               Consultoria Pedagógica com TRI
             </div>
@@ -31,15 +39,15 @@ export default function Hero() {
               </a>
               <a
                 href="#metodo"
-                className="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-6 py-3 text-base font-medium text-gray-900 transition-colors hover:bg-brand-soft"
+                className="inline-flex items-center gap-2 rounded-md border border-brand-muted bg-white/80 px-6 py-3 text-base font-medium text-brand transition-colors hover:bg-brand-soft"
               >
                 Conheça o método
               </a>
             </div>
 
-            <div className="mt-12 grid grid-cols-3 gap-6 border-t border-gray-200 pt-8">
+            <div className="mt-12 grid grid-cols-3 gap-6 border-t border-brand-muted/50 pt-8">
               <div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-soft text-brand">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/80 text-brand ring-1 ring-brand-muted/50">
                   <BarChart3 className="h-5 w-5" />
                 </div>
                 <p className="mt-3 text-sm font-semibold text-gray-900">
@@ -48,7 +56,7 @@ export default function Hero() {
                 <p className="text-sm text-gray-600">TRI ao invés de notas</p>
               </div>
               <div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-soft text-brand">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/80 text-brand ring-1 ring-brand-muted/50">
                   <Users className="h-5 w-5" />
                 </div>
                 <p className="mt-3 text-sm font-semibold text-gray-900">
@@ -57,7 +65,7 @@ export default function Hero() {
                 <p className="text-sm text-gray-600">Cada habilidade mapeada</p>
               </div>
               <div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-soft text-brand">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/80 text-brand ring-1 ring-brand-muted/50">
                   <Target className="h-5 w-5" />
                 </div>
                 <p className="mt-3 text-sm font-semibold text-gray-900">

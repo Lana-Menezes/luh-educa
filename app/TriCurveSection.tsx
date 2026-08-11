@@ -99,8 +99,8 @@ export default function TriCurveSection() {
   }, [a, b, c, theta]);
 
   const width = 640;
-  const height = 320;
-  const pad = { top: 16, right: 16, bottom: 40, left: 44 };
+  const height = 250;
+  const pad = { top: 12, right: 12, bottom: 32, left: 36 };
   const plotW = width - pad.left - pad.right;
   const plotHeight = height - pad.top - pad.bottom;
 
@@ -117,18 +117,18 @@ export default function TriCurveSection() {
 
   return (
     <section id="curva-tri" className="bg-[#f7f5f0]">
-      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 md:py-28 lg:px-8">
-        <h2 className="max-w-3xl font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
+        <h2 className="max-w-3xl font-[family-name:var(--font-display)] text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">
           Curva característica do item, ao vivo
         </h2>
-        <p className="mt-4 max-w-3xl text-lg leading-relaxed text-gray-600">
+        <p className="mt-2 max-w-2xl text-base leading-relaxed text-gray-600">
           Mova os parâmetros e veja, em tempo real, a chance de acerto segundo a
           proficiência e a informação que o item oferece.
         </p>
 
-        <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(260px,0.7fr)] lg:gap-12">
+        <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(240px,0.65fr)] lg:gap-8">
           <div>
-            <div className="overflow-hidden rounded-xl bg-white/60 p-3 shadow-sm ring-1 ring-gray-200/80 sm:p-4">
+            <div className="overflow-hidden rounded-lg bg-white/60 p-2 shadow-sm ring-1 ring-gray-200/80 sm:p-3">
               <svg
                 viewBox={`0 0 ${width} ${height}`}
                 className="h-auto w-full"
@@ -148,11 +148,11 @@ export default function TriCurveSection() {
                         strokeWidth={1}
                       />
                       <text
-                        x={pad.left - 10}
-                        y={y + 4}
+                        x={pad.left - 8}
+                        y={y + 3}
                         textAnchor="end"
                         className="fill-gray-400"
-                        fontSize={11}
+                        fontSize={10}
                       >
                         {tick === 0 || tick === 1
                           ? String(tick)
@@ -170,10 +170,10 @@ export default function TriCurveSection() {
                     <text
                       key={tick}
                       x={x}
-                      y={height - 12}
+                      y={height - 10}
                       textAnchor="middle"
                       className="fill-gray-400"
-                      fontSize={11}
+                      fontSize={10}
                     >
                       {tick}
                     </text>
@@ -185,8 +185,8 @@ export default function TriCurveSection() {
                   y={height - 1}
                   textAnchor="middle"
                   className="fill-gray-500"
-                  fontSize={10}
-                  letterSpacing={1.2}
+                  fontSize={9}
+                  letterSpacing={1}
                 >
                   PROFICIÊNCIA (θ)
                 </text>
@@ -195,15 +195,15 @@ export default function TriCurveSection() {
                   d={iPath}
                   fill="none"
                   stroke={MAGENTA}
-                  strokeWidth={2.25}
-                  strokeDasharray="7 5"
+                  strokeWidth={2}
+                  strokeDasharray="6 4"
                   className="tri-curve-path"
                 />
                 <path
                   d={pPath}
                   fill="none"
                   stroke={CYAN}
-                  strokeWidth={2.75}
+                  strokeWidth={2.5}
                   className="tri-curve-path"
                 />
 
@@ -220,16 +220,16 @@ export default function TriCurveSection() {
                 <circle
                   cx={thetaX}
                   cy={markerY}
-                  r={6}
+                  r={5}
                   fill="white"
                   stroke="#111827"
-                  strokeWidth={1.75}
+                  strokeWidth={1.5}
                   className="transition-all duration-300 ease-out"
                 />
               </svg>
             </div>
 
-            <div className="mt-8 space-y-6">
+            <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-3.5 sm:grid-cols-2">
               <SliderRow
                 label="Discriminação (a)"
                 valueLabel={formatBr(a)}
@@ -269,59 +269,59 @@ export default function TriCurveSection() {
             </div>
           </div>
 
-          <aside className="flex flex-col justify-between rounded-xl bg-white/70 p-6 shadow-sm ring-1 ring-gray-200/80 lg:p-8">
+          <aside className="flex flex-col justify-between rounded-lg bg-white/70 p-5 shadow-sm ring-1 ring-gray-200/80">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-500">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500">
                 Leitura do item
               </p>
               <p
-                className="mt-4 font-[family-name:var(--font-display)] text-5xl font-bold tabular-nums transition-colors duration-300 md:text-6xl"
+                className="mt-2 font-[family-name:var(--font-display)] text-4xl font-bold tabular-nums transition-colors duration-300 md:text-5xl"
                 style={{ color: CYAN }}
               >
                 {formatBr(chart.pAtTheta * 100, 1)}%
               </p>
-              <p className="mt-2 text-base leading-relaxed text-gray-600">
+              <p className="mt-1.5 text-sm leading-relaxed text-gray-600">
                 de chance de acerto para um aluno em{" "}
                 <span className="font-semibold text-gray-900">{thetaEnem}</span>
               </p>
 
-              <dl className="mt-8 space-y-4 border-t border-gray-200 pt-6 text-sm">
-                <div className="flex items-baseline justify-between gap-4">
+              <dl className="mt-5 space-y-2.5 border-t border-gray-200 pt-4 text-sm">
+                <div className="flex items-baseline justify-between gap-3">
                   <dt className="text-gray-500">Classificação</dt>
                   <dd className="text-right font-medium text-gray-900">
                     {classifyDifficulty(bEnem)}
                   </dd>
                 </div>
-                <div className="flex items-baseline justify-between gap-4">
+                <div className="flex items-baseline justify-between gap-3">
                   <dt className="text-gray-500">Informação em θ</dt>
                   <dd className="font-medium tabular-nums text-gray-900">
                     {formatBr(chart.iAtTheta)}
                   </dd>
                 </div>
-                <div className="flex items-baseline justify-between gap-4">
+                <div className="flex items-baseline justify-between gap-3">
                   <dt className="text-gray-500">Mede melhor em</dt>
                   <dd className="font-medium tabular-nums text-gray-900">
                     {chart.bestEnem}
                   </dd>
                 </div>
-                <div className="flex items-baseline justify-between gap-4">
+                <div className="flex items-baseline justify-between gap-3">
                   <dt className="text-gray-500">Escala exibida</dt>
                   <dd className="font-medium text-gray-900">ENEM 0–1000</dd>
                 </div>
               </dl>
             </div>
 
-            <div className="mt-10 space-y-3 border-t border-gray-200 pt-6 text-sm text-gray-600">
-              <div className="flex items-center gap-3">
+            <div className="mt-6 space-y-2 border-t border-gray-200 pt-4 text-xs text-gray-600">
+              <div className="flex items-center gap-2.5">
                 <span
-                  className="h-0.5 w-8 rounded-full"
+                  className="h-0.5 w-6 rounded-full"
                   style={{ backgroundColor: CYAN }}
                 />
                 curva característica
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5">
                 <span
-                  className="h-0 w-8 border-t-2 border-dashed"
+                  className="h-0 w-6 border-t-2 border-dashed"
                   style={{ borderColor: MAGENTA }}
                 />
                 curva de informação, normalizada ao pico
@@ -353,8 +353,8 @@ function SliderRow({
 }) {
   return (
     <label className="block">
-      <div className="mb-2 flex items-baseline justify-between gap-3">
-        <span className="text-xs font-semibold uppercase tracking-[0.14em] text-gray-600">
+      <div className="mb-1 flex items-baseline justify-between gap-3">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-600">
           {label}
         </span>
         <span
