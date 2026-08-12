@@ -9,7 +9,10 @@ export default function Header() {
   return (
     <header className="w-full shrink-0 border-b border-gray-200 bg-white py-4 px-8 shadow-sm">
       <nav className="flex justify-between items-center">
-        <Link href="/" className="text-xl font-bold text-gray-800 hover:text-brand transition-colors">
+        <Link
+          href="/"
+          className="font-[family-name:var(--font-display)] text-xl font-bold tracking-tight text-gray-900 hover:text-brand transition-colors"
+        >
           Luh Educa
         </Link>
         <div className="flex items-center space-x-4">

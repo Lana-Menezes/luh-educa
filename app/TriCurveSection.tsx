@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 
 const CURVE = "#173efd";
 const INFO = "#00b800";
@@ -99,8 +99,8 @@ export default function TriCurveSection() {
   }, [a, b, c, theta]);
 
   const width = 640;
-  const height = 250;
-  const pad = { top: 12, right: 12, bottom: 32, left: 36 };
+  const height = 262;
+  const pad = { top: 12, right: 12, bottom: 44, left: 36 };
   const plotW = width - pad.left - pad.right;
   const plotHeight = height - pad.top - pad.bottom;
 
@@ -170,7 +170,7 @@ export default function TriCurveSection() {
                     <text
                       key={tick}
                       x={x}
-                      y={height - 10}
+                      y={height - 22}
                       textAnchor="middle"
                       className="fill-gray-400"
                       fontSize={10}
@@ -182,7 +182,7 @@ export default function TriCurveSection() {
 
                 <text
                   x={pad.left + plotW / 2}
-                  y={height - 1}
+                  y={height - 4}
                   textAnchor="middle"
                   className="fill-gray-500"
                   fontSize={9}
@@ -372,6 +372,12 @@ function SliderRow({
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
         className="tri-slider w-full"
+        style={
+          {
+            "--tri-fill": `${((value - min) / (max - min)) * 100}%`,
+            accentColor: "#173efd",
+          } as CSSProperties
+        }
         aria-label={label}
       />
     </label>

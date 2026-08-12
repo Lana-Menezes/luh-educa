@@ -1,43 +1,91 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import { type NextAuthOptions } from "next-auth";
-import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import prisma from "@/lib/prisma";
+import {
+  hasAuthFieldErrors,
+  normalizeEmail,
+  readPassword,
+  validateLoginCredentials,
+} from "@/lib/auth-validation";
+import {
+  clearLoginFailures,
+  clientIpFromHeaders,
+  getLoginRateLimitKey,
+  isLoginRateLimited,
+  registerLoginFailure,
+} from "@/lib/login-rate-limit";
+
+const isProduction = process.env.NODE_ENV === "production";
+const dummyHash = bcrypt.hash(
+  "luh-educa-timing-dummy",
+  10,
+);
+
+async function passwordsMatch(password: string, hash: string) {
+  try {
+    return await bcrypt.compare(password, hash);
+  } catch {
+    return false;
+  }
+}
 
 export const authOptions = {
-  // next-auth v4 reads NEXTAUTH_SECRET by default; map AUTH_SECRET for this project
   secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+    maxAge: 60 * 60 * 8,
+    updateAge: 60 * 30,
+  },
+  useSecureCookies: isProduction,
   providers: [
     CredentialsProvider({
       name: "credentials",
       credentials: {
         email: { label: "E-mail", type: "email" },
         password: { label: "Senha", type: "password" },
+        company: { label: "Empresa", type: "text" },
       },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Credenciais inválidas");
+      async authorize(credentials, req) {
+        const email = normalizeEmail(credentials?.email);
+        const password = readPassword(credentials?.password);
+        const honeypot = String(credentials?.company ?? "").trim();
+        const ip = clientIpFromHeaders(req.headers ?? {});
+        const rateLimitKey = getLoginRateLimitKey(ip, email);
+
+        if (isLoginRateLimited(rateLimitKey)) {
+          return null;
         }
 
-        const email = credentials.email.trim().toLowerCase();
+        if (
+          honeypot ||
+          hasAuthFieldErrors(validateLoginCredentials(email, password))
+        ) {
+          registerLoginFailure(rateLimitKey);
+          await passwordsMatch(password || "invalid", await dummyHash);
+          return null;
+        }
 
         const user = await prisma.user.findUnique({
           where: { email },
+          select: { id: true, email: true, name: true, password: true },
         });
 
-        if (!user) {
-          throw new Error("Credenciais inválidas");
+        const hash = user?.password ?? (await dummyHash);
+        const isCorrectPassword = await passwordsMatch(password, hash);
+
+        if (!user || !isCorrectPassword) {
+          registerLoginFailure(rateLimitKey);
+          return null;
         }
 
-        const isCorrectPassword = await bcrypt.compare(
-          credentials.password,
-          user.password
-        );
+        clearLoginFailures(rateLimitKey);
 
-        if (!isCorrectPassword) {
-          throw new Error("Credenciais inválidas");
-        }
-
-        return user;
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+        };
       },
     }),
   ],

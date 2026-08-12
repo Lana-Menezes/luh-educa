@@ -2,19 +2,35 @@
 
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
+import {
+  hasAuthFieldErrors,
+  normalizeEmail,
+  readPassword,
+  validateRegisterCredentials,
+} from "@/lib/auth-validation";
 
 export async function registerUser(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
-  const password = String(formData.get("password") ?? "");
-  const confirmPassword = String(formData.get("confirmPassword") ?? "");
+  const email = normalizeEmail(formData.get("email"));
+  const password = readPassword(formData.get("password"));
+  const confirmPassword = readPassword(formData.get("confirmPassword"));
 
-  if (!name || !email || !password || !confirmPassword) {
-    return { error: "Nome, e-mail, senha e confirmação são obrigatórios" };
-  }
+  const errors = validateRegisterCredentials(
+    name,
+    email,
+    password,
+    confirmPassword,
+  );
 
-  if (password !== confirmPassword) {
-    return { error: "As senhas não coincidem" };
+  if (hasAuthFieldErrors(errors)) {
+    return {
+      error:
+        errors.name ||
+        errors.email ||
+        errors.password ||
+        errors.confirmPassword ||
+        "Dados inválidos",
+    };
   }
 
   const existingUser = await prisma.user.findUnique({
