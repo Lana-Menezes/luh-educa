@@ -3,6 +3,7 @@ import Hero from "./Hero";
 import FaqSection from "./FaqSection";
 import TriCurveSection from "./TriCurveSection";
 import DiagnosticQuiz from "./DiagnosticQuiz";
+import ContactSection from "./ContactSection";
 
 export default function HomePage() {
   return (
@@ -116,7 +117,9 @@ export default function HomePage() {
 
       <FaqSection />
 
-      <section id="contato" className="bg-brand">
+      <ContactSection />
+
+      <section className="bg-brand">
         <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-20 md:flex-row md:items-end md:justify-between md:px-8 md:py-24">
           <div className="max-w-xl">
             <h2 className="font-[family-name:var(--font-display)] text-3xl font-bold text-white md:text-4xl">

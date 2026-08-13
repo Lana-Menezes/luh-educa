@@ -47,6 +47,9 @@ export default function MarketingHeader() {
           <Link href="/#faq" className={linkClass}>
             FAQ
           </Link>
+          <Link href="/#contato" className={linkClass}>
+            Contato
+          </Link>
           <Link href="/quem-somos" className={linkClass}>
             Quem somos
           </Link>

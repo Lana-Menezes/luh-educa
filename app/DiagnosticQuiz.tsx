@@ -19,9 +19,12 @@ export default function DiagnosticQuiz() {
 
   const hasNo = answers.some((answer) => answer === "nao");
 
-  function setAnswer(index: number, value: Answer) {
+  function setAnswer(index: number, value: Exclude<Answer, null>) {
     setAnswers((current) =>
-      current.map((answer, i) => (i === index ? value : answer)),
+      current.map((answer, i) => {
+        if (i !== index) return answer;
+        return answer === value ? null : value;
+      }),
     );
   }
 
