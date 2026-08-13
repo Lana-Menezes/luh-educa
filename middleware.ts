@@ -1,10 +1,18 @@
 import { withAuth } from "next-auth/middleware";
+import { IDLE_TIMEOUT_MS } from "@/lib/session-idle";
 
 export default withAuth({
   pages: {
     signIn: "/login",
   },
   secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+  callbacks: {
+    authorized: ({ token }) => {
+      if (!token?.id) return false;
+      const lastActivity = Number(token.lastActivity ?? 0);
+      return lastActivity > 0 && Date.now() - lastActivity <= IDLE_TIMEOUT_MS;
+    },
+  },
 });
 
 export const config = {

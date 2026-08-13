@@ -15,6 +15,7 @@ import {
   isLoginRateLimited,
   registerLoginFailure,
 } from "@/lib/login-rate-limit";
+import { IDLE_TIMEOUT_MS, IDLE_TIMEOUT_SECONDS } from "@/lib/session-idle";
 
 const isProduction = process.env.NODE_ENV === "production";
 const dummyHash = bcrypt.hash(
@@ -34,8 +35,8 @@ export const authOptions = {
   secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
-    maxAge: 60 * 60 * 8,
-    updateAge: 60 * 30,
+    maxAge: IDLE_TIMEOUT_SECONDS,
+    updateAge: 60,
   },
   useSecureCookies: isProduction,
   providers: [
@@ -93,11 +94,41 @@ export const authOptions = {
     signIn: "/login",
   },
   callbacks: {
-    async jwt({ token, user }) {
-      return { ...token, id: token.id ?? user?.id };
+    async jwt({ token, user, trigger }) {
+      const now = Date.now();
+
+      if (user) {
+        return {
+          ...token,
+          id: user.id,
+          lastActivity: now,
+        };
+      }
+
+      const lastActivity = Number(token.lastActivity ?? 0);
+      if (!token.id || !lastActivity || now - lastActivity > IDLE_TIMEOUT_MS) {
+        return {};
+      }
+
+      if (trigger === "update") {
+        token.lastActivity = now;
+      }
+
+      return token;
     },
     async session({ session, token }) {
-      return { ...session, user: { ...session.user, id: token.id } };
+      if (!token.id) {
+        return {
+          ...session,
+          user: { id: "", name: "", email: "" },
+          expires: new Date(0).toISOString(),
+        };
+      }
+
+      return {
+        ...session,
+        user: { ...session.user, id: String(token.id) },
+      };
     },
   },
 } satisfies NextAuthOptions;
