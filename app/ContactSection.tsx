@@ -203,7 +203,7 @@ export default function ContactSection() {
                   onBeforeInput={rejectEmojiInput}
                   onChange={(event) => updateField("name", event.target.value)}
                   className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-gray-900 outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20 disabled:bg-gray-50"
-                  placeholder="Seu nome"
+                  placeholder="Informe seu nome"
                 />
               </div>
 
@@ -236,7 +236,7 @@ export default function ContactSection() {
                   htmlFor="contact-school"
                   className="mb-1.5 block text-sm font-medium text-gray-700"
                 >
-                  Escola ou rede
+                  Nome da escola
                 </label>
                 <input
                   id="contact-school"
@@ -251,7 +251,7 @@ export default function ContactSection() {
                     updateField("school", event.target.value)
                   }
                   className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-gray-900 outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20 disabled:bg-gray-50"
-                  placeholder="Nome da escola ou rede"
+                  placeholder="Informe o nome da sua escola"
                 />
               </div>
 
