@@ -2,6 +2,7 @@ import Link from "next/link";
 import Hero from "./Hero";
 import FaqSection from "./FaqSection";
 import TriCurveSection from "./TriCurveSection";
+import DiagnosticQuiz from "./DiagnosticQuiz";
 
 export default function HomePage() {
   return (
@@ -94,6 +95,8 @@ export default function HomePage() {
           </ol>
         </div>
       </section>
+
+      <DiagnosticQuiz />
 
       <TriCurveSection />
 
