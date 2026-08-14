@@ -108,8 +108,8 @@ export default function QuemSomosPage() {
               A engenheira Lana
             </h2>
             <p>
-              Lana Menezes Fidelis é engenheira de software, mestranda em IA,
-              responsável por transformar o método LUH Educacional em produto
+              Lana Menezes Fidelis é engenheira de software, pós em Gestão Empresarial, mestranda em Inteligência Artificial,
+              responsável por transformar o método LUH Educacional em um produto
               digital. Criadora da ferramenta de tecnologia que transforma
               dados das avaliações em relatórios no portal de acompanhamento,
               permitindo visualizações da aprendizagem da sua instituição de
@@ -151,33 +151,6 @@ export default function QuemSomosPage() {
 
         <div className="mt-16 max-w-3xl space-y-8 text-lg leading-relaxed text-gray-700">
           <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold text-gray-900 md:text-3xl">
-            Por que a TRI?
-          </h2>
-          <p>
-            Luciana defende a TRI porque ela muda a lógica da avaliação: em vez
-            de contar só acertos, a escola passa a estimar proficiência em uma
-            escala comparável ao longo do tempo. Isso permite ver avanço real,
-            identificar lacunas com mais precisão e organizar reforço por turma
-            e por estudante.
-          </p>
-
-          <h2 className="pt-2 font-[family-name:var(--font-display)] text-2xl font-bold text-gray-900 md:text-3xl">
-            O método Luh Educa
-          </h2>
-          <p>
-            O método que leva seu nome organiza a implementação em três
-            movimentos: diagnóstico e desenho, construção e calibração de itens,
-            e leitura para ação pedagógica. A ideia é simples — a escola não
-            precisa virar um centro de estatística; precisa de um caminho claro
-            para usar a TRI com confiança.
-          </p>
-          <p>
-            Além da consultoria, Luciana impulsiona o Portal Luh Educa para que
-            coordenadores e professores acompanhem os resultados no mesmo
-            ambiente em que decidem intervenções.
-          </p>
-
-          <h2 className="pt-2 font-[family-name:var(--font-display)] text-2xl font-bold text-gray-900 md:text-3xl">
             Para quem trabalhamos
           </h2>
           <p>
@@ -197,10 +170,10 @@ export default function QuemSomosPage() {
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <Link
-              href="/#metodo"
+              href="/#contato"
               className="rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover"
             >
-              Conhecer o método
+              Entrar em contato
             </Link>
             <Link
               href="/"

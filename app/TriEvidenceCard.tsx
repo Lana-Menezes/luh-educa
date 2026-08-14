@@ -56,11 +56,16 @@ export default function TriEvidenceCard() {
                   aria-hidden
                 />
                 <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-brand">
-                  luh · resposta automática
+                  luh · resposta
                 </p>
               </div>
-              <p className="font-mono text-[11px] text-gray-400">
-                gerado agora
+              <p className="font-mono text-[11px] text-gray-400" aria-live="polite">
+                Analisando
+                <span className="loading-dots" aria-hidden>
+                  <span>.</span>
+                  <span>.</span>
+                  <span>.</span>
+                </span>
               </p>
             </div>
 
