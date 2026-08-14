@@ -34,7 +34,7 @@ export default function Hero() {
                 href="#contato"
                 className="inline-flex items-center gap-2 rounded-md bg-brand px-6 py-3 text-base font-medium text-white transition-all hover:bg-brand-hover"
               >
-                Comece uma assessoria
+                Comece a assessoria
                 <ArrowRight className="h-4 w-4" />
               </a>
               <a

@@ -107,19 +107,28 @@ export default function DiagnosticQuiz() {
           </ul>
 
           {hasNo && (
-            <div className="mt-6 flex items-start gap-3 rounded-xl bg-brand-soft/80 px-4 py-4">
-              <AlertTriangle
-                className="mt-0.5 h-5 w-5 shrink-0 text-brand"
-                aria-hidden
-              />
-              <div>
-                <p className="text-sm font-semibold text-brand">
-                  Respondeu NÃO em alguma?
-                </p>
-                <p className="mt-1 text-sm leading-relaxed text-gray-600">
-                  A recomposição precisa de ferramentas precisas — e nós temos.
-                </p>
+            <div className="mt-6 flex flex-col gap-4 rounded-xl bg-brand-soft/80 px-4 py-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+              <div className="flex items-start gap-3">
+                <AlertTriangle
+                  className="mt-0.5 h-5 w-5 shrink-0 text-brand"
+                  aria-hidden
+                />
+                <div>
+                  <p className="text-sm font-semibold text-brand">
+                    Respondeu NÃO em alguma?
+                  </p>
+                  <p className="mt-1 text-sm leading-relaxed text-gray-600">
+                    A recomposição precisa de ferramentas precisas — e nós
+                    temos.
+                  </p>
+                </div>
               </div>
+              <a
+                href="#contato"
+                className="inline-flex shrink-0 items-center justify-center self-stretch rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover sm:self-center"
+              >
+                Entrar em contato
+              </a>
             </div>
           )}
         </div>
