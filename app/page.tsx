@@ -47,8 +47,8 @@ export default function HomePage() {
           </p>
 
           <ol className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-            <li>
-              <p className="font-[family-name:var(--font-display)] text-5xl font-bold text-brand/20">
+            <li className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+              <p className="font-[family-name:var(--font-display)] text-5xl font-bold text-brand">
                 01
               </p>
               <h3 className="mt-3 text-xl font-semibold text-gray-900">
@@ -59,8 +59,8 @@ export default function HomePage() {
                 estratégica para gestores e diretores da rede.
               </p>
             </li>
-            <li>
-              <p className="font-[family-name:var(--font-display)] text-5xl font-bold text-success/35">
+            <li className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+              <p className="font-[family-name:var(--font-display)] text-5xl font-bold text-success">
                 02
               </p>
               <h3 className="mt-3 text-xl font-semibold text-gray-900">
@@ -72,8 +72,8 @@ export default function HomePage() {
                 antes da prova oficial.
               </p>
             </li>
-            <li>
-              <p className="font-[family-name:var(--font-display)] text-5xl font-bold text-brand-muted">
+            <li className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+              <p className="font-[family-name:var(--font-display)] text-5xl font-bold text-accent">
                 03
               </p>
               <h3 className="mt-3 text-xl font-semibold text-gray-900">
@@ -84,8 +84,8 @@ export default function HomePage() {
                 BNCC, otimizando o tempo do professor em sala.
               </p>
             </li>
-            <li>
-              <p className="font-[family-name:var(--font-display)] text-5xl font-bold text-success/35">
+            <li className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+              <p className="font-[family-name:var(--font-display)] text-5xl font-bold text-danger">
                 04
               </p>
               <h3 className="mt-3 text-xl font-semibold text-gray-900">

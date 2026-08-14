@@ -17,10 +17,10 @@ export default function Hero() {
           <div className="flex flex-col justify-center">
             <div className="inline-flex w-fit items-center gap-2 rounded-full bg-white/80 px-4 py-1.5 text-sm font-medium text-brand ring-1 ring-brand-muted/60">
               <Target className="h-4 w-4" />
-              Assessoria Pedagógica com TRI
+              LUH - Método de Recomposição das Aprendizagens
             </div>
             <h1 className="mt-6 font-[family-name:var(--font-display)] text-4xl font-bold leading-[1.1] text-gray-900 sm:text-5xl lg:text-6xl">
-              Leitura Unificada de Habilidades
+              Assessoria Pedagógica com supporte para TRI
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
               O método{" "}
