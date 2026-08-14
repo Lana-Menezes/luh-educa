@@ -5,6 +5,7 @@ import TriCurveSection from "./TriCurveSection";
 import DiagnosticQuiz from "./DiagnosticQuiz";
 import ContactSection from "./ContactSection";
 import TriEvidenceCard from "./TriEvidenceCard";
+import GrowthInfographic from "./GrowthInfographic";
 
 export default function HomePage() {
   return (
@@ -106,17 +107,24 @@ export default function HomePage() {
       <TriCurveSection />
 
       <section className="mx-auto max-w-6xl px-6 py-20 md:px-8 md:py-28">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">
-          Para quem é
-        </p>
-        <h2 className="mt-3 max-w-2xl font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
-          Escolas que querem avaliação comparável e decisão pedagógica sólida.
-        </h2>
-        <p className="mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-          Atendemos redes e unidades que desejam sair do modelo só por acertos e
-          avançar para uma leitura coerente de aprendizagem — com portal de
-          acompanhamento para gestão e professores.
-        </p>
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-14">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">
+              Para quem é
+            </p>
+            <h2 className="mt-3 max-w-2xl font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
+              Escolas que querem avaliação comparável e decisão pedagógica
+              sólida.
+            </h2>
+            <p className="mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
+              Atendemos redes e unidades que desejam sair do modelo só por
+              acertos e avançar para uma leitura coerente de aprendizagem — com
+              portal de acompanhamento para gestão e professores.
+            </p>
+          </div>
+
+          <GrowthInfographic />
+        </div>
       </section>
 
       <FaqSection />
