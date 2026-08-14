@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
 const stages = [
   { label: "Baseline", value: 42, barClass: "bg-danger" },
   { label: "Diagnóstico", value: 58, barClass: "bg-accent" },
@@ -8,6 +12,27 @@ const stages = [
 const maxValue = Math.max(...stages.map((stage) => stage.value));
 
 export default function GrowthInfographic() {
+  const chartRef = useRef<HTMLDivElement>(null);
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    const node = chartRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setAnimate(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm md:p-8">
       <div className="flex items-start justify-between gap-4">
@@ -19,7 +44,7 @@ export default function GrowthInfographic() {
             Evolução esperada de proficiência ao longo do ciclo LUH.
           </p>
         </div>
-        <p className="shrink-0 font-[family-name:var(--font-display)] text-3xl font-bold leading-none text-success md:text-4xl">
+        <p className="shrink-0 text-center font-[family-name:var(--font-display)] text-3xl font-bold leading-none text-success md:text-4xl">
           +49
           <span className="mt-1 block text-sm font-semibold text-gray-500">
             pontos
@@ -39,21 +64,28 @@ export default function GrowthInfographic() {
           ))}
         </div>
 
-        <div className="relative grid h-48 grid-cols-4 gap-3 rounded-xl bg-[#f4f6ff] px-2 pb-2 pt-4 sm:gap-4">
-          {stages.map((stage, index) => (
-            <div
-              key={stage.label}
-              className="flex h-full items-end justify-center"
-            >
+        <div
+          ref={chartRef}
+          className="relative grid h-48 grid-cols-4 gap-3 rounded-xl bg-[#f4f6ff] px-2 pb-2 pt-4 sm:gap-4"
+        >
+          {stages.map((stage, index) => {
+            const targetHeight = (stage.value / maxValue) * 100;
+
+            return (
               <div
-                className={`w-full max-w-14 rounded-lg ${stage.barClass} luh-animate-fade-up`}
-                style={{
-                  height: `${(stage.value / maxValue) * 100}%`,
-                  animationDelay: `${index * 0.12}s`,
-                }}
-              />
-            </div>
-          ))}
+                key={stage.label}
+                className="flex h-full items-end justify-center"
+              >
+                <div
+                  className={`w-full max-w-14 rounded-lg ${stage.barClass}`}
+                  style={{
+                    height: animate ? `${targetHeight}%` : "0%",
+                    transition: `height 0.9s cubic-bezier(0.22, 1, 0.36, 1) ${index * 0.15}s`,
+                  }}
+                />
+              </div>
+            );
+          })}
         </div>
 
         <div className="mt-3 grid grid-cols-4 gap-3 sm:gap-4">
