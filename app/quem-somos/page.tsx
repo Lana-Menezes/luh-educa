@@ -37,8 +37,9 @@ export default function QuemSomosPage() {
             Quem somos
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/85">
-            Conheça as pessoas por trás do método Luh Educa e do portal que
-            torna a TRI acessível para escolas reais.
+            Conheça as pessoas por trás da metodologia LUH Educacional e do
+            portal que torna as avaliações elaboradas pela TRI e os
+            planejamentos por habilidade acessíveis para escolas reais.
           </p>
         </div>
       </header>
@@ -71,21 +72,32 @@ export default function QuemSomosPage() {
               A pedagoga Luciana
             </h2>
             <p>
-              Luciana Menezes de Souza é pedagoga e fundadora da Luh Educa. Sua trajetória
-              une avaliação educacional, leitura pedagógica de dados e o desejo
-              de aproximar a Teoria de Resposta ao Item do cotidiano das escolas.
+              Luciana é pedagoga, autora do livro intitulado{" "}
+              <strong className="font-semibold text-gray-900">
+                Manual de Recomposição das Aprendizagens
+              </strong>
+              , criadora do método LUH. Fundadora da empresa de assessoria em
+              Inteligência Pedagógica LUH Educacional que sistematiza essa
+              metodologia para gestores de redes públicas e privadas.
             </p>
             <p>
-              A Luh Educa nasceu de uma pergunta prática: como ajudar escolas a
-              implementar a TRI sem perder o sentido pedagógico do processo?
+              A LUH Educa nasceu de uma pergunta prática:{" "}
+              <strong className="font-semibold text-gray-900">
+                como ajudar escolas a implementar a TRI sem perder o sentido
+                pedagógico do processo?
+              </strong>{" "}
               Luciana transformou essa pergunta em método, formação e, depois,
-              no portal que acompanha gestão, turmas e alunos.
+              no portal que permite que a gestão acompanhe sua rede, escola,
+              turmas e alunos, através de ferramentas de tecnologia e uso de IA
+              construídas pela sua principal colaboradora no processo.
             </p>
             <p>
-              Com formação e experiência em educação, ela atua na ponte entre o
-              técnico e a sala de aula — calibragem de itens, régua de
-              proficiência, faixas de desempenho e, principalmente, o que a
-              equipe faz com esses números no planejamento pedagógico.
+              Com formação e experiência de mais de 25 anos em educação, ela
+              atua na ponte entre o técnico e a sala de aula, calibragem de
+              itens, régua de proficiência, níveis de desempenho e,
+              principalmente, o que a equipe pedagógica deve fazer com esses
+              números, fornecendo apoio no planejamento pedagógico por
+              habilidade através do acompanhamento às redes parceiras.
             </p>
           </div>
         </section>
@@ -96,21 +108,23 @@ export default function QuemSomosPage() {
               A engenheira Lana
             </h2>
             <p>
-              Lana Menezes Fidelis é engenheira de software e responsável por
-              transformar o método Luh Educa em produto digital — do portal de
-              acompanhamento às visualizações que ajudam a escola a ler a TRI
-              com clareza.
+              Lana Menezes Fidelis é engenheira de software, mestranda em IA,
+              responsável por transformar o método LUH Educacional em produto
+              digital. Criadora da ferramenta de tecnologia que transforma
+              dados das avaliações em relatórios no portal de acompanhamento,
+              permitindo visualizações da aprendizagem da sua instituição de
+              ensino com clareza.
             </p>
             <p>
-              Ela conecta a visão pedagógica da consultoria à experiência de
-              uso: dashboards da escola, da turma e do aluno, fluxos seguros de
-              autenticação e uma interface pensada para o dia a dia de gestão e
-              coordenação.
+              Ela conecta a visão pedagógica da assessoria à experiência de
+              uso: dashboards da rede, da escola, da turma e do aluno, fluxos
+              seguros de autenticação e uma interface pensada para o dia a dia
+              de gestão escolar.
             </p>
             <p>
-              Com Lana na engenharia e Luciana na pedagogia, a Luh Educa une
-              método avaliativo e tecnologia para que a leitura de
-              habilidades vire decisão prática na escola.
+              Através da união da engenharia e da pedagogia, a LUH Educa une
+              método avaliativo e planejamentos à tecnologia, para que a
+              leitura de habilidades vire decisão prática na escola.
             </p>
           </div>
 
@@ -143,8 +157,8 @@ export default function QuemSomosPage() {
             Luciana defende a TRI porque ela muda a lógica da avaliação: em vez
             de contar só acertos, a escola passa a estimar proficiência em uma
             escala comparável ao longo do tempo. Isso permite ver avanço real,
-            identificar lacunas com mais precisão e organizar reforço por turma e
-            por estudante.
+            identificar lacunas com mais precisão e organizar reforço por turma
+            e por estudante.
           </p>
 
           <h2 className="pt-2 font-[family-name:var(--font-display)] text-2xl font-bold text-gray-900 md:text-3xl">
