@@ -32,7 +32,7 @@ export default function HomePage() {
 
       <section
         id="tri"
-        className="border-y border-gray-200 bg-[linear-gradient(180deg,#f7f8ff_0%,#ffffff_100%)]"
+        className="border-y border-gray-200 bg-[#eef1ff]"
       >
         <div className="mx-auto max-w-6xl px-6 py-20 md:px-8 md:py-28">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">

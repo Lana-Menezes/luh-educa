@@ -17,12 +17,12 @@ const SCHOOL_MAX_LENGTH = 120;
 const socialLinks = [
   {
     label: "Instagram",
-    href: "https://instagram.com/luheduca",
+    href: "https://www.instagram.com/luh.educacional/",
     icon: Instagram,
   },
   {
     label: "LinkedIn",
-    href: "https://www.linkedin.com/company/luheduca",
+    href: "https://www.linkedin.com/in/luciana-souza-963351a3/",
     icon: Linkedin,
   },
   {
