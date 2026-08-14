@@ -4,6 +4,7 @@ import FaqSection from "./FaqSection";
 import TriCurveSection from "./TriCurveSection";
 import DiagnosticQuiz from "./DiagnosticQuiz";
 import ContactSection from "./ContactSection";
+import TriEvidenceCard from "./TriEvidenceCard";
 
 export default function HomePage() {
   return (
@@ -44,6 +45,7 @@ export default function HomePage() {
             Um caminho técnico para transformar dados de aprendizagem em
             diagnóstico, planejamento e acompanhamento pedagógico.
           </p>
+
           <ol className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
             <li>
               <p className="font-[family-name:var(--font-display)] text-5xl font-bold text-brand/20">
@@ -94,6 +96,8 @@ export default function HomePage() {
               </p>
             </li>
           </ol>
+
+          <TriEvidenceCard />
         </div>
       </section>
 
