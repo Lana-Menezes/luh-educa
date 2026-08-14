@@ -13,7 +13,7 @@ const faqs = [
   {
     question: "O que diferencia o método Luh Educa?",
     answer:
-      "O método conecta calibração de itens, leitura da régua de proficiência e rotina de decisão na escola. Além da consultoria, o Portal Luh Educa apoia a gestão com dashboards da escola, da turma e do aluno.",
+      "O método conecta calibração de itens, leitura da régua de proficiência e rotina de decisão na escola. Além da assessoria, o Portal Luh Educa apoia a gestão com dashboards da escola, da turma e do aluno.",
     tone: "bg-brand-muted/40 text-gray-900",
     mark: "text-brand",
   },

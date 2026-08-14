@@ -17,7 +17,7 @@ export default function Hero() {
           <div className="flex flex-col justify-center">
             <div className="inline-flex w-fit items-center gap-2 rounded-full bg-white/80 px-4 py-1.5 text-sm font-medium text-brand ring-1 ring-brand-muted/60">
               <Target className="h-4 w-4" />
-              Consultoria Pedagógica com TRI
+              Assessoria Pedagógica com TRI
             </div>
             <h1 className="mt-6 font-[family-name:var(--font-display)] text-4xl font-bold leading-[1.1] text-gray-900 sm:text-5xl lg:text-6xl">
               Leitura Unificada de Habilidades
@@ -34,7 +34,7 @@ export default function Hero() {
                 href="#contato"
                 className="inline-flex items-center gap-2 rounded-md bg-brand px-6 py-3 text-base font-medium text-white transition-all hover:bg-brand-hover"
               >
-                Comece uma consultoria
+                Comece uma assessoria
                 <ArrowRight className="h-4 w-4" />
               </a>
               <a

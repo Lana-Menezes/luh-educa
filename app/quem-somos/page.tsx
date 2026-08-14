@@ -190,7 +190,7 @@ export default function QuemSomosPage() {
           <p className="font-[family-name:var(--font-display)] font-semibold text-white">
             Luh Educa
           </p>
-          <p>Consultoria em TRI · Método Luh Educa</p>
+          <p>Assessoria em TRI · Método Luh Educa</p>
         </div>
       </footer>
     </article>

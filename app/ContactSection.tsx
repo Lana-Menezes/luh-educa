@@ -126,7 +126,7 @@ export default function ContactSection() {
           </h2>
           <p className="mt-5 text-lg leading-relaxed text-gray-600">
             Conte um pouco sobre a escola ou rede e o momento avaliativo atual.
-            Retornamos para alinhar o próximo passo da consultoria LUH.
+            Retornamos para alinhar o próximo passo da assessoria LUH.
           </p>
 
           <div className="mt-8 space-y-5 text-sm text-gray-700">
