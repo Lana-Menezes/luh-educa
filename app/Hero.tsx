@@ -36,7 +36,7 @@ export default function Hero() {
                 Conheça a Trilha
               </a>
               <a
-                href="#contato"
+                href="#autodiagnostico"
                 className="inline-flex items-center gap-2 rounded-md bg-brand px-6 py-3 text-base font-medium text-white transition-all hover:bg-brand-hover"
               >
                 Iniciar Diagnóstico

@@ -136,19 +136,15 @@ export default function HomePage() {
         <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-20 md:flex-row md:items-end md:justify-between md:px-8 md:py-24">
           <div className="max-w-xl">
             <h2 className="font-[family-name:var(--font-display)] text-3xl font-bold text-white md:text-4xl">
-              Entre no Portal Luh Educa
+            Quer ser uma escola parceira?                                                    
             </h2>
             <p className="mt-4 text-base leading-relaxed text-white/85">
-              Acompanhe dashboards TRI da escola, turmas e alunos em um só
-              lugar.
+            Solicite uma senha degustação e acesse o Portal LUH Educa.                                            
+            </p>
+            <p className="mt-4 text-base leading-relaxed text-white/85">
+            Assessoria Inteligência Pedagógica - Método LUH Educacional                                                          
             </p>
           </div>
-          <Link
-            href="/login"
-            className="inline-flex rounded-lg bg-white px-5 py-3 text-sm font-semibold text-brand transition hover:bg-brand-soft"
-          >
-            Acessar o portal
-          </Link>
         </div>
       </section>
 

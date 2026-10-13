@@ -72,20 +72,22 @@ export default function QuemSomosPage() {
               A pedagoga Luciana
             </h2>
             <p>
-              Luciana é pedagoga, autora do livro intitulado{" "}
+              Autora do livro{" "}
               <strong className="font-semibold text-gray-900">
                 Manual de Recomposição das Aprendizagens
               </strong>
               , criadora do método LUH. Fundadora da empresa de assessoria em
-              Inteligência Pedagógica LUH Educacional que sistematiza essa
-              metodologia para gestores de redes públicas e privadas.
+              Inteligência Pedagógica LUH Educacional que sistematiza a
+              metodologia para redes públicas e privadas.
             </p>
             <p>
               A LUH Educa nasceu de uma pergunta prática:{" "}
               <strong className="font-semibold text-gray-900">
-                como ajudar escolas a implementar a TRI sem perder o sentido
-                pedagógico do processo?
-              </strong>{" "}
+                como ajudar escolas a implementar o DE e PARA habilidade sem
+                perder o sentido pedagógico do processo?
+              </strong>
+            </p>
+            <p>
               Luciana transformou essa pergunta em método, formação e, depois,
               no portal que permite que a gestão acompanhe sua rede, escola,
               turmas e alunos, através de ferramentas de tecnologia e uso de IA
@@ -93,11 +95,11 @@ export default function QuemSomosPage() {
             </p>
             <p>
               Com formação e experiência de mais de 25 anos em educação, ela
-              atua na ponte entre o técnico e a sala de aula, calibragem de
-              itens, régua de proficiência, níveis de desempenho e,
-              principalmente, o que a equipe pedagógica deve fazer com esses
-              números, fornecendo apoio no planejamento pedagógico por
-              habilidade através do acompanhamento às redes parceiras.
+              atua na ponte entre o técnico e a sala de aula.
+            </p>
+            <p>
+              Após receber o diagnóstico da rede de ensino, o que a equipe
+              pedagógica deve fazer com esses números?
             </p>
           </div>
         </section>
@@ -108,8 +110,8 @@ export default function QuemSomosPage() {
               A engenheira Lana
             </h2>
             <p>
-              Lana Menezes Fidelis é engenheira de software, pós em Gestão Empresarial, mestranda em Inteligência Artificial,
-              responsável por transformar o método LUH Educacional em um produto
+              Lana Menezes Fidelis é engenheira de software, mestranda em IA,
+              responsável por transformar o método LUH Educacional em produto
               digital. Criadora da ferramenta de tecnologia que transforma
               dados das avaliações em relatórios no portal de acompanhamento,
               permitindo visualizações da aprendizagem da sua instituição de
@@ -117,9 +119,8 @@ export default function QuemSomosPage() {
             </p>
             <p>
               Ela conecta a visão pedagógica da assessoria à experiência de
-              uso: dashboards da rede, da escola, da turma e do aluno, fluxos
-              seguros de autenticação e uma interface pensada para o dia a dia
-              de gestão escolar.
+              uso: dashboards da rede, da escola, da turma e do aluno, e uma
+              interface pensada para o dia a dia de gestão escolar.
             </p>
             <p>
               Através da união da engenharia e da pedagogia, a LUH Educa une
@@ -166,7 +167,7 @@ export default function QuemSomosPage() {
             Quer conhecer o método na prática?
           </p>
           <p className="mt-3 leading-relaxed text-gray-700">
-            Veja como a Luh Educa apoia a implementação da TRI na sua escola.
+          Solicite uma senha degustação e acesse o Portal LUH Educa                                             
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <Link
