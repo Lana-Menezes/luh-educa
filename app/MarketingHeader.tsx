@@ -42,7 +42,7 @@ export default function MarketingHeader() {
             Método
           </Link>
           <Link href="/#tri" className={linkClass}>
-            TRI
+            Trilha
           </Link>
           <Link href="/#faq" className={linkClass}>
             FAQ

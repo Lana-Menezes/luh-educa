@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AlertTriangle } from "lucide-react";
 
 const questions = [
-  "A sua rede de ensino já recebe a complementação-VAAR do Fundeb?",
+  "A sua rede conhece as condicionalidades do VAAR relacionadas à gestão e aos resultados educacionais?",
   "Conseguem realizar uma análise real da aprendizagem por habilidade?",
   "São capazes de identificar lacunas estruturais antes da avaliação oficial?",
   "Oferecem personalização do ensino com base no ritmo de cada aluno?",
@@ -118,8 +118,7 @@ export default function DiagnosticQuiz() {
                     Respondeu NÃO em alguma?
                   </p>
                   <p className="mt-1 text-sm leading-relaxed text-gray-600">
-                    A recomposição precisa de ferramentas precisas — e nós
-                    temos.
+                  A recomposição necessita de ferramentas mais precisas e nós as temos.
                   </p>
                 </div>
               </div>

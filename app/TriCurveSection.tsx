@@ -108,8 +108,7 @@ export default function TriCurveSection() {
   const iPath = buildPath(chart.iNorm, pad.left, pad.top, plotW, plotHeight);
 
   const thetaX =
-    pad.left +
-    ((theta - THETA_MIN) / (THETA_MAX - THETA_MIN)) * plotW;
+    pad.left + ((theta - THETA_MIN) / (THETA_MAX - THETA_MIN)) * plotW;
   const markerY = pad.top + plotHeight * (1 - chart.pAtTheta);
 
   const yTicks = [0, 0.25, 0.5, 0.75, 1];
@@ -118,12 +117,17 @@ export default function TriCurveSection() {
   return (
     <section id="curva-tri" className="bg-[#f7f5f0]">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
-        <h2 className="max-w-3xl font-[family-name:var(--font-display)] text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">
-          Curva característica do item, ao vivo
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">
+          Sistema
+        </p>
+        <h2 className="mt-3 max-w-3xl font-[family-name:var(--font-display)] text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">
+          A IA a favor dos resultados da sua rede.
         </h2>
         <p className="mt-2 max-w-2xl text-base leading-relaxed text-gray-600">
-          Mova os parâmetros e veja, em tempo real, a chance de acerto segundo a
-          proficiência e a informação que o item oferece.
+          Não geramos apenas relatórios. Nossa tecnologia integra dados
+          educacionais para identificar padrões de aprendizagem, apoiar a
+          identificação de situações que demandam atenção e subsidiar a tomada
+          de decisão pedagógica.
         </p>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(240px,0.65fr)] lg:gap-8">

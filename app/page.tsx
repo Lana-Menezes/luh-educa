@@ -31,10 +31,7 @@ export default function HomePage() {
         </p>
       </section>
 
-      <section
-        id="tri"
-        className="border-y border-gray-200 bg-[#eef1ff]"
-      >
+      <section id="tri" className="border-y border-gray-200 bg-[#eef1ff]">
         <div className="mx-auto max-w-6xl px-6 py-20 md:px-8 md:py-28">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">
             TRILHA DE APRENDIZAGEM
@@ -43,8 +40,7 @@ export default function HomePage() {
             Recomposição em 4 estações.
           </h2>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-            Um caminho técnico para transformar dados de aprendizagem em
-            diagnóstico, planejamento e acompanhamento pedagógico.
+            Um caminho técnico, sequencial e mensurável.
           </p>
 
           <ol className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
@@ -110,16 +106,21 @@ export default function HomePage() {
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-14">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">
-              Para quem é
+              Próximo passo
             </p>
             <h2 className="mt-3 max-w-2xl font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
-              Escolas que querem avaliação comparável e decisão pedagógica
-              sólida.
+              Pronto para elevar sua rede ao próximo nível?
             </h2>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-              Atendemos redes e unidades que desejam sair do modelo só por
-              acertos e avançar para uma leitura coerente de aprendizagem — com
-              portal de acompanhamento para gestão e professores.
+              Atendemos redes e unidades de ensino públicas e privadas que
+              desejam sair do modelo tradicional de avaliação e avançar para uma
+              leitura coerente de aprendizagem que utiliza portal de
+              acompanhamento para gestão unido à assessoria especializada.
+            </p>
+            <p className="mt-5 max-w-2xl rounded-xl border border-brand-muted/60 bg-brand-soft/80 px-5 py-4 text-lg font-semibold leading-relaxed text-brand">
+              Agende uma consulta e peça uma demonstração gratuita para redes
+              privadas de ensino e redes públicas: secretarias municipais e
+              estaduais de educação.
             </p>
           </div>
 
