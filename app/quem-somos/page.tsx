@@ -174,12 +174,12 @@ export default function QuemSomosPage() {
             Solicite uma senha degustação e acesse o Portal LUH Educa
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
-            <Link
+            <a
               href="/#contato"
               className="rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover"
             >
               Entrar em contato
-            </Link>
+            </a>
             <Link
               href="/"
               className="rounded-lg border border-brand/20 bg-white px-4 py-2.5 text-sm font-semibold text-brand transition hover:bg-brand-muted/40"

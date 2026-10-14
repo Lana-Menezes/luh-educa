@@ -15,8 +15,33 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const isAuth = authPaths.some((path) => pathname.startsWith(path));
 
   useEffect(() => {
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+
+    const [navEntry] = performance.getEntriesByType(
+      "navigation",
+    ) as PerformanceNavigationTiming[];
+    const isReload = navEntry?.type === "reload";
+
+    if (!isReload) {
+      const hash = window.location.hash;
+      if (hash) {
+        const target = document.getElementById(hash.slice(1));
+        if (target) {
+          target.scrollIntoView();
+          return;
+        }
+      }
+    }
+
     scrollRef.current?.scrollTo(0, 0);
     window.scrollTo(0, 0);
+
+    requestAnimationFrame(() => {
+      scrollRef.current?.scrollTo(0, 0);
+      window.scrollTo(0, 0);
+    });
   }, [pathname]);
 
   if (isMarketing) {
