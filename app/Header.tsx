@@ -14,7 +14,7 @@ export default function Header() {
           href="/"
           className="font-[family-name:var(--font-display)] text-xl font-bold tracking-tight text-gray-900 hover:text-brand transition-colors"
         >
-          Luh Educa
+          LUH Educa
         </Link>
         {isLoggedIn && (
           <div className="flex items-center space-x-4">

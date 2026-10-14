@@ -186,14 +186,14 @@ export default function QuemSomosPage() {
         </aside>
       </div>
 
-      <footer className="bg-brand">
+      {/* <footer className="bg-brand">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 border-t border-white/15 px-6 py-8 text-sm text-white/75 md:flex-row md:items-center md:justify-between md:px-8">
           <p className="font-[family-name:var(--font-display)] font-semibold text-white">
             Luh Educa
           </p>
           <p>Assessoria em TRI · Método Luh Educa</p>
         </div>
-      </footer>
+      </footer> */}
     </article>
   );
 }

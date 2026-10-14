@@ -35,7 +35,7 @@ export default function MarketingHeader() {
           href="/"
           className="font-[family-name:var(--font-display)] text-xl font-bold tracking-tight text-gray-900 md:text-2xl"
         >
-          Luh Educa
+          LUH Educa
         </Link>
         <div className="flex items-center gap-6">
           <Link href="/#metodo" className={linkClass}>

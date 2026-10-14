@@ -106,7 +106,7 @@ export default function ContactSection() {
               Entre em contato
             </p>
             <h2 className="mt-3 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
-              Vamos conversar sobre a recomposição na sua rede.
+              Vamos conversar sobre a <br /> recomposição na sua rede.
             </h2>
             <p className="mt-5 max-w-md text-lg leading-relaxed text-gray-600">
               Conte um pouco sobre a escola ou rede e o momento avaliativo atual.

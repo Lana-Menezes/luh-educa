@@ -19,13 +19,10 @@ export default function Hero() {
               Assessoria de Inteligência Pedagógica
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
-              A assessoria de inteligência pedagógica aplica a{" "}
-              <strong className="text-gray-900">metodologia LUH</strong>{" "}
-              que conecta a BNCC à avaliação por evidências, unindo a precisão
-              da Teoria de Resposta ao Item (TRI) à prática da sala de aula.
+              A metodologia LUH conecta a BNCC à avaliação por evidências.
               Contamos com tecnologia para transformar os dados de resultados de
               avaliações em diagnóstico e em planejamentos por habilidade com
-              acompanhamento. Os relatórios auxiliarão na decisão pedagógica da
+              acompanhamento. Os relatórios auxiliam na decisão pedagógica da
               equipe gestora.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
