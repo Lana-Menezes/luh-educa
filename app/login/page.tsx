@@ -3,6 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   EMAIL_MAX_LENGTH,
@@ -72,6 +73,14 @@ function LoginForm() {
     <div className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto bg-[#eef1ff] py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div>
+          <Image
+            src="/logo-luh.png"
+            alt="Logo LUH Educa"
+            width={577}
+            height={521}
+            priority
+            className="mx-auto h-32 w-auto"
+          />
           <h2 className="mt-6 text-center font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-gray-900">
             Acesse o Portal LUH Educa
           </h2>

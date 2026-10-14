@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getSession } from "next-auth/react";
@@ -33,8 +34,15 @@ export default function MarketingHeader() {
       <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="font-[family-name:var(--font-display)] text-xl font-bold tracking-tight text-gray-900 md:text-2xl"
+          className="flex items-center gap-2 font-[family-name:var(--font-display)] text-xl font-bold tracking-tight text-gray-900 md:text-2xl"
         >
+          <Image
+            src="/logo-luh.png"
+            alt="Logo LUH Educa"
+            width={577}
+            height={521}
+            className="h-8 w-auto"
+          />
           LUH Educa
         </Link>
         <div className="flex items-center gap-6">
