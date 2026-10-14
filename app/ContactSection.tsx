@@ -109,7 +109,7 @@ export default function ContactSection() {
               Vamos conversar sobre a <br /> recomposição na sua rede.
             </h2>
             <p className="mt-5 max-w-md text-lg leading-relaxed text-gray-600">
-              Conte um pouco sobre a escola ou rede e o momento avaliativo atual.
+              Conte um pouco sobre a sua escola ou rede e o momento avaliativo atual.
               Retornamos para alinhar o próximo passo da assessoria LUH.
             </p>
           </div>

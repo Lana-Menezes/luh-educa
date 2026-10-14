@@ -16,13 +16,12 @@ type FaqGroup = {
 
 const tones = [
   { tone: "bg-brand-soft text-gray-900", mark: "text-brand" },
-  { tone: "bg-brand-muted/40 text-gray-900", mark: "text-brand" },
   { tone: "bg-success-soft text-gray-900", mark: "text-success" },
+  { tone: "bg-accent-soft text-gray-900", mark: "text-accent-ink" },
+  { tone: "bg-danger-soft text-gray-900", mark: "text-danger" },
 ] as const;
 
-function withTones(
-  items: { question: string; answer: string }[],
-): FaqItem[] {
+function withTones(items: { question: string; answer: string }[]): FaqItem[] {
   return items.map((item, index) => ({
     ...item,
     ...tones[index % tones.length],
@@ -55,7 +54,8 @@ const faqGroups: FaqGroup[] = [
           "Não se deve presumir equivalência entre uma escala produzida para uma avaliação da rede e a escala oficial do Saeb. Quando houver utilização da TRI em avaliações próprias, os resultados dependerão do modelo estatístico, da calibração dos itens, do desenho da avaliação e dos procedimentos de comparabilidade adotados.",
       },
       {
-        question: "A LUH identifica quais habilidades precisam ser trabalhadas?",
+        question:
+          "A LUH identifica quais habilidades precisam ser trabalhadas?",
         answer:
           "A metodologia utiliza os resultados das avaliações e as habilidades representadas pelos itens para apoiar a identificação de fragilidades de aprendizagem. A interpretação dos resultados considera as evidências disponíveis e o contexto pedagógico da rede.",
       },
@@ -63,6 +63,16 @@ const faqGroups: FaqGroup[] = [
         question: "O método entrega apenas um relatório?",
         answer:
           "Não. A proposta é utilizar os resultados como ponto de partida para a tomada de decisão pedagógica. Conforme o escopo contratado, a assessoria pode apoiar a interpretação dos dados, a identificação de prioridades, o planejamento por habilidade e o acompanhamento dos resultados.",
+      },
+      {
+        question: "O método LUH atende também o público da educação especial?",
+        answer:
+          "Sim. A metodologia pode apoiar a análise das aprendizagens dos estudantes público da educação especial, considerando suas necessidades específicas, as condições de acessibilidade e as adaptações necessárias. “A educação especial talvez seja o ambiente em que a leitura individualizada das habilidades mais revela sua importância. Quando o planejamento deixa de ser orientado apenas pela série e passa a considerar também o percurso singular do estudante, a aprendizagem deixa de ser uma expectativa coletiva e passa a constituir uma possibilidade concreta para o indivíduo”. Através da tecnologia construída para personalizar o acompanhamento das aprendizagens conseguimos alcançar estudantes que necessitam de percursos educacionais diferenciados.",
+      },
+      {
+        question: "De que maneira o método LUH se aplica as redes de ensino que desejam o aprofundamento da aprendizagem?",
+        answer:
+        "A metodologia também contempla o aprofundamento das aprendizagens. A partir das evidências de aprendizagem, apoia a identificação de habilidades consolidadas e o planejamento de propostas que ampliem a complexidade cognitiva, favorecendo o desenvolvimento e a progressão das aprendizagens.",
       },
     ]),
   },
@@ -73,6 +83,11 @@ const faqGroups: FaqGroup[] = [
         question: "O que exatamente a LUH Educa oferece?",
         answer:
           "A LUH Educa oferece assessoria de inteligência pedagógica apoiada pela Metodologia LUH e por recursos tecnológicos. O escopo de cada contratação é definido de acordo com as necessidades da rede, podendo envolver diagnóstico, análise de resultados, planejamento por habilidade, formação, acompanhamento pedagógico e utilização dos recursos tecnológicos disponíveis.",
+      },
+      {
+        question: "Minha rede de ensino recebeu o resultado de desempenho após a avaliação diagnóstica, o que fazer com estes dados?",
+        answer:
+        "Os resultados devem orientar decisões pedagógicas. A LUH Educa apoia a rede na interpretação das evidências, identificação das habilidades que exigem atenção, definição de prioridades e elaboração de planos de recomposição e aprofundamento, com acompanhamento dos resultados.",
       },
       {
         question:
@@ -112,7 +127,8 @@ const faqGroups: FaqGroup[] = [
           "A inteligência artificial pode ser utilizada como recurso de apoio ao processamento, organização, análise ou apresentação de informações, conforme as funcionalidades disponibilizadas. Seu uso não substitui a análise profissional nem a decisão pedagógica da equipe responsável.",
       },
       {
-        question: "A inteligência artificial toma decisões sobre os estudantes?",
+        question:
+          "A inteligência artificial toma decisões sobre os estudantes?",
         answer:
           "Não. As informações produzidas por recursos tecnológicos devem subsidiar a análise dos profissionais responsáveis. A decisão pedagógica deve considerar os dados disponíveis, o contexto educacional e o conhecimento da equipe sobre os estudantes.",
       },
@@ -122,7 +138,8 @@ const faqGroups: FaqGroup[] = [
           "A utilização de dados depende do escopo da contratação e das funcionalidades utilizadas. Quando houver tratamento de dados pessoais, deverão ser observadas as disposições aplicáveis da Lei Geral de Proteção de Dados Pessoais (LGPD), incluindo finalidade, necessidade, segurança, governança e definição das responsabilidades dos agentes de tratamento.",
       },
       {
-        question: "Os dados dos estudantes ficam disponíveis para qualquer usuário?",
+        question:
+          "Os dados dos estudantes ficam disponíveis para qualquer usuário?",
         answer:
           "Não. O acesso deve observar os perfis e as permissões definidos para a solução e para a contratação. O tratamento e o compartilhamento de dados devem respeitar as finalidades estabelecidas e a legislação aplicável.",
       },
@@ -137,8 +154,7 @@ const faqGroups: FaqGroup[] = [
           "Sim. A LUH Educa desenvolve serviços destinados a redes públicas e privadas. No caso das redes públicas, o objeto, os requisitos, as entregas, os critérios de aceitação e as responsabilidades das partes devem ser definidos de acordo com o instrumento de contratação e com a legislação aplicável.",
       },
       {
-        question:
-          "A contratação da LUH inclui obrigatoriamente a plataforma?",
+        question: "A contratação da LUH inclui obrigatoriamente a plataforma?",
         answer:
           "Não necessariamente. A composição da solução depende do objeto e do escopo definido para cada contratação. Assessoria, metodologia e recursos tecnológicos podem ser estruturados de acordo com a necessidade da instituição ou rede.",
       },

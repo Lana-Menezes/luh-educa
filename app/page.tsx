@@ -115,8 +115,7 @@ export default function HomePage() {
               acompanhamento para gestão unido à assessoria especializada.
             </p>
             <p className="mt-5 max-w-2xl rounded-xl border border-brand-muted/60 bg-brand-soft/80 px-5 py-4 text-lg font-semibold leading-relaxed text-brand">
-              Agende uma consulta e peça uma demonstração gratuita para redes
-              privadas de ensino e redes públicas: secretarias municipais e
+              Agende uma consulta e peça uma demonstração gratuita para secretarias municipais e
               estaduais de educação.
             </p>
           </div>
