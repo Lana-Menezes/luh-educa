@@ -53,7 +53,7 @@ export default function MarketingHeader() {
           <Link href="/quem-somos" className={linkClass}>
             Quem somos
           </Link>
-          {/* <button
+          <button
             type="button"
             onClick={openPortal}
             disabled={checkingPortal}
@@ -66,7 +66,7 @@ export default function MarketingHeader() {
               />
             )}
             Portal Escola
-          </button> */}
+          </button>
         </div>
       </nav>
     </header>

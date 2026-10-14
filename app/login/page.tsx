@@ -162,11 +162,11 @@ function LoginForm() {
             </button>
           </div>
         </form>
-        <div className="text-center">
+        {/* <div className="text-center">
           <Link href="/register" className="text-brand hover:underline">
             Não tem uma conta? Criar conta
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );
