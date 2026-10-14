@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Quem somos | Luh Educa",
   description:
-    "Conheça Luciana Menezes de Souza e Lana Menezes Fidelis, a equipe por trás da Luh Educa.",
+    "Conheça as pessoas por trás da metodologia LUH Educacional e do portal que torna as avaliações e os planejamentos por habilidade acessíveis para escolas reais.",
 };
 
 export default function QuemSomosPage() {
@@ -37,9 +37,7 @@ export default function QuemSomosPage() {
             Quem somos
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/85">
-            Conheça as pessoas por trás da metodologia LUH Educacional e do
-            portal que torna as avaliações elaboradas pela TRI e os
-            planejamentos por habilidade acessíveis para escolas reais.
+          Conheça as pessoas por trás da metodologia LUH Educacional e do portal que torna as avaliações e os planejamentos por habilidade acessíveis para escolas reais.
           </p>
         </div>
       </header>
