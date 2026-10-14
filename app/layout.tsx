@@ -16,9 +16,9 @@ const sans = Figtree({
 });
 
 export const metadata = {
-  title: "Luh Educa | Assessoria em TRI",
+  title: "LUH Educa",
   description:
-    "Assessoria especializada na implementação da Teoria de Resposta ao Item com o método Luh Educa.",
+    "Assessoria especializada na implementação da Teoria de Resposta ao Item com o método LUH Educa.",
 };
 
 export default function RootLayout({

@@ -31,7 +31,7 @@ export default function PerfilPage() {
     <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-8">
       <h1 className="text-3xl font-bold text-gray-900">Perfil</h1>
       <p className="mt-2 text-gray-600">
-        Dados da sua conta na plataforma Luh Educa.
+        Dados da sua conta na plataforma LUH Educa.
       </p>
 
       <section className="mt-8 max-w-xl rounded-xl border border-gray-200 bg-white p-6 shadow-sm">

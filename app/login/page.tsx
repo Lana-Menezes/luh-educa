@@ -69,7 +69,7 @@ function LoginForm() {
   }
 
   return (
-    <div className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto bg-[#eef1ff] py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div>
           <h2 className="mt-6 text-center font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-gray-900">
@@ -109,7 +109,7 @@ function LoginForm() {
                 onChange={(event) => {
                   event.target.value = stripEmojis(event.target.value);
                 }}
-                className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-brand focus:outline-hidden focus:ring-brand disabled:bg-gray-100 sm:text-sm"
+                className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-brand focus:outline-hidden focus:ring-brand disabled:bg-gray-100 sm:text-sm"
                 placeholder="E-mail"
               />
             </div>
@@ -129,7 +129,7 @@ function LoginForm() {
                 onChange={(event) => {
                   event.target.value = stripEmojis(event.target.value);
                 }}
-                className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-brand focus:outline-hidden focus:ring-brand disabled:bg-gray-100 sm:text-sm"
+                className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-brand focus:outline-hidden focus:ring-brand disabled:bg-gray-100 sm:text-sm"
                 placeholder="Senha"
               />
             </div>
@@ -176,7 +176,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-0 flex-1 items-center justify-center bg-gray-50 text-sm text-gray-500">
+        <div className="flex min-h-0 flex-1 items-center justify-center bg-[#eef1ff] text-sm text-gray-500">
           Carregando...
         </div>
       }

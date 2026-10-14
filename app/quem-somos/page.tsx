@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Quem somos | Luh Educa",
+  title: "Quem somos | LUH Educa",
   description:
     "Conheça as pessoas por trás da metodologia LUH Educacional e do portal que torna as avaliações e os planejamentos por habilidade acessíveis para escolas reais.",
 };
@@ -31,7 +31,7 @@ export default function QuemSomosPage() {
 
         <div className="relative mx-auto max-w-6xl px-6 pb-16 pt-32 md:px-8 md:pb-20 md:pt-36">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-muted">
-            Luh Educa
+            LUH Educa
           </p>
           <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-bold tracking-tight text-white sm:text-5xl">
             Quem somos
@@ -48,7 +48,7 @@ export default function QuemSomosPage() {
             <div className="relative aspect-[801/1024] w-full overflow-hidden rounded-2xl bg-brand-soft shadow-[0_20px_50px_-16px_rgba(23,62,253,0.28)]">
               <Image
                 src="/luciana-quem-somos.png"
-                alt="Luciana Menezes de Souza, pedagoga e fundadora da Luh Educa"
+                alt="Luciana Menezes de Souza, pedagoga e fundadora da LUH Educa"
                 fill
                 priority
                 sizes="(max-width: 768px) 280px, 320px"
@@ -60,7 +60,7 @@ export default function QuemSomosPage() {
                 Luciana Menezes de Souza
               </p>
               <p className="mt-1 text-sm font-medium text-brand">
-                Pedagoga · Fundadora da Luh Educa
+                Pedagoga · Fundadora da LUH Educa
               </p>
             </figcaption>
           </figure>
@@ -95,7 +95,7 @@ export default function QuemSomosPage() {
               Com formação e experiência de mais de 25 anos em educação, ela
               atua na ponte entre o técnico e a sala de aula.
             </p>
-            <p>
+            <p className="font-semibold text-gray-900">
               Após receber o diagnóstico da rede de ensino, o que a equipe
               pedagógica deve fazer com esses números?
             </p>
