@@ -37,7 +37,9 @@ export default function QuemSomosPage() {
             Quem somos
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/85">
-          Conheça as pessoas por trás da metodologia LUH Educacional e do portal que torna as avaliações e os planejamentos por habilidade acessíveis para escolas reais.
+            Conheça as pessoas por trás da metodologia LUH Educacional e do
+            portal que torna as avaliações e os planejamentos por habilidade
+            acessíveis para escolas reais.
           </p>
         </div>
       </header>
@@ -110,20 +112,20 @@ export default function QuemSomosPage() {
             <p>
               Lana Menezes Fidelis é engenheira de software, mestranda em IA,
               responsável por transformar o método LUH Educacional em produto
-              digital. Criadora da ferramenta de tecnologia que transforma
-              dados das avaliações em relatórios no portal de acompanhamento,
+              digital. Criadora da ferramenta de tecnologia que transforma dados
+              das avaliações em relatórios no portal de acompanhamento,
               permitindo visualizações da aprendizagem da sua instituição de
               ensino com clareza.
             </p>
             <p>
-              Ela conecta a visão pedagógica da assessoria à experiência de
-              uso: dashboards da rede, da escola, da turma e do aluno, e uma
+              Ela conecta a visão pedagógica da assessoria à experiência de uso:
+              dashboards da rede, da escola, da turma e do aluno, e uma
               interface pensada para o dia a dia de gestão escolar.
             </p>
             <p>
               Através da união da engenharia e da pedagogia, a LUH Educa une
-              método avaliativo e planejamentos à tecnologia, para que a
-              leitura de habilidades vire decisão prática na escola.
+              método avaliativo e planejamentos à tecnologia, para que a leitura
+              de habilidades vire decisão prática na escola.
             </p>
           </div>
 
@@ -153,10 +155,14 @@ export default function QuemSomosPage() {
             Para quem trabalhamos
           </h2>
           <p>
-            Redes e unidades escolares que querem sair do modelo só por nota e
-            construir uma cultura avaliativa mais justa, comparável e útil para
-            o planejamento pedagógico. O trabalho começa no diagnóstico da
-            escola e segue até a formação das equipes.
+            Redes de publicas e privadas de educação e unidades escolares que
+            querem construir uma cultura avaliativa mais justa, comparável e
+            útil para o planejamento pedagógico. O trabalho começa na avaliação
+            diagnóstica, juntamente com a formação das equipes, segue com os
+            planejamentos por habilidade (recomposição e/ou aprofundamento) para
+            as avaliações formativas, que acompanham o avanço da aprendizagem
+            dos estudantes e conclui o ciclo na avaliação somativa que revela os
+            resultados obtidos.
           </p>
         </div>
 
@@ -165,7 +171,7 @@ export default function QuemSomosPage() {
             Quer conhecer o método na prática?
           </p>
           <p className="mt-3 leading-relaxed text-gray-700">
-          Solicite uma senha degustação e acesse o Portal LUH Educa                                             
+            Solicite uma senha degustação e acesse o Portal LUH Educa
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <Link
