@@ -7,15 +7,15 @@ import { useSession } from "next-auth/react";
 import {
   ChevronLeft,
   ChevronRight,
-  LayoutDashboard,
+  School,
   UserRound,
   Users,
 } from "lucide-react";
 
-const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+const navItems: { href: string; label: string; icon: typeof Users; also?: string[] }[] = [
+  { href: "/dashboard", label: "Escolas", icon: School, also: ["/escolas"] },
   { href: "/turmas", label: "Turmas", icon: Users },
-] as const;
+];
 
 const hiddenPaths = ["/login", "/register", "/setup"];
 const STORAGE_KEY = "luh-educa-sidebar-collapsed";
@@ -78,9 +78,10 @@ export default function Sidebar() {
       </div>
 
       <nav className={`flex flex-1 flex-col gap-1 p-2 ${collapsed ? "items-center" : ""}`}>
-        {navItems.map(({ href, label, icon: Icon }) => {
-          const isActive =
-            pathname === href || pathname.startsWith(`${href}/`);
+        {navItems.map(({ href, label, icon: Icon, also = [] }) => {
+          const isActive = [href, ...also].some(
+            (path) => pathname === path || pathname.startsWith(`${path}/`),
+          );
 
           return (
             <Link
