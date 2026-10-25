@@ -42,7 +42,7 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="relative z-10 order-first lg:order-last">
+          <div className="relative z-10">
             <Image
               src="/hero-quadro.png"
               alt="Quadro com o ciclo do método LUH: erro, diagnóstico, intervenção, reavaliação, sequência didática e avaliação"
