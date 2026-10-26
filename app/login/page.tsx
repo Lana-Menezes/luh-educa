@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
 import {
   EMAIL_MAX_LENGTH,
   PASSWORD_MAX_LENGTH,
@@ -26,6 +27,7 @@ function LoginForm() {
     password?: string;
   }>({});
   const [pending, setPending] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -126,21 +128,37 @@ function LoginForm() {
               <label htmlFor="password" className="sr-only">
                 Senha
               </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                maxLength={PASSWORD_MAX_LENGTH}
-                disabled={pending}
-                onBeforeInput={rejectEmojiInput}
-                onChange={(event) => {
-                  event.target.value = stripEmojis(event.target.value);
-                }}
-                className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-brand focus:outline-hidden focus:ring-brand disabled:bg-gray-100 sm:text-sm"
-                placeholder="Senha"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  required
+                  maxLength={PASSWORD_MAX_LENGTH}
+                  disabled={pending}
+                  onBeforeInput={rejectEmojiInput}
+                  onChange={(event) => {
+                    event.target.value = stripEmojis(event.target.value);
+                  }}
+                  className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 bg-white px-3 py-2 pr-10 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-brand focus:outline-hidden focus:ring-brand disabled:bg-gray-100 sm:text-sm"
+                  placeholder="Senha"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((value) => !value)}
+                  disabled={pending}
+                  tabIndex={-1}
+                  aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                  className="absolute inset-y-0 right-0 z-20 flex items-center px-3 text-gray-500 hover:text-gray-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {showPassword ? (
+                    <Eye className="h-4 w-4" aria-hidden="true" />
+                  ) : (
+                    <EyeOff className="h-4 w-4" aria-hidden="true" />
+                  )}
+                </button>
+              </div>
             </div>
           </div>
 
