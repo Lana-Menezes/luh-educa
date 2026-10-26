@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import {
   ChevronLeft,
   ChevronRight,
+  ClipboardList,
   School,
   UserRound,
   Users,
@@ -14,6 +15,7 @@ import {
 
 const navItems: { href: string; label: string; icon: typeof Users; also?: string[] }[] = [
   { href: "/dashboard", label: "Escolas", icon: School, also: ["/escolas"] },
+  { href: "/avaliacoes", label: "Avaliações", icon: ClipboardList },
 ];
 
 const hiddenPaths = ["/login", "/register", "/setup"];
@@ -48,8 +50,8 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`flex shrink-0 flex-col overflow-y-auto border-r border-gray-200 bg-white transition-[width] duration-500 ease-in-out ${
-        collapsed ? "w-16" : "w-56"
+      className={`flex shrink-0 flex-col border-r border-gray-200 bg-white transition-[width] duration-500 ease-in-out ${
+        collapsed ? "w-14" : "w-44"
       }`}
     >
       <div
@@ -76,7 +78,11 @@ export default function Sidebar() {
         </button>
       </div>
 
-      <nav className={`flex flex-1 flex-col gap-1 p-2 ${collapsed ? "items-center" : ""}`}>
+      <nav
+        className={`flex flex-1 flex-col gap-1 overflow-y-auto p-2 ${
+          collapsed ? "items-center" : ""
+        }`}
+      >
         {navItems.map(({ href, label, icon: Icon, also = [] }) => {
           const isActive = [href, ...also].some(
             (path) => pathname === path || pathname.startsWith(`${path}/`),
@@ -86,9 +92,8 @@ export default function Sidebar() {
             <Link
               key={href}
               href={href}
-              title={label}
               aria-label={label}
-              className={`flex items-center rounded-lg text-sm font-medium transition-colors ${
+              className={`group relative flex items-center rounded-lg text-sm font-medium transition-colors ${
                 collapsed ? "justify-center p-2.5" : "gap-3 px-3 py-2.5"
               } ${
                 isActive
@@ -97,7 +102,13 @@ export default function Sidebar() {
               }`}
             >
               <Icon className="h-5 w-5 shrink-0" aria-hidden />
-              {!collapsed && <span>{label}</span>}
+              {collapsed ? (
+                <span className="pointer-events-none absolute left-full ml-2 whitespace-nowrap rounded-md bg-gray-900 px-2 py-1 text-xs font-medium text-white opacity-0 shadow-sm transition-opacity delay-150 group-hover:opacity-100 z-20">
+                  {label}
+                </span>
+              ) : (
+                <span>{label}</span>
+              )}
             </Link>
           );
         })}
@@ -115,9 +126,8 @@ export default function Sidebar() {
         )}
         <Link
           href="/perfil"
-          title="Perfil"
           aria-label="Perfil"
-          className={`flex items-center rounded-lg text-sm font-medium transition-colors ${
+          className={`group relative flex items-center rounded-lg text-sm font-medium transition-colors ${
             collapsed ? "justify-center p-2.5" : "gap-3 px-3 py-2.5"
           } ${
             isPerfilActive
@@ -126,7 +136,11 @@ export default function Sidebar() {
           }`}
         >
           <UserRound className="h-5 w-5 shrink-0" aria-hidden />
-          {!collapsed && (
+          {collapsed ? (
+            <span className="pointer-events-none absolute left-full ml-2 whitespace-nowrap rounded-md bg-gray-900 px-2 py-1 text-xs font-medium text-white opacity-0 shadow-sm transition-opacity delay-150 group-hover:opacity-100 z-20">
+              {session?.user?.name || "Perfil"}
+            </span>
+          ) : (
             <span className="min-w-0 truncate">
               {session?.user?.name || "Perfil"}
             </span>
