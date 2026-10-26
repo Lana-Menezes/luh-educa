@@ -13,19 +13,10 @@ import {
   formatPercent,
   formatProficiencia,
   nivelDaProficiencia,
-  type Padrao,
 } from "@/lib/saeb";
-
-const corPadrao: Record<Padrao, string> = {
-  Insuficiente: "bg-danger",
-  Básico: "bg-accent",
-  Proficiente: "bg-brand",
-  Avançado: "bg-success",
-};
-
-function deltaClass(value: number) {
-  return value >= 0 ? "text-success" : "text-accent-ink";
-}
+import { AVALIACAO_ATUAL, formatData, getTurmas, resumir } from "@/lib/turmas-mock";
+import { ChevronRight } from "lucide-react";
+import { Breadcrumb, PadroesBarra, corPadrao, deltaClass } from "../ui";
 
 export default async function EscolaPage({
   params,
@@ -50,6 +41,8 @@ export default async function EscolaPage({
   const idebRede = calcularIdeb(rede);
   const referencia = redeMock.referenciaNacional[etapa];
   const ano = resultado.ano;
+  const turmas = getTurmas(escola, etapa);
+  const resumoAno = resumir(turmas.flatMap((t) => t.alunos), ano);
 
   const leituras = [
     ideb.divulgado
@@ -71,9 +64,12 @@ export default async function EscolaPage({
   return (
     <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-8">
       <div>
-        <Link href="/dashboard" className="text-sm font-medium text-brand hover:underline">
-          ← Todas as escolas da rede
-        </Link>
+        <Breadcrumb
+          itens={[
+            { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/dashboard" },
+            { label: escola.nome },
+          ]}
+        />
         <h1 className="mt-4 text-3xl font-bold text-gray-900">
           <span className="text-brand">{escola.nome}</span>
         </h1>
@@ -156,7 +152,60 @@ export default async function EscolaPage({
       </div>
 
       <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-gray-900">Padrões de desempenho</h2>
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">Turmas do {ano}º ano</h2>
+            <p className="mt-1 text-sm text-gray-500">
+              {AVALIACAO_ATUAL.nome} LUH ({formatData(AVALIACAO_ATUAL.data)}) ·{" "}
+              {resumoAno.avaliados} de {resumoAno.matriculados} estudantes avaliados
+            </p>
+          </div>
+          <Link
+            href={`/escolas/${escola.id}/anos/${ano}`}
+            className="text-sm font-medium text-brand hover:underline"
+          >
+            Ver o {ano}º ano completo →
+          </Link>
+        </div>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {turmas.map((turma) => {
+            const r = resumir(turma.alunos, ano);
+            return (
+              <li key={turma.id}>
+                <Link
+                  href={`/escolas/${escola.id}/anos/${ano}/turmas/${turma.id}`}
+                  className="group block rounded-lg border border-gray-200 p-4 transition hover:border-brand-muted hover:shadow-sm"
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="font-semibold text-gray-900 group-hover:text-brand">{turma.nome}</p>
+                    <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-brand" aria-hidden />
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    {turma.turno} · {turma.alunos.length} estudantes · participação{" "}
+                    {formatPercent(r.participacao)}
+                  </p>
+                  <div className="mt-3 space-y-2">
+                    {DISCIPLINAS.map(({ codigo }) => (
+                      <div key={codigo} className="flex items-center gap-3 text-xs">
+                        <span className="w-6 text-gray-500">{codigo}</span>
+                        <div className="flex-1">
+                          <PadroesBarra contagem={r.padroes[codigo]} compacta />
+                        </div>
+                        <span className="w-12 text-right font-medium text-gray-900">
+                          {formatProficiencia(r.media[codigo])}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+
+      <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-gray-900">Padrões de desempenho · Saeb</h2>
         <p className="mt-1 text-sm text-gray-500">
           Distribuição dos alunos do {ano}º ano nos padrões da escala Saeb
         </p>

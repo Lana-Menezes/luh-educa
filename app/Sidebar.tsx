@@ -14,7 +14,6 @@ import {
 
 const navItems: { href: string; label: string; icon: typeof Users; also?: string[] }[] = [
   { href: "/dashboard", label: "Escolas", icon: School, also: ["/escolas"] },
-  { href: "/turmas", label: "Turmas", icon: Users },
 ];
 
 const hiddenPaths = ["/login", "/register", "/setup"];

@@ -130,6 +130,11 @@ export function distribuicaoNiveis(ano: AnoSaeb, disciplina: Disciplina, media: 
   });
 }
 
+export function padraoDaProficiencia(ano: AnoSaeb, disciplina: Disciplina, proficiencia: number): Padrao {
+  const cortes = ESCALA_SAEB[ano][disciplina].cortesPadroes;
+  return PADROES[cortes.filter((corte) => proficiencia >= corte).length];
+}
+
 export function nivelDaProficiencia(ano: AnoSaeb, disciplina: Disciplina, media: number) {
   const { inicioNivel1, niveis } = ESCALA_SAEB[ano][disciplina];
   if (media < inicioNivel1) return 0;
