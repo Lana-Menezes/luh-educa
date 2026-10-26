@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { Download, FileText } from "lucide-react";
+import { Download, Eye, FileText } from "lucide-react";
 import { redeMock } from "@/lib/rede-mock";
 import {
   agruparPorTipo,
@@ -21,21 +21,41 @@ function CardAvaliacao({ titulo, itens }: { titulo: string; itens: Avaliacao[] }
             key={avaliacao.id}
             className="flex items-center justify-between gap-3 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5"
           >
-            <div className="flex items-center gap-2.5">
-              <FileText className="h-4 w-4 shrink-0 text-gray-400" aria-hidden />
-              <div>
-                <p className="text-sm font-medium text-gray-900">{avaliacao.titulo}</p>
-                <p className="text-xs text-gray-500">{avaliacao.periodo}</p>
-              </div>
-            </div>
             <a
               href={avaliacao.arquivoUrl}
-              download={avaliacao.arquivoNome}
-              className="flex items-center gap-1.5 rounded-md bg-brand px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-brand-hover"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex min-w-0 flex-1 items-center gap-2.5"
+              title={`Visualizar ${avaliacao.titulo}`}
             >
-              <Download className="h-3.5 w-3.5" aria-hidden />
-              Baixar
+              <FileText className="h-4 w-4 shrink-0 text-gray-400 group-hover:text-brand" aria-hidden />
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium text-gray-900 group-hover:text-brand group-hover:underline">
+                  {avaliacao.titulo}
+                </p>
+                <p className="text-xs text-gray-500">{avaliacao.periodo}</p>
+              </div>
             </a>
+            <div className="flex shrink-0 items-center gap-2">
+              <a
+                href={avaliacao.arquivoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Visualizar ${avaliacao.titulo}`}
+                className="flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 transition-colors hover:border-brand-muted hover:text-brand"
+              >
+                <Eye className="h-3.5 w-3.5" aria-hidden />
+              </a>
+              <a
+                href={avaliacao.arquivoUrl}
+                download={avaliacao.arquivoNome}
+                aria-label={`Baixar ${avaliacao.titulo}`}
+                className="flex items-center gap-1.5 rounded-md bg-brand px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-brand-hover"
+              >
+                <Download className="h-3.5 w-3.5" aria-hidden />
+                Baixar
+              </a>
+            </div>
           </li>
         ))}
       </ul>
