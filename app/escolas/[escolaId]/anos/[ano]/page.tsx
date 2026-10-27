@@ -77,8 +77,6 @@ export default async function AnoPage({
         />
       </div>
 
-      <a href="#turmas" className="mt-4 inline-block text-sm font-semibold text-brand hover:underline">Ver turmas e estudantes ↓</a>
-
       <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           label="Estudantes avaliados"
@@ -160,8 +158,8 @@ export default async function AnoPage({
 
       <HabilidadesResultados alunos={todos} ano={ano} avaliacao={avaliacaoIdx} />
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="mt-6 grid gap-6 lg:grid-cols-3">
+        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm lg:col-span-1">
           <h2 className="text-lg font-semibold text-gray-900">Padrões de desempenho do ano</h2>
           <div className="mt-5 space-y-6">
             {DISCIPLINAS.map(({ codigo, nome }) => (
@@ -170,7 +168,7 @@ export default async function AnoPage({
           </div>
         </section>
 
-        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm lg:col-span-2">
           <h2 className="text-lg font-semibold text-gray-900">Progresso mês a mês</h2>
           <p className="mt-1 text-sm text-gray-500">
             Média do {ano}º ano na escala Saeb, avaliação a avaliação

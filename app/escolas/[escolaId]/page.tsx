@@ -81,27 +81,35 @@ export default async function EscolaPage({
         <p className="mt-1 text-gray-600">Resultados no {redeMock.edicao} e acompanhamento pelo método LUH</p>
       </div>
 
-      {etapas.length > 1 && (
-        <nav className="mt-6 flex gap-2" aria-label="Etapa avaliada">
-          {etapas.map((e) => {
-            const active = e === etapa;
-            return (
-              <Link
-                key={e}
-                href={`/escolas/${escola.id}?etapa=${encodeURIComponent(e)}`}
-                aria-current={active ? "page" : undefined}
-                className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
-                  active
-                    ? "border-brand bg-brand-soft text-brand"
-                    : "border-gray-200 bg-white text-gray-700 hover:border-brand-muted"
-                }`}
-              >
-                {escola.resultados[e]!.ano}º ano · {e}
-              </Link>
-            );
-          })}
-        </nav>
-      )}
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+        {etapas.length > 1 && (
+          <nav className="flex flex-wrap gap-2" aria-label="Etapa avaliada">
+            {etapas.map((e) => {
+              const active = e === etapa;
+              return (
+                <Link
+                  key={e}
+                  href={`/escolas/${escola.id}?etapa=${encodeURIComponent(e)}`}
+                  aria-current={active ? "page" : undefined}
+                  className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
+                    active
+                      ? "border-brand bg-brand-soft text-brand"
+                      : "border-gray-200 bg-white text-gray-700 hover:border-brand-muted"
+                  }`}
+                >
+                  {escola.resultados[e]!.ano}º ano · {e}
+                </Link>
+              );
+            })}
+          </nav>
+        )}
+        <Link
+          href={`/escolas/${escola.id}/anos/${ano}`}
+          className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-hover"
+        >
+          Ver o {ano}º ano completo →
+        </Link>
+      </div>
 
       <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-gray-900">{redeMock.edicao} × Método LUH</h2>
@@ -200,20 +208,12 @@ export default async function EscolaPage({
       </div>
 
       <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">Método LUH · Turmas do {ano}º ano</h2>
-            <p className="mt-1 text-sm text-gray-500">
-              {avaliacaoSelecionada.nome} LUH ({formatData(avaliacaoSelecionada.data)}) ·{" "}
-              {resumoAno.avaliados} de {resumoAno.matriculados} estudantes avaliados
-            </p>
-          </div>
-          <Link
-            href={`/escolas/${escola.id}/anos/${ano}`}
-            className="text-sm font-medium text-brand hover:underline"
-          >
-            Ver o {ano}º ano completo →
-          </Link>
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900">Método LUH · Turmas do {ano}º ano</h2>
+          <p className="mt-1 text-sm text-gray-500">
+            {avaliacaoSelecionada.nome} LUH ({formatData(avaliacaoSelecionada.data)}) ·{" "}
+            {resumoAno.avaliados} de {resumoAno.matriculados} estudantes avaliados
+          </p>
         </div>
         <ul className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {turmas.map((turma) => {

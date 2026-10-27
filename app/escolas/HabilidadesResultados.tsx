@@ -40,7 +40,7 @@ export default function HabilidadesResultados({ alunos, ano, avaliacao, matriz =
                   {["Questão / habilidade aplicada", "% de acertos", "Acertaram", "Erraram", "Sem resultado"].map((titulo) => <th key={titulo} scope="col" className="px-3 py-3 font-semibold">{titulo}</th>)}
                 </tr></thead>
                 <tbody>{habilidades.map((habilidade) => {
-                  const resultados = alunos.map((aluno) => resultadoHabilidade(aluno, avaliacao, habilidade.id));
+                  const resultados = alunos.map((aluno) => resultadoHabilidade(aluno, avaliacao, habilidade));
                   const itens = resultados.reduce((s, r) => s + r.itens, 0);
                   const acertos = resultados.reduce((s, r) => s + r.acertos, 0);
                   return <tr key={habilidade.id} className="border-t border-gray-100">
@@ -68,7 +68,7 @@ export default function HabilidadesResultados({ alunos, ano, avaliacao, matriz =
                   <th scope="row" className="sticky left-0 min-w-52 bg-white px-4 py-3 font-medium text-gray-900">{aluno.nome}</th>
                   <td className="px-3 py-3 font-semibold">{aluno.resultados[avaliacao] ? formatProficiencia(aluno.resultados[avaliacao]![codigo]) : "—"}</td>
                   {habilidades.map((h) => {
-                    const r = resultadoHabilidade(aluno, avaliacao, h.id);
+                    const r = resultadoHabilidade(aluno, avaliacao, h);
                     return <td key={h.id} className="px-3 py-3 text-center" title={`${h.descricao} ${ESTADOS[r.status].texto}${r.itens ? ` · ${r.acertos}/${r.itens} acertos` : ""}`}><Indicador status={r.status} />{r.itens > 0 && <span className="block text-xs text-gray-700">{r.acertos}/{r.itens}</span>}</td>;
                   })}
                 </tr>)}</tbody>
