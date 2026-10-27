@@ -107,7 +107,7 @@ export function getTurmas(escola: EscolaRede, etapa: Etapa): Turma[] {
 
   const ano = ANO_POR_ETAPA[etapa];
   const matriculados = Math.round(resultado.alunosAvaliados / (resultado.participacao / 100));
-  const quantidade = Math.max(1, Math.round(matriculados / ALUNOS_POR_TURMA));
+  const quantidade = Math.min(3, Math.max(1, Math.round(matriculados / ALUNOS_POR_TURMA)));
   const rand = rng(key);
 
   const turmas = Array.from({ length: quantidade }, (_, i): Turma => {

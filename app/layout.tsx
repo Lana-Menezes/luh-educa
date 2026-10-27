@@ -17,8 +17,7 @@ const sans = Figtree({
 
 export const metadata = {
   title: "LUH Educa",
-  description:
-    "Assessoria especializada na implementação da Teoria de Resposta ao Item com o método LUH Educa.",
+  description: "Assessoria educacional especializada com o método LUH Educa.",
 };
 
 export default function RootLayout({

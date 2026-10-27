@@ -1,16 +1,10 @@
 import { checkPostTableExists } from "@/lib/db-utils";
 import { ETAPAS, getResultadoRede, precisaAtencao, redeMock } from "@/lib/rede-mock";
-import {
-  DISCIPLINAS,
-  PARTICIPACAO_MINIMA_SAEB,
-  aprendizadoAdequado,
-  formatDelta,
-  formatPercent,
-  formatProficiencia,
-  nivelDaProficiencia,
-} from "@/lib/saeb";
+import { DISCIPLINAS, PARTICIPACAO_MINIMA_SAEB, formatDelta, formatPercent, formatProficiencia, nivelDaProficiencia } from "@/lib/saeb";
+import { AVALIACOES, formatData, getTurmas, indiceAvaliacao, resumir } from "@/lib/turmas-mock";
 import { redirect } from "next/navigation";
 import EscolaFinder from "./EscolaFinder";
+import AvaliacaoDropdown from "./AvaliacaoDropdown";
 import { parseFiltros } from "./filtros";
 
 export const dynamic = "force-dynamic";
@@ -30,6 +24,12 @@ export default async function DashboardPage({
   }
 
   const rede = redeMock;
+  const resolvedSearchParams = await searchParams;
+  const avaliacaoParam =
+    typeof resolvedSearchParams.avaliacao === "string" ? resolvedSearchParams.avaliacao : undefined;
+  const avaliacaoIdx = indiceAvaliacao(avaliacaoParam);
+  const avaliacaoSelecionada = AVALIACOES[avaliacaoIdx];
+
   const totalAlunos = rede.escolas.reduce(
     (sum, escola) =>
       sum + ETAPAS.reduce((s, etapa) => s + (escola.resultados[etapa]?.alunosAvaliados ?? 0), 0),
@@ -38,14 +38,17 @@ export default async function DashboardPage({
   const escolasEmAtencao = rede.escolas.filter(precisaAtencao).length;
   const porEtapa = ETAPAS.map((etapa) => {
     const resultado = getResultadoRede(etapa);
+    const alunosEtapa = rede.escolas.flatMap((escola) => getTurmas(escola, etapa).flatMap((t) => t.alunos));
+    const resumoAvaliacao = resumir(alunosEtapa, resultado.ano, avaliacaoIdx);
     return {
       etapa,
       resultado,
+      resumoAvaliacao,
       referencia: rede.referenciaNacional[etapa],
       escolas: rede.escolas.filter((escola) => escola.resultados[etapa]).length,
     };
   });
-  const initialFiltros = parseFiltros(await searchParams);
+  const initialFiltros = parseFiltros(resolvedSearchParams);
 
   return (
     <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-8">
@@ -62,6 +65,10 @@ export default async function DashboardPage({
         </p>
       </div>
 
+      <div className="mt-4">
+        <AvaliacaoDropdown avaliacoes={AVALIACOES} atual={avaliacaoIdx} />
+      </div>
+
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">Escolas avaliadas</p>
@@ -70,13 +77,13 @@ export default async function DashboardPage({
             {totalAlunos.toLocaleString("pt-BR")} alunos avaliados no Saeb
           </p>
         </div>
-        {porEtapa.map(({ etapa, resultado, referencia }) => {
-          const mediaRede = (resultado.proficiencia.LP + resultado.proficiencia.MT) / 2;
+        {porEtapa.map(({ etapa, resumoAvaliacao, referencia }) => {
+          const mediaRede = (resumoAvaliacao.media.LP + resumoAvaliacao.media.MT) / 2;
           const mediaReferencia = (referencia.proficiencia.LP + referencia.proficiencia.MT) / 2;
           return (
             <div key={etapa} className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
               <p className="text-sm text-gray-500">
-                Proficiência média · {etapa} ({resultado.ano}º ano)
+                Proficiência média · {etapa} ({avaliacaoSelecionada.nome})
               </p>
               <p className="mt-2 text-3xl font-bold text-gray-900">{formatProficiencia(mediaRede)}</p>
               <p className={`mt-1 text-xs ${deltaClass(mediaRede - mediaReferencia)}`}>
@@ -96,27 +103,27 @@ export default async function DashboardPage({
       </div>
 
       <section className="mt-6 grid gap-6 lg:grid-cols-2">
-        {porEtapa.map(({ etapa, resultado, referencia, escolas }) => (
+        {porEtapa.map(({ etapa, resultado, resumoAvaliacao, referencia, escolas }) => (
           <div key={etapa} className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-brand">{etapa}</p>
                 <h2 className="mt-1 text-lg font-semibold text-gray-900">
-                  Saeb {resultado.ano}º ano · rede municipal
+                  {avaliacaoSelecionada.nome} · {resultado.ano}º ano · rede municipal
                 </h2>
                 <p className="mt-1 text-sm text-gray-500">
-                  {escolas} escolas · {resultado.alunosAvaliados.toLocaleString("pt-BR")} alunos
+                  {escolas} escolas · {resumoAvaliacao.avaliados.toLocaleString("pt-BR")} alunos avaliados
                 </p>
               </div>
               <div className="text-right text-xs text-gray-500">
                 <p>
                   Participação{" "}
                   <span className="font-semibold text-gray-900">
-                    {formatPercent(resultado.participacao)}
+                    {formatPercent(resumoAvaliacao.participacao)}
                   </span>
                 </p>
                 <p className="mt-1">
-                  Aprovação{" "}
+                  Aprovação (Censo Escolar){" "}
                   <span className="font-semibold text-gray-900">
                     {formatPercent(resultado.aprovacao)}
                   </span>
@@ -126,9 +133,9 @@ export default async function DashboardPage({
 
             <dl className="mt-5 grid gap-4 sm:grid-cols-2">
               {DISCIPLINAS.map(({ codigo, nome }) => {
-                const media = resultado.proficiencia[codigo];
+                const media = resumoAvaliacao.media[codigo];
                 const delta = media - referencia.proficiencia[codigo];
-                const adequado = aprendizadoAdequado(resultado.ano, codigo, media);
+                const adequado = resumoAvaliacao.adequado[codigo];
 
                 return (
                   <div key={codigo} className="rounded-lg border border-gray-100 bg-gray-50 p-4">
@@ -168,8 +175,7 @@ export default async function DashboardPage({
       />
 
       <p className="mt-6 text-xs text-gray-400">
-        Dados fictícios para demonstração. Proficiências na escala Saeb, estimadas pela TRI
-        (Teoria de Resposta ao Item); referências nacionais ilustrativas.
+        Dados fictícios para demonstração. Referências nacionais ilustrativas.
       </p>
     </div>
   );

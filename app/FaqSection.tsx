@@ -44,14 +44,9 @@ const faqGroups: FaqGroup[] = [
           "A metodologia não se limita à produção de um resultado ou à identificação do percentual de acertos. Ela busca relacionar os resultados das avaliações às habilidades avaliadas e utilizá-los como evidência para orientar o planejamento pedagógico e o acompanhamento da aprendizagem.",
       },
       {
-        question: "A TRI é obrigatória na Metodologia LUH?",
-        answer:
-          "Não necessariamente. A TRI é um recurso técnico utilizado pela metodologia quando as características da avaliação, dos itens e dos dados permitem sua aplicação. A metodologia LUH é mais ampla e envolve também currículo, análise das evidências, diagnóstico, planejamento e acompanhamento pedagógico.",
-      },
-      {
         question: "A LUH utiliza a mesma escala de proficiência do Saeb?",
         answer:
-          "Não se deve presumir equivalência entre uma escala produzida para uma avaliação da rede e a escala oficial do Saeb. Quando houver utilização da TRI em avaliações próprias, os resultados dependerão do modelo estatístico, da calibração dos itens, do desenho da avaliação e dos procedimentos de comparabilidade adotados.",
+          "Não se deve presumir equivalência entre uma escala produzida para uma avaliação da rede e a escala oficial do Saeb. Os resultados de avaliações próprias dependerão do modelo estatístico, do desenho da avaliação e dos procedimentos de comparabilidade adotados.",
       },
       {
         question:

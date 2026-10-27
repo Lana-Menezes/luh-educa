@@ -65,8 +65,10 @@ export type PontoEvolucao = {
 export function CurvaEvolucao({ pontos }: { pontos: PontoEvolucao[] }) {
   const largura = 640;
   const altura = 180;
-  const margemX = 28;
-  const margemY = 16;
+  const margemEsq = 58;
+  const margemDir = 12;
+  const margemSup = 26;
+  const margemInf = 20;
 
   const valores = pontos.flatMap((p) => [p.LP, p.MT]);
   const minV = Math.min(...valores);
@@ -77,12 +79,15 @@ export function CurvaEvolucao({ pontos }: { pontos: PontoEvolucao[] }) {
 
   const x = (i: number) =>
     pontos.length === 1
-      ? largura / 2
-      : margemX + (i * (largura - margemX * 2)) / (pontos.length - 1);
-  const y = (v: number) => margemY + (1 - (v - base) / (topo - base)) * (altura - margemY * 2);
+      ? margemEsq + (largura - margemEsq - margemDir) / 2
+      : margemEsq + (i * (largura - margemEsq - margemDir)) / (pontos.length - 1);
+  const y = (v: number) => margemSup + (1 - (v - base) / (topo - base)) * (altura - margemSup - margemInf);
 
   const linha = (chave: "LP" | "MT") =>
     pontos.map((p, i) => `${i === 0 ? "M" : "L"}${x(i)},${y(p[chave])}`).join(" ");
+
+  const gridTicks = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1];
+  const valorNoTick = (f: number) => topo - f * (topo - base);
 
   return (
     <div>
@@ -92,20 +97,32 @@ export function CurvaEvolucao({ pontos }: { pontos: PontoEvolucao[] }) {
         role="img"
         aria-label="Curva de evolução da proficiência nas avaliações"
       >
-        {[0, 0.5, 1].map((f) => (
-          <line
-            key={f}
-            x1={margemX}
-            x2={largura - margemX}
-            y1={margemY + f * (altura - margemY * 2)}
-            y2={margemY + f * (altura - margemY * 2)}
-            className="stroke-gray-100"
-            strokeWidth={1}
-          />
-        ))}
+        {gridTicks.map((f) => {
+          const ly = margemSup + f * (altura - margemSup - margemInf);
+          return (
+            <g key={f}>
+              <line
+                x1={margemEsq}
+                x2={largura - margemDir}
+                y1={ly}
+                y2={ly}
+                className="stroke-gray-100"
+                strokeWidth={1}
+              />
+              <text
+                x={margemEsq - 14}
+                y={ly + 3}
+                textAnchor="end"
+                className="fill-gray-400 text-[7px]"
+              >
+                {formatProficiencia(valorNoTick(f))}
+              </text>
+            </g>
+          );
+        })}
 
-        <path d={linha("MT")} fill="none" className="stroke-brand-muted" strokeWidth={2.5} />
-        <path d={linha("LP")} fill="none" className="stroke-brand" strokeWidth={2.5} />
+        <path d={linha("MT")} fill="none" className="stroke-brand-muted" strokeWidth={1.5} />
+        <path d={linha("LP")} fill="none" className="stroke-brand" strokeWidth={1.5} />
 
         {pontos.map((p, i) => (
           <g key={p.id}>
@@ -113,14 +130,30 @@ export function CurvaEvolucao({ pontos }: { pontos: PontoEvolucao[] }) {
               <line
                 x1={x(i)}
                 x2={x(i)}
-                y1={margemY}
-                y2={altura - margemY}
+                y1={margemSup}
+                y2={altura - margemInf}
                 className="stroke-brand"
                 strokeWidth={1}
                 strokeDasharray="3 3"
                 opacity={0.35}
               />
             )}
+            <text
+              x={x(i)}
+              y={y(p.LP) - 7}
+              textAnchor="middle"
+              className="fill-brand text-[7px] font-medium"
+            >
+              {formatProficiencia(p.LP)}
+            </text>
+            <text
+              x={x(i)}
+              y={y(p.MT) - 7}
+              textAnchor="middle"
+              className="fill-brand-muted text-[7px] font-medium"
+            >
+              {formatProficiencia(p.MT)}
+            </text>
             {(["MT", "LP"] as const).map((chave) => (
               <circle
                 key={chave}
@@ -138,7 +171,7 @@ export function CurvaEvolucao({ pontos }: { pontos: PontoEvolucao[] }) {
               x={x(i)}
               y={altura + 14}
               textAnchor="middle"
-              className={`text-[10px] ${p.selecionado ? "fill-brand font-medium" : "fill-gray-400"}`}
+              className={`text-[7px] ${p.selecionado ? "fill-brand font-medium" : "fill-gray-400"}`}
             >
               {p.rotulo}
             </text>

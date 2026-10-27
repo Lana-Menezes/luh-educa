@@ -11,8 +11,17 @@ const authPaths = ["/login", "/register", "/setup"];
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
   const isMarketing = pathname === "/" || pathname.startsWith("/quem-somos");
   const isAuth = authPaths.some((path) => pathname.startsWith(path));
+
+  function resetScroll() {
+    scrollRef.current?.scrollTo(0, 0);
+    window.scrollTo(0, 0);
+    mainRef.current?.querySelectorAll<HTMLElement>(".overflow-y-auto").forEach((el) => {
+      el.scrollTop = 0;
+    });
+  }
 
   useEffect(() => {
     if ("scrollRestoration" in history) {
@@ -35,13 +44,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       }
     }
 
-    scrollRef.current?.scrollTo(0, 0);
-    window.scrollTo(0, 0);
-
-    requestAnimationFrame(() => {
-      scrollRef.current?.scrollTo(0, 0);
-      window.scrollTo(0, 0);
-    });
+    resetScroll();
+    requestAnimationFrame(resetScroll);
   }, [pathname]);
 
   if (isMarketing) {
@@ -60,7 +64,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     return (
       <div className="flex h-dvh flex-col overflow-hidden">
         <Header />
-        <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <main ref={mainRef} className="flex min-h-0 flex-1 flex-col overflow-hidden">
           {children}
         </main>
       </div>
@@ -72,7 +76,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <Header />
       <div className="flex min-h-0 flex-1">
         <Sidebar />
-        <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <main ref={mainRef} className="flex min-h-0 flex-1 flex-col overflow-hidden">
           {children}
         </main>
       </div>

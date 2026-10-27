@@ -10,7 +10,14 @@ import {
   padraoDaProficiencia,
 } from "@/lib/saeb";
 import { AVALIACAO_ATUAL, AVALIACOES, formatData, getTurma, resultadoAtual, resumir } from "@/lib/turmas-mock";
-import { Breadcrumb, PadraoBadge, corPadrao, deltaClass } from "../../../../../../../ui";
+import {
+  Breadcrumb,
+  CurvaEvolucao,
+  PadraoBadge,
+  corPadrao,
+  deltaClass,
+  rotuloAvaliacaoCurto,
+} from "../../../../../../../ui";
 
 export default async function AlunoPage({
   params,
@@ -59,6 +66,14 @@ export default async function AlunoPage({
   if (recomendacoes.length === 0) {
     recomendacoes.push("Aprendizado adequado nas duas disciplinas: ofereça atividades de aprofundamento.");
   }
+
+  const evolucaoPontos = presentes.map((r) => ({
+    id: r.avaliacao.id,
+    rotulo: rotuloAvaliacaoCurto(r.avaliacao.nome),
+    selecionado: r === ultima,
+    LP: r.LP,
+    MT: r.MT,
+  }));
 
   return (
     <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-8">
@@ -156,6 +171,18 @@ export default async function AlunoPage({
           );
         })}
       </div>
+
+      {evolucaoPontos.length > 0 && (
+        <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-gray-900">Progresso mês a mês</h2>
+          <p className="mt-1 text-sm text-gray-500">
+            Evolução do estudante nas avaliações do ano, por Língua Portuguesa e Matemática (escala Saeb)
+          </p>
+          <div className="mt-4 overflow-x-auto">
+            <CurvaEvolucao pontos={evolucaoPontos} />
+          </div>
+        </section>
+      )}
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">

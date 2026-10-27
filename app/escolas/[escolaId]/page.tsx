@@ -340,8 +340,7 @@ export default async function EscolaPage({
       </section>
 
       <p className="mt-6 text-xs text-gray-400">
-        Dados fictícios para demonstração. Proficiências na escala Saeb, estimadas pela TRI
-        (Teoria de Resposta ao Item); distribuições por nível e padrão são aproximações.
+        Dados fictícios para demonstração. Distribuições por nível e padrão são aproximações.
       </p>
     </div>
   );

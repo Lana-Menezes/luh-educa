@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Hero from "./Hero";
 import FaqSection from "./FaqSection";
-import TriCurveSection from "./TriCurveSection";
 import DiagnosticQuiz from "./DiagnosticQuiz";
 import ContactSection from "./ContactSection";
 import GrowthInfographic from "./GrowthInfographic";
@@ -97,8 +96,6 @@ export default function HomePage() {
 
       <DiagnosticQuiz />
 
-      <TriCurveSection />
-
       <section className="mx-auto max-w-6xl px-6 py-20 md:px-8 md:py-28">
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-14">
           <div>
@@ -143,15 +140,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-{/* 
-      <footer className="bg-brand">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 border-t border-white/15 px-6 py-8 text-sm text-white/75 md:flex-row md:items-center md:justify-between md:px-8">
-          <p className="font-[family-name:var(--font-display)] font-semibold text-white">
-            Luh Educa
-          </p>
-          <p>Assessoria em TRI · Método Luh Educa</p>
-        </div>
-      </footer> */}
     </div>
   );
 }

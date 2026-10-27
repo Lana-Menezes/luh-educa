@@ -120,69 +120,6 @@ body {
   animation-delay: 0.44s;
 }
 
-.tri-slider {
-  -webkit-appearance: none;
-  appearance: none;
-  height: 6px;
-  border-radius: 999px;
-  outline: none;
-  accent-color: var(--color-brand);
-  background: linear-gradient(
-    to right,
-    var(--color-brand) var(--tri-fill, 0%),
-    var(--color-brand-muted) var(--tri-fill, 0%)
-  );
-}
-
-.tri-slider::-webkit-slider-runnable-track {
-  height: 6px;
-  border-radius: 999px;
-  background: linear-gradient(
-    to right,
-    var(--color-brand) var(--tri-fill, 0%),
-    var(--color-brand-muted) var(--tri-fill, 0%)
-  );
-}
-
-.tri-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 18px;
-  height: 18px;
-  margin-top: -6px;
-  border-radius: 999px;
-  background: var(--color-brand);
-  border: 2px solid #ffffff;
-  box-shadow: 0 1px 4px rgba(23, 62, 253, 0.35);
-  cursor: pointer;
-}
-
-.tri-slider::-moz-range-track {
-  height: 6px;
-  border-radius: 999px;
-  background: var(--color-brand-muted);
-}
-
-.tri-slider::-moz-range-progress {
-  height: 6px;
-  border-radius: 999px;
-  background: var(--color-brand);
-}
-
-.tri-slider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  background: var(--color-brand);
-  border: 2px solid #ffffff;
-  box-shadow: 0 1px 4px rgba(23, 62, 253, 0.35);
-  cursor: pointer;
-}
-
-.tri-curve-path {
-  transition: d 0.35s ease-out;
-}
-
 @keyframes loading-dot {
   0%,
   80%,

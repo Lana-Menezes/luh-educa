@@ -143,6 +143,8 @@ export default function EscolaFinder({
   // Mantém os filtros na URL para que o "voltar" da escola restaure a busca.
   useEffect(() => {
     const params = new URLSearchParams();
+    const avaliacaoAtual = new URLSearchParams(window.location.search).get("avaliacao");
+    if (avaliacaoAtual) params.set("avaliacao", avaliacaoAtual);
     if (q.trim()) params.set("q", q.trim());
     if (zona.length > 0) params.set("zona", zona.join(","));
     if (etapa.length > 0) params.set("etapa", etapa.join(","));

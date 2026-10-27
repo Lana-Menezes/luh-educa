@@ -24,12 +24,22 @@ const ordens: { value: Ordem; label: string }[] = [
   { value: "maior-evolucao", label: "Maior evolução" },
 ];
 
-/** Evolução média (LP e MT) da primeira à última avaliação em que o estudante esteve presente. */
-function evolucao(aluno: Aluno) {
-  const presentes = aluno.resultados.filter((r) => r !== null);
+/**
+ * Evolução em LP e MT da primeira avaliação até a avaliação selecionada.
+ * Sem resultado nela, o estudante está ausente e não há evolução a mostrar.
+ */
+function evolucao(aluno: Aluno, avaliacaoIndex: number): { LP: number; MT: number } | null {
+  const atual = aluno.resultados[avaliacaoIndex];
+  if (!atual) return null;
+  const presentes = aluno.resultados.slice(0, avaliacaoIndex + 1).filter((r) => r !== null);
   if (presentes.length < 2) return null;
-  const [primeira, ultima] = [presentes[0], presentes[presentes.length - 1]];
-  return (ultima.LP - primeira.LP + ultima.MT - primeira.MT) / 2;
+  const primeira = presentes[0];
+  return { LP: atual.LP - primeira.LP, MT: atual.MT - primeira.MT };
+}
+
+/** Média de LP e MT, usada para ordenar por "Maior evolução". */
+function evolucaoMedia(ev: { LP: number; MT: number } | null) {
+  return ev === null ? -Infinity : (ev.LP + ev.MT) / 2;
 }
 
 export default function AlunosTabela({
@@ -64,7 +74,9 @@ export default function AlunosTabela({
           case "menor-MT":
             return valor(a, "MT") - valor(b, "MT");
           case "maior-evolucao":
-            return (evolucao(b) ?? -Infinity) - (evolucao(a) ?? -Infinity);
+            return (
+              evolucaoMedia(evolucao(b, avaliacaoIndex)) - evolucaoMedia(evolucao(a, avaliacaoIndex))
+            );
           default:
             return a.nome.localeCompare(b.nome, "pt-BR");
         }
@@ -144,13 +156,17 @@ export default function AlunosTabela({
                   {nome}
                 </th>
               ))}
-              <th className="px-2 py-2 text-right font-medium">Evolução no ano</th>
+              {DISCIPLINAS.map(({ codigo }) => (
+                <th key={codigo} className="px-2 py-2 text-right font-medium">
+                  Evolução {codigo}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
             {linhas.map((aluno) => {
               const atual = aluno.resultados[avaliacaoIndex] ?? null;
-              const ev = evolucao(aluno);
+              const ev = evolucao(aluno, avaliacaoIndex);
               const href = `${baseHref}/alunos/${aluno.id}`;
               return (
                 <tr key={aluno.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
@@ -174,13 +190,15 @@ export default function AlunosTabela({
                       )}
                     </td>
                   ))}
-                  <td className="px-2 py-3 text-right">
-                    {ev === null ? (
-                      <span className="text-xs text-gray-400">—</span>
-                    ) : (
-                      <span className={`font-medium ${deltaClass(ev)}`}>{formatDelta(ev)}</span>
-                    )}
-                  </td>
+                  {DISCIPLINAS.map(({ codigo }) => (
+                    <td key={codigo} className="px-2 py-3 text-right">
+                      {ev === null ? (
+                        <span className="text-xs text-gray-400">—</span>
+                      ) : (
+                        <span className={`font-medium ${deltaClass(ev[codigo])}`}>{formatDelta(ev[codigo])}</span>
+                      )}
+                    </td>
+                  ))}
                 </tr>
               );
             })}
