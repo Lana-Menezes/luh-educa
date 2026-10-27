@@ -1,3 +1,4 @@
+import HabilidadesResultados from "@/app/escolas/HabilidadesResultados";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -164,6 +165,8 @@ export default async function EscolaPage({
           a diferença apresentada não mede, isoladamente, o efeito do método LUH.
         </p>
       </section>
+
+      <HabilidadesResultados alunos={turmas.flatMap((turma) => turma.alunos)} ano={ano} avaliacao={avaliacaoIdx} />
 
       <h2 className="mt-6 text-lg font-semibold text-gray-900">Resultados no {redeMock.edicao}</h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

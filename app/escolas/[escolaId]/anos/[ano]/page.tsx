@@ -1,6 +1,6 @@
-import Link from "next/link";
+import HabilidadesResultados from "@/app/escolas/HabilidadesResultados";
 import { notFound } from "next/navigation";
-import { ChevronRight } from "lucide-react";
+import TurmaLinha from "./TurmaLinha";
 import {
   AVALIACOES,
   etapaDoAno,
@@ -13,7 +13,6 @@ import {
 } from "@/lib/mock-data";
 import {
   DISCIPLINAS,
-  formatDelta,
   formatPercent,
   formatProficiencia,
   nivelDaProficiencia,
@@ -24,7 +23,6 @@ import {
   CurvaEvolucao,
   PadroesBarra,
   StatCard,
-  deltaClass,
   rotuloAvaliacaoCurto,
 } from "../../../ui";
 
@@ -55,7 +53,7 @@ export default async function AnoPage({
   const escolaHref = `/escolas/${escola.id}?etapa=${encodeURIComponent(etapa)}`;
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-8">
+    <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-y-none bg-gray-50 p-8">
       <Breadcrumb
         itens={[
           { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/escolas" },
@@ -78,6 +76,8 @@ export default async function AnoPage({
           hrefFor={(i) => `/escolas/${escola.id}/anos/${ano}?avaliacao=${i}`}
         />
       </div>
+
+      <a href="#turmas" className="mt-4 inline-block text-sm font-semibold text-brand hover:underline">Ver turmas e estudantes ↓</a>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
@@ -110,7 +110,7 @@ export default async function AnoPage({
         />
       </div>
 
-      <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <section id="turmas" className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-gray-900">Turmas do {ano}º ano</h2>
         <p className="mt-1 text-sm text-gray-500">
           Compare as turmas e abra uma delas para ver os estudantes
@@ -132,40 +132,22 @@ export default async function AnoPage({
             <tbody>
               {turmas.map((turma) => {
                 const r = resumir(turma.alunos, ano, avaliacaoIdx);
-                const href = `/escolas/${escola.id}/anos/${ano}/turmas/${turma.id}`;
+                const href = `/escolas/${escola.id}/anos/${ano}/turmas/${turma.id}?avaliacao=${avaliacaoIdx}`;
                 return (
-                  <tr key={turma.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
-                    <td className="py-3 pr-3">
-                      <Link href={href} className="font-medium text-gray-900 hover:text-brand">
-                        {turma.nome}
-                      </Link>
-                      <p className="text-xs text-gray-500">
-                        {turma.turno} · {turma.alunos.length} estudantes
-                      </p>
-                    </td>
-                    <td className="px-2 py-3 text-gray-700">{formatPercent(r.participacao)}</td>
-                    {DISCIPLINAS.map(({ codigo }) => {
-                      const delta = r.media[codigo] - resumo.media[codigo];
-                      return (
-                        <td key={codigo} className="px-2 py-3">
-                          <div className="flex items-baseline gap-2">
-                            <span className="font-semibold text-gray-900">
-                              {formatProficiencia(r.media[codigo])}
-                            </span>
-                            <span className={`text-xs ${deltaClass(delta)}`}>{formatDelta(delta)}</span>
-                          </div>
-                          <div className="mt-1.5 w-40">
-                            <PadroesBarra contagem={r.padroes[codigo]} compacta />
-                          </div>
-                        </td>
-                      );
-                    })}
-                    <td>
-                      <Link href={href} aria-label={`Abrir ${turma.nome}`}>
-                        <ChevronRight className="h-5 w-5 text-gray-300 hover:text-brand" aria-hidden />
-                      </Link>
-                    </td>
-                  </tr>
+                  <TurmaLinha
+                    key={turma.id}
+                    href={href}
+                    nome={turma.nome}
+                    turno={turma.turno}
+                    totalAlunos={turma.alunos.length}
+                    participacao={formatPercent(r.participacao)}
+                    disciplinas={DISCIPLINAS.map(({ codigo }) => ({
+                      codigo,
+                      media: r.media[codigo],
+                      delta: r.media[codigo] - resumo.media[codigo],
+                      padroes: r.padroes[codigo],
+                    }))}
+                  />
                 );
               })}
             </tbody>
@@ -175,6 +157,8 @@ export default async function AnoPage({
           Diferença em relação à média do {ano}º ano. Barras: Abaixo do Básico, Básico, Adequado e Avançado.
         </p>
       </section>
+
+      <HabilidadesResultados alunos={todos} ano={ano} avaliacao={avaliacaoIdx} />
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">

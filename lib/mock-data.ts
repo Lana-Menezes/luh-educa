@@ -410,7 +410,7 @@ export type Turma = {
   alunos: Aluno[];
 };
 
-const ALUNOS_POR_TURMA = 28;
+const ALUNOS_POR_TURMA = 25;
 
 const PRENOMES = [
   "Ana", "Arthur", "Beatriz", "Bernardo", "Camila", "Davi", "Eduarda", "Enzo",
@@ -479,12 +479,13 @@ export function getTurmas(escola: EscolaRede, etapa: Etapa): Turma[] {
 
   const ano = ANO_POR_ETAPA[etapa];
   const matriculados = Math.round(resultado.alunosAvaliados / (resultado.participacao / 100));
+  // Amostra demonstrativa de até três turmas, sem reproduzir todas as matrículas do Saeb.
   const quantidade = Math.min(3, Math.max(1, Math.round(matriculados / ALUNOS_POR_TURMA)));
   const rand = rng(key);
 
   const turmas = Array.from({ length: quantidade }, (_, i): Turma => {
     const letra = String.fromCharCode(65 + i);
-    const tamanho = Math.round(matriculados / quantidade + (rand() - 0.5) * 4);
+    const tamanho = 20 + Math.floor(rand() * 11);
     const efeitoTurma = normal(rand) * 10;
     const participacaoTurma = Math.min(1, resultado.participacao / 100 + (rand() - 0.5) * 0.08);
     // Oscilação compartilhada por avaliação (prova mais difícil, período de provas, etc.):

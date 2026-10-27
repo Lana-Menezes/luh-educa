@@ -83,10 +83,14 @@ export default function AlunosTabela({
   }, [alunos, ano, avaliacaoIndex, busca, somenteInsuficiente, ordem]);
 
   return (
-    <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+    <details className="group mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand [&::-webkit-details-marker]:hidden">
+        <span className="text-lg font-semibold text-gray-900">Estudantes <span className="text-sm font-normal text-gray-600">({alunos.length})</span></span>
+        <ChevronDown className="h-5 w-5 shrink-0 text-gray-600 transition-transform group-open:rotate-180" aria-hidden />
+      </summary>
+      <div className="mt-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">Estudantes</h2>
           <p className="mt-1 text-sm text-gray-500">
             Resultado na avaliação {avaliacaoNome} · clique para ver o histórico do estudante
           </p>
@@ -166,7 +170,7 @@ export default function AlunosTabela({
             {linhas.map((aluno) => {
               const atual = aluno.resultados[avaliacaoIndex] ?? null;
               const ev = evolucao(aluno, avaliacaoIndex);
-              const href = `${baseHref}/alunos/${aluno.id}`;
+              const href = `${baseHref}/alunos/${aluno.id}?avaliacao=${avaliacaoIndex}`;
               return (
                 <tr key={aluno.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
                   <td className="py-3 pr-3">
@@ -207,6 +211,7 @@ export default function AlunosTabela({
           <p className="py-8 text-center text-sm text-gray-500">Nenhum estudante encontrado.</p>
         )}
       </div>
-    </section>
+      </div>
+    </details>
   );
 }

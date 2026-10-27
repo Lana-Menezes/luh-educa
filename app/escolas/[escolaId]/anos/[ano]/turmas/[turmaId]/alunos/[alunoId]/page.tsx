@@ -1,10 +1,13 @@
 import { notFound } from "next/navigation";
+import HabilidadesResultados from "@/app/escolas/HabilidadesResultados";
+import AvaliacaoDropdown from "@/app/escolas/AvaliacaoDropdown";
 import {
   AVALIACAO_ATUAL,
   AVALIACOES,
   formatData,
   getEscola,
   getTurma,
+  indiceAvaliacao,
   redeMock,
   resultadoAtual,
   resumir,
@@ -29,9 +32,13 @@ import {
 
 export default async function AlunoPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ escolaId: string; ano: string; turmaId: string; alunoId: string }>;
+  searchParams: Promise<{ avaliacao?: string }>;
 }) {
+  const { avaliacao } = await searchParams;
+  const avaliacaoIdx = indiceAvaliacao(avaliacao);
   const { escolaId, ano: anoParam, turmaId, alunoId } = await params;
   const escola = getEscola(escolaId);
   const turma = escola && getTurma(escola, Number(anoParam), turmaId);
@@ -191,6 +198,11 @@ export default async function AlunoPage({
           </div>
         </section>
       )}
+
+      <div className="mt-6">
+        <AvaliacaoDropdown avaliacoes={AVALIACOES} atual={avaliacaoIdx} />
+        <HabilidadesResultados alunos={[aluno]} ano={ano} avaliacao={avaliacaoIdx} matriz />
+      </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">

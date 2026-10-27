@@ -1,3 +1,4 @@
+import HabilidadesResultados from "@/app/escolas/HabilidadesResultados";
 import { notFound } from "next/navigation";
 import {
   AVALIACOES,
@@ -55,7 +56,7 @@ export default async function TurmaPage({
   const maxEvolucao = Math.max(...evolucao.flatMap(({ resumo: r }) => [r.media.LP, r.media.MT]));
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-8">
+    <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-y-none bg-gray-50 p-8">
       <Breadcrumb
         itens={[
           { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/escolas" },
@@ -114,24 +115,9 @@ export default async function TurmaPage({
         />
       </div>
 
-      <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-gray-900">Progresso mês a mês</h2>
-        <p className="mt-1 text-sm text-gray-500">Média da turma nas avaliações do ano (escala Saeb)</p>
-        <div className="mt-4 overflow-x-auto">
-          <CurvaEvolucao
-            pontos={evolucao.map(({ avaliacao, resumo: r }, i) => ({
-              id: avaliacao.id,
-              rotulo: rotuloAvaliacaoCurto(avaliacao.nome),
-              selecionado: i === avaliacaoIdx,
-              LP: r.media.LP,
-              MT: r.media.MT,
-            }))}
-          />
-        </div>
-      </section>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="mt-6 grid gap-6 lg:grid-cols-3">
+        <section className="min-w-0 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">Padrões de desempenho da turma</h2>
           <div className="mt-5 space-y-6">
             {DISCIPLINAS.map(({ codigo, nome }) => (
@@ -140,7 +126,33 @@ export default async function TurmaPage({
           </div>
         </section>
 
-        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <section className="min-w-0 rounded-xl border border-gray-200 bg-white p-6 shadow-sm lg:col-span-2">
+          <h2 className="text-lg font-semibold text-gray-900">Progresso mês a mês</h2>
+          <p className="mt-1 text-sm text-gray-500">Média da turma nas avaliações do ano (escala Saeb)</p>
+          <div className="mt-4 w-full overflow-x-auto">
+            <CurvaEvolucao
+              pontos={evolucao.map(({ avaliacao, resumo: r }, i) => ({
+                id: avaliacao.id,
+                rotulo: rotuloAvaliacaoCurto(avaliacao.nome),
+                selecionado: i === avaliacaoIdx,
+                LP: r.media.LP,
+                MT: r.media.MT,
+              }))}
+            />
+          </div>
+
+        </section>
+        <section id="estudantes" className="col-span-full min-w-0 w-full [&>details]:mt-0">
+          <AlunosTabela
+            alunos={turma.alunos}
+            ano={ano}
+            baseHref={`${anoHref}/turmas/${turma.id}`}
+            avaliacaoIndex={avaliacaoIdx}
+            avaliacaoNome={avaliacaoSelecionada.nome}
+          />
+        </section>
+
+        {/* <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">Detalhe por avaliação</h2>
           <p className="mt-1 text-sm text-gray-500">Média da turma nas avaliações do ano (escala Saeb)</p>
           <div className="mt-5 space-y-4">
@@ -169,16 +181,12 @@ export default async function TurmaPage({
               </div>
             ))}
           </div>
-        </section>
+        </section> */}
       </div>
 
-      <AlunosTabela
-        alunos={turma.alunos}
-        ano={ano}
-        baseHref={`${anoHref}/turmas/${turma.id}`}
-        avaliacaoIndex={avaliacaoIdx}
-        avaliacaoNome={avaliacaoSelecionada.nome}
-      />
+      <HabilidadesResultados alunos={turma.alunos} ano={ano} avaliacao={avaliacaoIdx} matriz />
+
+
     </div>
   );
 }
