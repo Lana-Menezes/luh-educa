@@ -42,8 +42,13 @@ export function CurvaEvolucao({ pontos }: { pontos: PontoEvolucao[] }) {
   const linha = (chave: "LP" | "MT") =>
     pontos.map((p, i) => `${i === 0 ? "M" : "L"}${x(i)},${y(p[chave])}`).join(" ");
 
-  const gridTicks = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1];
-  const valorNoTick = (f: number) => topo - f * (topo - base);
+  // Ticks do eixo Y em valores redondos, de 10 em 10, em vez de fatias
+  // fracionárias do intervalo (que geravam rótulos decimais arbitrários).
+  const PASSO_TICK = 5;
+  const primeiroTick = Math.ceil(base / PASSO_TICK) * PASSO_TICK;
+  const ultimoTick = Math.floor(topo / PASSO_TICK) * PASSO_TICK;
+  const gridTicks: number[] = [];
+  for (let v = primeiroTick; v <= ultimoTick; v += PASSO_TICK) gridTicks.push(v);
 
   const opacidade = (chave: "LP" | "MT") => (emFoco === null || emFoco === chave ? 1 : 0.25);
 
@@ -55,10 +60,10 @@ export function CurvaEvolucao({ pontos }: { pontos: PontoEvolucao[] }) {
         role="img"
         aria-label="Curva de evolução da proficiência nas avaliações"
       >
-        {gridTicks.map((f) => {
-          const ly = margemSup + f * (altura - margemSup - margemInf);
+        {gridTicks.map((v) => {
+          const ly = y(v);
           return (
-            <g key={f}>
+            <g key={v}>
               <line
                 x1={margemEsq}
                 x2={largura - margemDir}
@@ -73,7 +78,7 @@ export function CurvaEvolucao({ pontos }: { pontos: PontoEvolucao[] }) {
                 textAnchor="end"
                 className="fill-gray-400 text-[7px]"
               >
-                {formatProficiencia(valorNoTick(f))}
+                {formatProficiencia(v)}
               </text>
             </g>
           );
