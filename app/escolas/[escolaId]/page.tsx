@@ -77,7 +77,7 @@ export default async function EscolaPage({
           INEP {escola.codigoInep} · {escola.bairro} · Zona {escola.zona.toLowerCase()} ·{" "}
           {redeMock.municipio}/{redeMock.uf}
         </p>
-        <p className="mt-1 text-gray-600">Resultados no {redeMock.edicao}</p>
+        <p className="mt-1 text-gray-600">Resultados no {redeMock.edicao} e acompanhamento pelo método LUH</p>
       </div>
 
       {etapas.length > 1 && (
@@ -102,7 +102,71 @@ export default async function EscolaPage({
         </nav>
       )}
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-gray-900">{redeMock.edicao} × Método LUH</h2>
+        <p className="mt-1 text-sm text-gray-500">
+          {ano}º ano · Compare a referência do Saeb com a avaliação LUH selecionada.
+        </p>
+        <div className="mt-4">
+          <AvaliacaoSeletor
+            avaliacoes={AVALIACOES}
+            atual={avaliacaoIdx}
+            hrefFor={(i) =>
+              `/escolas/${escola.id}?etapa=${encodeURIComponent(etapa)}&avaliacao=${i}`
+            }
+          />
+        </div>
+        <p className="mt-4 text-sm text-gray-500">
+          Método LUH · {avaliacaoSelecionada.nome} · {formatData(avaliacaoSelecionada.data)}
+        </p>
+        <div className="mt-3 overflow-x-auto">
+          <table className="w-full min-w-[32rem] text-left text-sm">
+            <caption className="sr-only">Comparação dos resultados da escola no Saeb e na avaliação LUH selecionada</caption>
+            <thead className="border-b border-gray-200 text-gray-500">
+              <tr>
+                <th scope="col" className="py-2 pr-3 font-medium">Indicador</th>
+                <th scope="col" className="px-2 py-2 text-right font-medium">{redeMock.edicao}</th>
+                <th scope="col" className="px-2 py-2 text-right font-medium">Método LUH</th>
+                <th scope="col" className="px-2 py-2 text-right font-medium">Diferença (LUH − Saeb)</th>
+              </tr>
+            </thead>
+            <tbody className="text-gray-700">
+              {DISCIPLINAS.map(({ codigo, nome }) => {
+                const delta = resumoAno.media[codigo] - resultado.proficiencia[codigo];
+                return (
+                  <tr key={codigo} className="border-b border-gray-100">
+                    <th scope="row" className="py-3 pr-3 font-medium text-gray-900">Proficiência em {nome}</th>
+                    <td className="px-2 py-3 text-right">{formatProficiencia(resultado.proficiencia[codigo])}</td>
+                    <td className="px-2 py-3 text-right">{resumoAno.avaliados ? formatProficiencia(resumoAno.media[codigo]) : "—"}</td>
+                    <td className={`px-2 py-3 text-right ${resumoAno.avaliados ? deltaClass(delta) : "text-gray-400"}`}>
+                      {resumoAno.avaliados ? `${formatDelta(delta)} pontos` : "—"}
+                    </td>
+                  </tr>
+                );
+              })}
+              <tr className="border-b border-gray-100">
+                <th scope="row" className="py-3 pr-3 font-medium text-gray-900">Participação</th>
+                <td className="px-2 py-3 text-right">{formatPercent(resultado.participacao)}</td>
+                <td className="px-2 py-3 text-right">{formatPercent(resumoAno.participacao)}</td>
+                <td className="px-2 py-3 text-right">{formatDelta(resumoAno.participacao - resultado.participacao)} p.p.</td>
+              </tr>
+              <tr>
+                <th scope="row" className="py-3 pr-3 font-medium text-gray-900">Estudantes avaliados</th>
+                <td className="px-2 py-3 text-right">{resultado.alunosAvaliados}</td>
+                <td className="px-2 py-3 text-right">{resumoAno.avaliados}</td>
+                <td className="px-2 py-3 text-right">{formatDelta(resumoAno.avaliados - resultado.alunosAvaliados, String)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-3 text-xs text-gray-500">
+          Dados de demonstração. As avaliações podem envolver estudantes e períodos diferentes;
+          a diferença apresentada não mede, isoladamente, o efeito do método LUH.
+        </p>
+      </section>
+
+      <h2 className="mt-6 text-lg font-semibold text-gray-900">Resultados no {redeMock.edicao}</h2>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {DISCIPLINAS.map(({ codigo, nome }) => {
           const media = resultado.proficiencia[codigo];
           const delta = media - rede.proficiencia[codigo];
@@ -135,7 +199,7 @@ export default async function EscolaPage({
       <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Turmas do {ano}º ano</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Método LUH · Turmas do {ano}º ano</h2>
             <p className="mt-1 text-sm text-gray-500">
               {avaliacaoSelecionada.nome} LUH ({formatData(avaliacaoSelecionada.data)}) ·{" "}
               {resumoAno.avaliados} de {resumoAno.matriculados} estudantes avaliados
@@ -147,15 +211,6 @@ export default async function EscolaPage({
           >
             Ver o {ano}º ano completo →
           </Link>
-        </div>
-        <div className="mt-4">
-          <AvaliacaoSeletor
-            avaliacoes={AVALIACOES}
-            atual={avaliacaoIdx}
-            hrefFor={(i) =>
-              `/escolas/${escola.id}?etapa=${encodeURIComponent(etapa)}&avaliacao=${i}`
-            }
-          />
         </div>
         <ul className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {turmas.map((turma) => {

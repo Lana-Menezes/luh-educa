@@ -8,6 +8,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ClipboardList,
+  CalendarDays,
   School,
   LayoutDashboard,
   UserRound,
@@ -18,6 +19,7 @@ const navItems: { href: string; label: string; icon: typeof Users; also?: string
   { href: "/dashboard", label: "Início", icon: LayoutDashboard },
   { href: "/escolas", label: "Escolas", icon: School },
   { href: "/avaliacoes", label: "Avaliações", icon: ClipboardList },
+  { href: "/planejamento", label: "Planejamento", icon: CalendarDays },
 ];
 
 const hiddenPaths = ["/login", "/register", "/setup"];

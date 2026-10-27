@@ -88,12 +88,14 @@ export type Avaliacao = {
   disciplina: Disciplina;
   titulo: string;
   periodo: string;
+  /** Data de disponibilização online (YYYY-MM-DD). */
+  disponibilizadaEm: string;
   arquivoUrl: string;
   arquivoNome: string;
 };
 
 function construirAvaliacoes(serie: Serie): Avaliacao[] {
-  return CICLOS_AVALIATIVOS.flatMap(({ tipo, ordem, periodo }) =>
+  return CICLOS_AVALIATIVOS.flatMap(({ tipo, ordem, periodo, mes }) =>
     DISCIPLINAS.map(({ codigo, nome }) => ({
       id: `${serie}-${tipo.toLowerCase()}-${ordem}-${codigo.toLowerCase()}`,
       serie,
@@ -102,6 +104,8 @@ function construirAvaliacoes(serie: Serie): Avaliacao[] {
       disciplina: codigo,
       titulo: `${tituloCiclo({ tipo, ordem })} · ${nome}`,
       periodo,
+      // Datas de exemplo: publicação no início do mês de cada ciclo letivo.
+      disponibilizadaEm: `2026-${String(mes).padStart(2, "0")}-01`,
       arquivoUrl: "/provas/modelo-prova.pdf",
       arquivoNome: `${serie}ano-${tipo.toLowerCase()}${tipo === "Formativa" ? ordem : ""}-${codigo.toLowerCase()}.pdf`,
     })),

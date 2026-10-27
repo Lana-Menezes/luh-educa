@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Download, Eye, FileText } from "lucide-react";
 import {
   agruparPorTipo,
+  formatData,
   getAvaliacoes,
   isSerie,
   nomeSerie,
@@ -33,7 +34,12 @@ function CardAvaliacao({ titulo, itens }: { titulo: string; itens: Avaliacao[] }
                 <p className="truncate text-sm font-medium text-gray-900 group-hover:text-brand group-hover:underline">
                   {avaliacao.titulo}
                 </p>
-                <p className="text-xs text-gray-500">{avaliacao.periodo}</p>
+                <p className="text-xs text-gray-500">
+                  {avaliacao.periodo} · Disponibilizada em{" "}
+                  <time dateTime={avaliacao.disponibilizadaEm}>
+                    {formatData(avaliacao.disponibilizadaEm)}
+                  </time>
+                </p>
               </div>
             </a>
             <div className="flex shrink-0 items-center gap-2">
@@ -94,18 +100,15 @@ export default async function AvaliacoesSeriePage({
         Baixe os arquivos das provas para aplicar aos estudantes do {nomeSerie(serie)}.
       </p>
 
-      <div className="mt-6 grid gap-5 lg:grid-cols-2">
+      <div className="mt-6 grid gap-5">
         <CardAvaliacao titulo="Avaliação diagnóstica" itens={diagnostica} />
+        <CardAvaliacao titulo="Avaliações formativas (1 a 8)" itens={formativas} />
         <CardAvaliacao titulo="Avaliação somativa" itens={somativa} />
       </div>
 
-      <div className="mt-5">
-        <CardAvaliacao titulo="Avaliações formativas (1 a 8)" itens={formativas} />
-      </div>
-
       <p className="mt-6 text-xs text-gray-400">
-        Arquivos de demonstração para fins de desenvolvimento. Serão substituídos pelos
-        PDFs oficiais de cada avaliação.
+        Arquivos e datas de disponibilização de demonstração para fins de desenvolvimento.
+        Serão substituídos pelos PDFs e datas oficiais de cada avaliação.
       </p>
     </div>
   );
