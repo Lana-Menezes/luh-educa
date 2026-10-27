@@ -29,6 +29,9 @@
   --color-attention-hover: #d79902;
   --color-attention-soft: #fef7e5;
   --color-attention-ink: #8b6301;
+
+  /* Série "Matemática" nos gráficos de evolução — mais legível que brand-muted sobre fundo branco. */
+  --color-chart-mt: #0e7490;
 }
 
 /*

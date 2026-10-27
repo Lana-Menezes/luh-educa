@@ -8,15 +8,16 @@ import {
   normalizeBusca,
   type EscolaRede,
   type Etapa,
+  type MotivoAtencao,
   type ReferenciaSaeb,
-} from "@/lib/rede-mock";
+  type ResumoAvaliacao,
+} from "@/lib/mock-data";
 import {
   ANO_POR_ETAPA,
   PARTICIPACAO_MINIMA_SAEB,
   formatPercent,
   formatProficiencia,
 } from "@/lib/saeb";
-import { motivosAtencaoAvaliacao, precisaAtencaoAvaliacao } from "@/lib/turmas-mock";
 import {
   etapas,
   ordenacoes,
@@ -25,16 +26,23 @@ import {
   type Ordenacao,
 } from "./filtros";
 
+type ResumosPorEscola = Record<string, Partial<Record<Etapa, ResumoAvaliacao>>>;
+type MotivosPorEscola = Record<string, MotivoAtencao[]>;
+
 /** Com etapas filtradas, ordena pela média delas; senão, pela média das etapas da escola. */
-function chaveOrdenacao(escola: EscolaRede, etapa: Etapa[], campo: "proficiencia" | "participacao") {
-  const valores = (etapa.length > 0 ? etapa.filter((e) => escola.resultados[e]) : etapasDaEscola(escola)).map(
-    (e) => {
-      const resultado = escola.resultados[e]!;
-      return campo === "proficiencia"
-        ? (resultado.proficiencia.LP + resultado.proficiencia.MT) / 2
-        : resultado.participacao;
-    },
-  );
+function chaveOrdenacao(
+  escola: EscolaRede,
+  etapa: Etapa[],
+  campo: "proficiencia" | "participacao",
+  resumosPorEscola: ResumosPorEscola,
+) {
+  const resumosEscola = resumosPorEscola[escola.id] ?? {};
+  const etapasConsideradas = etapa.length > 0 ? etapa.filter((e) => resumosEscola[e]) : etapasDaEscola(escola);
+  const valores = etapasConsideradas.flatMap((e) => {
+    const resumo = resumosEscola[e];
+    if (!resumo) return [];
+    return [campo === "proficiencia" ? (resumo.media.LP + resumo.media.MT) / 2 : resumo.participacao];
+  });
   return valores.length > 0 ? valores.reduce((sum, v) => sum + v, 0) / valores.length : -Infinity;
 }
 
@@ -127,12 +135,14 @@ export default function EscolaFinder({
   escolas,
   referenciaNacional,
   initialFiltros,
-  avaliacaoIndex,
+  resumosPorEscola,
+  motivosPorEscola,
 }: {
   escolas: EscolaRede[];
   referenciaNacional: Record<Etapa, ReferenciaSaeb>;
   initialFiltros: EscolaFinderFiltros;
-  avaliacaoIndex: number;
+  resumosPorEscola: ResumosPorEscola;
+  motivosPorEscola: MotivosPorEscola;
 }) {
   const [filtros, setFiltros] = useState(initialFiltros);
   const { q, zona, etapa, atencao, ordem } = filtros;
@@ -162,7 +172,7 @@ export default function EscolaFinder({
     const filtradas = escolas.filter((escola) => {
       if (zona.length > 0 && !zona.includes(escola.zona)) return false;
       if (etapa.length > 0 && !etapa.some((e) => escola.resultados[e])) return false;
-      if (atencao && !precisaAtencaoAvaliacao(escola, avaliacaoIndex)) return false;
+      if (atencao && (motivosPorEscola[escola.id]?.length ?? 0) === 0) return false;
       if (!termo) return true;
       return (
         normalizeBusca(escola.nome).includes(termo) ||
@@ -174,16 +184,25 @@ export default function EscolaFinder({
     return filtradas.sort((a, b) => {
       switch (ordem) {
         case "maior-proficiencia":
-          return chaveOrdenacao(b, etapa, "proficiencia") - chaveOrdenacao(a, etapa, "proficiencia");
+          return (
+            chaveOrdenacao(b, etapa, "proficiencia", resumosPorEscola) -
+            chaveOrdenacao(a, etapa, "proficiencia", resumosPorEscola)
+          );
         case "menor-proficiencia":
-          return chaveOrdenacao(a, etapa, "proficiencia") - chaveOrdenacao(b, etapa, "proficiencia");
+          return (
+            chaveOrdenacao(a, etapa, "proficiencia", resumosPorEscola) -
+            chaveOrdenacao(b, etapa, "proficiencia", resumosPorEscola)
+          );
         case "menor-participacao":
-          return chaveOrdenacao(a, etapa, "participacao") - chaveOrdenacao(b, etapa, "participacao");
+          return (
+            chaveOrdenacao(a, etapa, "participacao", resumosPorEscola) -
+            chaveOrdenacao(b, etapa, "participacao", resumosPorEscola)
+          );
         default:
           return a.nome.localeCompare(b.nome, "pt-BR");
       }
     });
-  }, [escolas, q, zona, etapa, atencao, ordem, avaliacaoIndex]);
+  }, [escolas, q, zona, etapa, atencao, ordem, resumosPorEscola, motivosPorEscola]);
 
   const temFiltros = Boolean(q || zona.length > 0 || etapa.length > 0 || atencao);
 
@@ -301,7 +320,8 @@ export default function EscolaFinder({
       ) : (
         <ul className="mt-3 divide-y divide-gray-100 rounded-lg border border-gray-100">
           {resultados.map((escola) => {
-            const motivos = motivosAtencaoAvaliacao(escola, avaliacaoIndex);
+            const motivos = motivosPorEscola[escola.id] ?? [];
+            const resumosEscola = resumosPorEscola[escola.id] ?? {};
             const etapasVisiveis =
               etapa.length > 0 ? etapa.filter((e) => escola.resultados[e]) : etapasDaEscola(escola);
             const etapaLink = etapa.length === 1 ? etapa[0] : undefined;
@@ -338,9 +358,13 @@ export default function EscolaFinder({
                   <div className="shrink-0 space-y-1.5 text-sm">
                     {etapasVisiveis.map((e) => {
                       const resultado = escola.resultados[e]!;
+                      const resumo = resumosEscola[e];
                       const referencia = referenciaNacional[e];
-                      const abaixoLP = resultado.proficiencia.LP < referencia.proficiencia.LP;
-                      const abaixoMT = resultado.proficiencia.MT < referencia.proficiencia.MT;
+                      const mediaLP = resumo?.media.LP ?? resultado.proficiencia.LP;
+                      const mediaMT = resumo?.media.MT ?? resultado.proficiencia.MT;
+                      const participacao = resumo?.participacao ?? resultado.participacao;
+                      const abaixoLP = mediaLP < referencia.proficiencia.LP;
+                      const abaixoMT = mediaMT < referencia.proficiencia.MT;
 
                       return (
                         <div key={e} className="flex items-baseline justify-end gap-4">
@@ -348,25 +372,25 @@ export default function EscolaFinder({
                           <span className="w-20 text-right">
                             <span className="text-xs text-gray-500">LP </span>
                             <span className={`font-semibold ${abaixoLP ? "text-attention" : "text-gray-900"}`}>
-                              {formatProficiencia(resultado.proficiencia.LP)}
+                              {formatProficiencia(mediaLP)}
                             </span>
                           </span>
                           <span className="hidden w-20 text-right md:inline">
                             <span className="text-xs text-gray-500">MT </span>
                             <span className={`font-medium ${abaixoMT ? "text-attention" : "text-gray-900"}`}>
-                              {formatProficiencia(resultado.proficiencia.MT)}
+                              {formatProficiencia(mediaMT)}
                             </span>
                           </span>
-                          <span className="hidden w-20 text-right lg:inline" title="Participação no Saeb">
+                          <span className="hidden w-20 text-right lg:inline" title="Participação na avaliação">
                             <span className="text-xs text-gray-500">Part. </span>
                             <span
                               className={`font-medium ${
-                                resultado.participacao < PARTICIPACAO_MINIMA_SAEB
+                                participacao < PARTICIPACAO_MINIMA_SAEB
                                   ? "text-attention"
                                   : "text-gray-600"
                               }`}
                             >
-                              {formatPercent(resultado.participacao)}
+                              {formatPercent(participacao)}
                             </span>
                           </span>
                         </div>

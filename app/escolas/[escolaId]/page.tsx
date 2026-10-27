@@ -1,6 +1,16 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { etapasDaEscola, getEscola, getResultadoRede, redeMock } from "@/lib/rede-mock";
+import {
+  AVALIACOES,
+  etapasDaEscola,
+  formatData,
+  getEscola,
+  getResultadoRede,
+  getTurmas,
+  indiceAvaliacao,
+  redeMock,
+  resumir,
+} from "@/lib/mock-data";
 import {
   DISCIPLINAS,
   PARTICIPACAO_MINIMA_SAEB,
@@ -12,7 +22,6 @@ import {
   formatProficiencia,
   nivelDaProficiencia,
 } from "@/lib/saeb";
-import { AVALIACOES, formatData, getTurmas, indiceAvaliacao, resumir } from "@/lib/turmas-mock";
 import { ChevronRight } from "lucide-react";
 import { AvaliacaoSeletor, Breadcrumb, PadroesBarra, corPadrao, deltaClass } from "../ui";
 

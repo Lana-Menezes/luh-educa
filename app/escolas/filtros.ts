@@ -1,4 +1,4 @@
-import { ETAPAS, type Etapa, type Zona } from "@/lib/rede-mock";
+import { ETAPAS, type Etapa, type Zona } from "@/lib/mock-data";
 
 export type Ordenacao = "nome" | "maior-proficiencia" | "menor-proficiencia" | "menor-participacao";
 

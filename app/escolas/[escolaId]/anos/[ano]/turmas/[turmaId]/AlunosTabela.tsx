@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ChevronDown, Search } from "lucide-react";
-import { normalizeBusca } from "@/lib/rede-mock";
+import { estaInsuficiente, normalizeBusca, type Aluno } from "@/lib/mock-data";
 import {
   DISCIPLINAS,
   formatDelta,
@@ -12,7 +12,6 @@ import {
   type AnoSaeb,
   type Disciplina,
 } from "@/lib/saeb";
-import { estaInsuficiente, type Aluno } from "@/lib/turmas-mock";
 import { PadraoBadge, deltaClass } from "@/app/escolas/ui";
 
 type Ordem = "nome" | "menor-LP" | "menor-MT" | "maior-evolucao";

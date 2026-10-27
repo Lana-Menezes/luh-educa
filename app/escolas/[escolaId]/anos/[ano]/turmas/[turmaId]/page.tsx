@@ -1,5 +1,15 @@
 import { notFound } from "next/navigation";
-import { getEscola, redeMock } from "@/lib/rede-mock";
+import {
+  AVALIACOES,
+  estaInsuficiente,
+  formatData,
+  getEscola,
+  getTurma,
+  getTurmas,
+  indiceAvaliacao,
+  redeMock,
+  resumir,
+} from "@/lib/mock-data";
 import {
   DISCIPLINAS,
   formatDelta,
@@ -7,15 +17,6 @@ import {
   formatProficiencia,
   nivelDaProficiencia,
 } from "@/lib/saeb";
-import {
-  AVALIACOES,
-  estaInsuficiente,
-  formatData,
-  getTurma,
-  getTurmas,
-  indiceAvaliacao,
-  resumir,
-} from "@/lib/turmas-mock";
 import {
   AvaliacaoSeletor,
   Breadcrumb,

@@ -1,14 +1,14 @@
 import { notFound } from "next/navigation";
 import { Download, Eye, FileText } from "lucide-react";
-import { redeMock } from "@/lib/rede-mock";
 import {
   agruparPorTipo,
   getAvaliacoes,
   isSerie,
   nomeSerie,
+  redeMock,
   type Avaliacao,
   type Serie,
-} from "@/lib/avaliacoes-mock";
+} from "@/lib/mock-data";
 import { Breadcrumb } from "../../escolas/ui";
 
 function CardAvaliacao({ titulo, itens }: { titulo: string; itens: Avaliacao[] }) {

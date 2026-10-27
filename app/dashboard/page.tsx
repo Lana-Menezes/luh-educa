@@ -2,10 +2,19 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { AlertTriangle, ChevronRight } from "lucide-react";
 import { authOptions } from "@/auth";
-import { ETAPAS, redeMock } from "@/lib/rede-mock";
 import { formatPercent } from "@/lib/saeb";
-import { AVALIACOES, getTurmas, indiceAvaliacao, motivosAtencaoAvaliacao, precisaAtencaoAvaliacao } from "@/lib/turmas-mock";
+import {
+  AVALIACOES,
+  ETAPAS,
+  getTurmas,
+  indiceAvaliacao,
+  motivosAtencaoAvaliacao,
+  precisaAtencaoAvaliacao,
+  redeMock,
+  resumir,
+} from "@/lib/mock-data";
 import AvaliacaoDropdown from "../escolas/AvaliacaoDropdown";
+import { CurvaEvolucao, rotuloAvaliacaoCurto } from "../escolas/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +46,17 @@ export default async function DashboardPage({
   const totalAlunos = todosAlunos.filter((a) => a.resultados[avaliacaoIdx] !== null).length;
   const participacao = matriculados ? (totalAlunos / matriculados) * 100 : 0;
 
+  const evolucaoRede = AVALIACOES.map((avaliacao, k) => {
+    const resumo = resumir(todosAlunos, 5, k);
+    return {
+      id: avaliacao.id,
+      rotulo: rotuloAvaliacaoCurto(avaliacao.nome),
+      selecionado: k === avaliacaoIdx,
+      LP: resumo.media.LP,
+      MT: resumo.media.MT,
+    };
+  });
+
   const escolasEmAtencao = rede.escolas.filter((escola) => precisaAtencaoAvaliacao(escola, avaliacaoIdx));
 
   return (
@@ -59,24 +79,36 @@ export default async function DashboardPage({
         <AvaliacaoDropdown avaliacoes={AVALIACOES} atual={avaliacaoIdx} />
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-gray-500">Escolas da rede</p>
-          <p className="mt-2 text-3xl font-bold text-gray-900">{rede.escolas.length}</p>
-          <p className="mt-1 text-xs text-gray-500">2º, 5º e 9º ano do Ensino Fundamental</p>
+      <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+        <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+            <p className="text-sm text-gray-500">Escolas da rede</p>
+            <p className="mt-2 text-3xl font-bold text-gray-900">{rede.escolas.length}</p>
+            <p className="mt-1 text-xs text-gray-500">2º, 5º e 9º ano do Ensino Fundamental</p>
+          </div>
+          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+            <p className="text-sm text-gray-500">Participação em {avaliacaoSelecionada.nome}</p>
+            <p className="mt-2 text-3xl font-bold text-gray-900">{formatPercent(participacao)}</p>
+            <p className="mt-1 text-xs text-gray-500">
+              {totalAlunos.toLocaleString("pt-BR")} de {matriculados.toLocaleString("pt-BR")} estudantes
+            </p>
+          </div>
+          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+            <p className="text-sm text-gray-500">Escolas que precisam de atenção</p>
+            <p className="mt-2 text-3xl font-bold text-attention">{escolasEmAtencao.length}</p>
+            <p className="mt-1 text-xs text-gray-500">Veja os detalhes no painel das escolas</p>
+          </div>
         </div>
-        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-gray-500">Participação em {avaliacaoSelecionada.nome}</p>
-          <p className="mt-2 text-3xl font-bold text-gray-900">{formatPercent(participacao)}</p>
-          <p className="mt-1 text-xs text-gray-500">
-            {totalAlunos.toLocaleString("pt-BR")} de {matriculados.toLocaleString("pt-BR")} estudantes
+
+        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-gray-900">Progresso mês a mês · rede municipal</h2>
+          <p className="mt-1 text-sm text-gray-500">
+            Média da rede nas avaliações do ano, por Língua Portuguesa e Matemática (escala Saeb)
           </p>
-        </div>
-        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-gray-500">Escolas que precisam de atenção</p>
-          <p className="mt-2 text-3xl font-bold text-attention">{escolasEmAtencao.length}</p>
-          <p className="mt-1 text-xs text-gray-500">Veja os detalhes no painel das escolas</p>
-        </div>
+          <div className="mt-4 overflow-x-auto">
+            <CurvaEvolucao pontos={evolucaoRede} />
+          </div>
+        </section>
       </div>
 
       {escolasEmAtencao.length > 0 && (

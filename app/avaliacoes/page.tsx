@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ChevronRight, ClipboardList } from "lucide-react";
-import { redeMock } from "@/lib/rede-mock";
-import { SERIES, TOTAL_AVALIACOES_POR_SERIE, nomeSerie } from "@/lib/avaliacoes-mock";
+import { SERIES, TOTAL_AVALIACOES_POR_SERIE, nomeSerie, redeMock } from "@/lib/mock-data";
 import { Breadcrumb } from "../escolas/ui";
 
 export default function AvaliacoesPage() {

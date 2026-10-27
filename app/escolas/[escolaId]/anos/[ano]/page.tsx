@@ -1,7 +1,16 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
-import { getEscola, redeMock } from "@/lib/rede-mock";
+import {
+  AVALIACOES,
+  etapaDoAno,
+  formatData,
+  getEscola,
+  getTurmas,
+  indiceAvaliacao,
+  redeMock,
+  resumir,
+} from "@/lib/mock-data";
 import {
   DISCIPLINAS,
   formatDelta,
@@ -9,7 +18,6 @@ import {
   formatProficiencia,
   nivelDaProficiencia,
 } from "@/lib/saeb";
-import { AVALIACOES, etapaDoAno, formatData, getTurmas, indiceAvaliacao, resumir } from "@/lib/turmas-mock";
 import {
   AvaliacaoSeletor,
   Breadcrumb,

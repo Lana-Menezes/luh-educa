@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { PADROES, formatPercent, formatProficiencia, type Padrao } from "@/lib/saeb";
+import { PADROES, formatPercent, type Padrao } from "@/lib/saeb";
 
 export const corPadrao: Record<Padrao, string> = {
   "Abaixo do Básico": "bg-danger",
@@ -53,142 +53,8 @@ export function rotuloAvaliacaoCurto(nome: string) {
   return nome.replace("Formativa ", "F");
 }
 
-export type PontoEvolucao = {
-  id: string;
-  rotulo: string;
-  selecionado: boolean;
-  LP: number;
-  MT: number;
-};
-
-/** Curva de evolução (LP e MT) ao longo das avaliações do ano, com a avaliação selecionada em destaque. */
-export function CurvaEvolucao({ pontos }: { pontos: PontoEvolucao[] }) {
-  const largura = 640;
-  const altura = 180;
-  const margemEsq = 58;
-  const margemDir = 12;
-  const margemSup = 26;
-  const margemInf = 20;
-
-  const valores = pontos.flatMap((p) => [p.LP, p.MT]);
-  const minV = Math.min(...valores);
-  const maxV = Math.max(...valores);
-  const folga = Math.max((maxV - minV) * 0.15, 5);
-  const base = minV - folga;
-  const topo = maxV + folga;
-
-  const x = (i: number) =>
-    pontos.length === 1
-      ? margemEsq + (largura - margemEsq - margemDir) / 2
-      : margemEsq + (i * (largura - margemEsq - margemDir)) / (pontos.length - 1);
-  const y = (v: number) => margemSup + (1 - (v - base) / (topo - base)) * (altura - margemSup - margemInf);
-
-  const linha = (chave: "LP" | "MT") =>
-    pontos.map((p, i) => `${i === 0 ? "M" : "L"}${x(i)},${y(p[chave])}`).join(" ");
-
-  const gridTicks = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1];
-  const valorNoTick = (f: number) => topo - f * (topo - base);
-
-  return (
-    <div>
-      <svg
-        viewBox={`0 0 ${largura} ${altura + 20}`}
-        className="w-full min-w-[32rem]"
-        role="img"
-        aria-label="Curva de evolução da proficiência nas avaliações"
-      >
-        {gridTicks.map((f) => {
-          const ly = margemSup + f * (altura - margemSup - margemInf);
-          return (
-            <g key={f}>
-              <line
-                x1={margemEsq}
-                x2={largura - margemDir}
-                y1={ly}
-                y2={ly}
-                className="stroke-gray-100"
-                strokeWidth={1}
-              />
-              <text
-                x={margemEsq - 14}
-                y={ly + 3}
-                textAnchor="end"
-                className="fill-gray-400 text-[7px]"
-              >
-                {formatProficiencia(valorNoTick(f))}
-              </text>
-            </g>
-          );
-        })}
-
-        <path d={linha("MT")} fill="none" className="stroke-brand-muted" strokeWidth={1.5} />
-        <path d={linha("LP")} fill="none" className="stroke-brand" strokeWidth={1.5} />
-
-        {pontos.map((p, i) => (
-          <g key={p.id}>
-            {p.selecionado && (
-              <line
-                x1={x(i)}
-                x2={x(i)}
-                y1={margemSup}
-                y2={altura - margemInf}
-                className="stroke-brand"
-                strokeWidth={1}
-                strokeDasharray="3 3"
-                opacity={0.35}
-              />
-            )}
-            <text
-              x={x(i)}
-              y={y(p.LP) - 7}
-              textAnchor="middle"
-              className="fill-brand text-[7px] font-medium"
-            >
-              {formatProficiencia(p.LP)}
-            </text>
-            <text
-              x={x(i)}
-              y={y(p.MT) - 7}
-              textAnchor="middle"
-              className="fill-brand-muted text-[7px] font-medium"
-            >
-              {formatProficiencia(p.MT)}
-            </text>
-            {(["MT", "LP"] as const).map((chave) => (
-              <circle
-                key={chave}
-                cx={x(i)}
-                cy={y(p[chave])}
-                r={p.selecionado ? 5 : 3}
-                className={chave === "LP" ? "fill-brand" : "fill-brand-muted"}
-              >
-                <title>
-                  {p.rotulo} · {chave}: {formatProficiencia(p[chave])}
-                </title>
-              </circle>
-            ))}
-            <text
-              x={x(i)}
-              y={altura + 14}
-              textAnchor="middle"
-              className={`text-[7px] ${p.selecionado ? "fill-brand font-medium" : "fill-gray-400"}`}
-            >
-              {p.rotulo}
-            </text>
-          </g>
-        ))}
-      </svg>
-      <div className="mt-2 flex items-center gap-4 text-xs text-gray-600">
-        <span className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full bg-brand" aria-hidden /> Língua Portuguesa
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full bg-brand-muted" aria-hidden /> Matemática
-        </span>
-      </div>
-    </div>
-  );
-}
+export type { PontoEvolucao } from "./CurvaEvolucao";
+export { CurvaEvolucao } from "./CurvaEvolucao";
 
 /** Seletor de avaliação (Diagnóstica, Formativa 1–8, Somativa) para acompanhar o progresso mês a mês. */
 export function AvaliacaoSeletor({

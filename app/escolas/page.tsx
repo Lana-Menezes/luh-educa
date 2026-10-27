@@ -1,7 +1,19 @@
 import { checkPostTableExists } from "@/lib/db-utils";
-import { ETAPAS, getResultadoRede, redeMock } from "@/lib/rede-mock";
-import { DISCIPLINAS, PARTICIPACAO_MINIMA_SAEB, formatDelta, formatPercent, formatProficiencia, nivelDaProficiencia } from "@/lib/saeb";
-import { AVALIACOES, getTurmas, indiceAvaliacao, precisaAtencaoAvaliacao, resumir } from "@/lib/turmas-mock";
+import { ANO_POR_ETAPA, DISCIPLINAS, PARTICIPACAO_MINIMA_SAEB, formatDelta, formatPercent, formatProficiencia, nivelDaProficiencia } from "@/lib/saeb";
+import {
+  AVALIACOES,
+  ETAPAS,
+  etapasDaEscola,
+  getResultadoRede,
+  getTurmas,
+  indiceAvaliacao,
+  motivosAtencaoAvaliacao,
+  redeMock,
+  resumir,
+  type Etapa,
+  type MotivoAtencao,
+  type ResumoAvaliacao,
+} from "@/lib/mock-data";
 import { redirect } from "next/navigation";
 import EscolaFinder from "./EscolaFinder";
 import AvaliacaoDropdown from "./AvaliacaoDropdown";
@@ -35,7 +47,18 @@ export default async function EscolasPage({
       sum + ETAPAS.reduce((s, etapa) => s + (escola.resultados[etapa]?.alunosAvaliados ?? 0), 0),
     0,
   );
-  const escolasEmAtencao = rede.escolas.filter((escola) => precisaAtencaoAvaliacao(escola, avaliacaoIdx)).length;
+  const resumosPorEscola: Record<string, Partial<Record<Etapa, ResumoAvaliacao>>> = {};
+  const motivosPorEscola: Record<string, MotivoAtencao[]> = {};
+  for (const escola of rede.escolas) {
+    const porEtapaEscola: Partial<Record<Etapa, ResumoAvaliacao>> = {};
+    for (const etapa of etapasDaEscola(escola)) {
+      const alunos = getTurmas(escola, etapa).flatMap((t) => t.alunos);
+      porEtapaEscola[etapa] = resumir(alunos, ANO_POR_ETAPA[etapa], avaliacaoIdx);
+    }
+    resumosPorEscola[escola.id] = porEtapaEscola;
+    motivosPorEscola[escola.id] = motivosAtencaoAvaliacao(escola, avaliacaoIdx);
+  }
+  const escolasEmAtencao = Object.values(motivosPorEscola).filter((m) => m.length > 0).length;
   const porEtapa = ETAPAS.map((etapa) => {
     const resultado = getResultadoRede(etapa);
     const alunosEtapa = rede.escolas.flatMap((escola) => getTurmas(escola, etapa).flatMap((t) => t.alunos));
@@ -172,7 +195,8 @@ export default async function EscolasPage({
         escolas={rede.escolas}
         referenciaNacional={rede.referenciaNacional}
         initialFiltros={initialFiltros}
-        avaliacaoIndex={avaliacaoIdx}
+        resumosPorEscola={resumosPorEscola}
+        motivosPorEscola={motivosPorEscola}
       />
 
       <p className="mt-6 text-xs text-gray-400">

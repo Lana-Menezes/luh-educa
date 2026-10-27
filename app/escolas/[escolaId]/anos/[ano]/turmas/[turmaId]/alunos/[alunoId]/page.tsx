@@ -1,5 +1,14 @@
 import { notFound } from "next/navigation";
-import { getEscola, redeMock } from "@/lib/rede-mock";
+import {
+  AVALIACAO_ATUAL,
+  AVALIACOES,
+  formatData,
+  getEscola,
+  getTurma,
+  redeMock,
+  resultadoAtual,
+  resumir,
+} from "@/lib/mock-data";
 import {
   DISCIPLINAS,
   ESCALA_SAEB,
@@ -9,7 +18,6 @@ import {
   nivelDaProficiencia,
   padraoDaProficiencia,
 } from "@/lib/saeb";
-import { AVALIACAO_ATUAL, AVALIACOES, formatData, getTurma, resultadoAtual, resumir } from "@/lib/turmas-mock";
 import {
   Breadcrumb,
   CurvaEvolucao,
