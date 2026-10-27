@@ -79,7 +79,7 @@ export default async function AlunoPage({
     <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-8">
       <Breadcrumb
         itens={[
-          { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/dashboard" },
+          { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/escolas" },
           { label: escola.nome, href: `/escolas/${escola.id}?etapa=${encodeURIComponent(etapa)}` },
           { label: `${ano}º ano`, href: anoHref },
           { label: turma.nome, href: turmaHref },

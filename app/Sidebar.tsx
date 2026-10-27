@@ -9,12 +9,14 @@ import {
   ChevronRight,
   ClipboardList,
   School,
+  LayoutDashboard,
   UserRound,
   Users,
 } from "lucide-react";
 
 const navItems: { href: string; label: string; icon: typeof Users; also?: string[] }[] = [
-  { href: "/dashboard", label: "Escolas", icon: School, also: ["/escolas"] },
+  { href: "/dashboard", label: "Início", icon: LayoutDashboard },
+  { href: "/escolas", label: "Escolas", icon: School },
   { href: "/avaliacoes", label: "Avaliações", icon: ClipboardList },
 ];
 

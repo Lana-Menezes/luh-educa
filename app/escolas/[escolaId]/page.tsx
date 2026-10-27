@@ -57,7 +57,7 @@ export default async function EscolaPage({
       <div>
         <Breadcrumb
           itens={[
-            { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/dashboard" },
+            { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/escolas" },
             { label: escola.nome },
           ]}
         />

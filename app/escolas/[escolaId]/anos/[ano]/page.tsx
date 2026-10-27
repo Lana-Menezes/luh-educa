@@ -50,7 +50,7 @@ export default async function AnoPage({
     <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-8">
       <Breadcrumb
         itens={[
-          { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/dashboard" },
+          { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/escolas" },
           { label: escola.nome, href: escolaHref },
           { label: `${ano}º ano` },
         ]}
