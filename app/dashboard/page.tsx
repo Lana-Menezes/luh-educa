@@ -1,13 +1,19 @@
 import Link from "next/link";
-import { ETAPAS, getResultadoRede, redeMock } from "@/lib/rede-mock";
-import { DISCIPLINAS, formatDelta, formatPercent, formatProficiencia, nivelDaProficiencia } from "@/lib/saeb";
-import { AVALIACOES, getTurmas, indiceAvaliacao, resumir } from "@/lib/turmas-mock";
+import { getServerSession } from "next-auth";
+import { AlertTriangle, ChevronRight } from "lucide-react";
+import { authOptions } from "@/auth";
+import { ETAPAS, motivosAtencao, precisaAtencao, redeMock } from "@/lib/rede-mock";
+import { formatPercent } from "@/lib/saeb";
+import { AVALIACOES, getTurmas, indiceAvaliacao } from "@/lib/turmas-mock";
 import AvaliacaoDropdown from "../escolas/AvaliacaoDropdown";
 
 export const dynamic = "force-dynamic";
 
-function deltaClass(value: number) {
-  return value >= 0 ? "text-success" : "text-attention";
+/** Saudação conforme o horário: madrugada e manhã (bom dia), tarde (boa tarde), noite (boa noite). */
+function saudacao(hora: number) {
+  if (hora >= 5 && hora < 12) return "Bom dia";
+  if (hora >= 12 && hora < 18) return "Boa tarde";
+  return "Boa noite";
 }
 
 export default async function DashboardPage({
@@ -16,27 +22,22 @@ export default async function DashboardPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const rede = redeMock;
+  const session = await getServerSession(authOptions);
+  const nomeUsuario = session?.user?.name || session?.user?.email || "professor(a)";
   const resolvedSearchParams = await searchParams;
   const avaliacaoParam =
     typeof resolvedSearchParams.avaliacao === "string" ? resolvedSearchParams.avaliacao : undefined;
   const avaliacaoIdx = indiceAvaliacao(avaliacaoParam);
   const avaliacaoSelecionada = AVALIACOES[avaliacaoIdx];
 
-  const porEtapa = ETAPAS.map((etapa) => {
-    const resultado = getResultadoRede(etapa);
-    const alunosEtapa = rede.escolas.flatMap((escola) => getTurmas(escola, etapa).flatMap((t) => t.alunos));
-    const resumoAvaliacao = resumir(alunosEtapa, resultado.ano, avaliacaoIdx);
-    return {
-      etapa,
-      resultado,
-      resumoAvaliacao,
-      referencia: rede.referenciaNacional[etapa],
-      escolas: rede.escolas.filter((escola) => escola.resultados[etapa]).length,
-    };
-  });
-  const totalAlunos = porEtapa.reduce((total, item) => total + item.resumoAvaliacao.avaliados, 0);
-  const matriculados = porEtapa.reduce((total, item) => total + item.resumoAvaliacao.matriculados, 0);
+  const todosAlunos = rede.escolas.flatMap((escola) =>
+    ETAPAS.flatMap((etapa) => getTurmas(escola, etapa).flatMap((t) => t.alunos)),
+  );
+  const matriculados = todosAlunos.length;
+  const totalAlunos = todosAlunos.filter((a) => a.resultados[avaliacaoIdx] !== null).length;
   const participacao = matriculados ? (totalAlunos / matriculados) * 100 : 0;
+
+  const escolasEmAtencao = rede.escolas.filter(precisaAtencao);
 
   return (
     <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-4 sm:p-8">
@@ -45,11 +46,9 @@ export default async function DashboardPage({
           {rede.nome}
         </p>
         <h1 className="mt-1 text-3xl font-bold text-gray-900">
-          Resumo das avaliações
+          {saudacao(new Date().getHours())}, {nomeUsuario}
         </h1>
-        <p className="mt-2 text-gray-600">
-          Acompanhe a aprendizagem em {rede.municipio}/{rede.uf} · 2º, 5º e 9º ano do Ensino Fundamental
-        </p>
+        <p className="mt-1 text-sm font-medium text-brand">Resumo das avaliações</p>
       </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
@@ -60,104 +59,60 @@ export default async function DashboardPage({
         <AvaliacaoDropdown avaliacoes={AVALIACOES} atual={avaliacaoIdx} />
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <div className="mt-8 grid gap-4 sm:grid-cols-3">
         <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-gray-500">Escolas avaliadas</p>
+          <p className="text-sm text-gray-500">Escolas da rede</p>
           <p className="mt-2 text-3xl font-bold text-gray-900">{rede.escolas.length}</p>
-          <p className="mt-1 text-xs text-gray-500">
-            {totalAlunos.toLocaleString("pt-BR")} alunos em {avaliacaoSelecionada.nome}
-          </p>
+          <p className="mt-1 text-xs text-gray-500">2º, 5º e 9º ano do Ensino Fundamental</p>
         </div>
-        {porEtapa.map(({ etapa, resumoAvaliacao, referencia }) => {
-          const mediaRede = (resumoAvaliacao.media.LP + resumoAvaliacao.media.MT) / 2;
-          const mediaReferencia = (referencia.proficiencia.LP + referencia.proficiencia.MT) / 2;
-          return (
-            <div key={etapa} className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-              <p className="text-sm text-gray-500">
-                Proficiência média · {etapa} ({avaliacaoSelecionada.nome})
-              </p>
-              <p className="mt-2 text-3xl font-bold text-gray-900">{formatProficiencia(mediaRede)}</p>
-              <p className={`mt-1 text-xs ${deltaClass(mediaRede - mediaReferencia)}`}>
-                {formatDelta(mediaRede - mediaReferencia)} vs. referência nacional (
-                {formatProficiencia(mediaReferencia)})
-              </p>
-            </div>
-          );
-        })}
         <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-gray-500">Participação na avaliação</p>
-          <p className="mt-2 text-3xl font-bold text-attention">{formatPercent(participacao)}</p>
+          <p className="text-sm text-gray-500">Participação em {avaliacaoSelecionada.nome}</p>
+          <p className="mt-2 text-3xl font-bold text-gray-900">{formatPercent(participacao)}</p>
           <p className="mt-1 text-xs text-gray-500">
             {totalAlunos.toLocaleString("pt-BR")} de {matriculados.toLocaleString("pt-BR")} estudantes
           </p>
         </div>
+        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <p className="text-sm text-gray-500">Escolas que precisam de atenção</p>
+          <p className="mt-2 text-3xl font-bold text-attention">{escolasEmAtencao.length}</p>
+          <p className="mt-1 text-xs text-gray-500">Veja os detalhes no painel das escolas</p>
+        </div>
       </div>
 
-      <section className="mt-6 grid gap-6 lg:grid-cols-2">
-        {porEtapa.map(({ etapa, resultado, resumoAvaliacao, referencia, escolas }) => (
-          <div key={etapa} className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-brand">{etapa}</p>
-                <h2 className="mt-1 text-lg font-semibold text-gray-900">
-                  {avaliacaoSelecionada.nome} · {resultado.ano}º ano · rede municipal
-                </h2>
-                <p className="mt-1 text-sm text-gray-500">
-                  {escolas} escolas · {resumoAvaliacao.avaliados.toLocaleString("pt-BR")} alunos avaliados
-                </p>
-              </div>
-              <div className="text-right text-xs text-gray-500">
-                <p>
-                  Participação{" "}
-                  <span className="font-semibold text-gray-900">
-                    {formatPercent(resumoAvaliacao.participacao)}
-                  </span>
-                </p>
-                <p className="mt-1">
-                  Aprovação (Censo Escolar){" "}
-                  <span className="font-semibold text-gray-900">
-                    {formatPercent(resultado.aprovacao)}
-                  </span>
-                </p>
-              </div>
-            </div>
-
-            <dl className="mt-5 grid gap-4 sm:grid-cols-2">
-              {DISCIPLINAS.map(({ codigo, nome }) => {
-                const media = resumoAvaliacao.media[codigo];
-                const delta = media - referencia.proficiencia[codigo];
-                const adequado = resumoAvaliacao.adequado[codigo];
-
-                return (
-                  <div key={codigo} className="rounded-lg border border-gray-100 bg-gray-50 p-4">
-                    <dt className="text-sm font-medium text-gray-900">{nome}</dt>
-                    <dd className="mt-2 flex items-baseline gap-2">
-                      <span className="text-2xl font-bold text-gray-900">
-                        {formatProficiencia(media)}
-                      </span>
-                      <span className={`text-xs font-medium ${deltaClass(delta)}`}>
-                        {formatDelta(delta)} vs. nacional
-                      </span>
-                    </dd>
-                    <dd className="mt-1 text-xs text-gray-500">
-                      Nível {nivelDaProficiencia(resultado.ano, codigo, media)} da escala Saeb
-                    </dd>
-                    <dd className="mt-3">
-                      <div className="flex justify-between text-xs text-gray-600">
-                        <span>Aprendizado adequado</span>
-                        <span className="font-semibold text-gray-900">{formatPercent(adequado)}</span>
-                      </div>
-                      <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-gray-200">
-                        <div className="h-full rounded-full bg-brand" style={{ width: `${adequado}%` }} />
-                      </div>
-                    </dd>
-                  </div>
-                );
-              })}
-            </dl>
+      {escolasEmAtencao.length > 0 && (
+        <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-lg font-semibold text-gray-900">Escolas que precisam de atenção</h2>
+            <Link href="/escolas?atencao=1" className="text-sm font-medium text-brand hover:underline">
+              Ver todas →
+            </Link>
           </div>
-        ))}
-      </section>
+          <ul className="mt-3 divide-y divide-gray-100">
+            {escolasEmAtencao.slice(0, 5).map((escola) => {
+              const motivos = motivosAtencao(escola);
+              return (
+                <li key={escola.id}>
+                  <Link
+                    href={`/escolas/${escola.id}`}
+                    className="group flex items-center gap-3 py-3 hover:bg-gray-50"
+                  >
+                    <AlertTriangle className="h-4 w-4 shrink-0 text-attention" aria-hidden />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-medium text-gray-900 group-hover:text-brand">
+                        {escola.nome}
+                      </p>
+                      <p className="truncate text-xs text-gray-500">
+                        {motivos.map((m) => `${m.etapa}: ${m.motivo}`).join(" · ")}
+                      </p>
+                    </div>
+                    <ChevronRight className="h-4 w-4 shrink-0 text-gray-300 group-hover:text-brand" aria-hidden />
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
 
       <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-gray-900">Calendário de avaliações</h2>
