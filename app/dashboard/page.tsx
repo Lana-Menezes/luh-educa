@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { AlertTriangle, ChevronRight } from "lucide-react";
@@ -61,14 +62,23 @@ export default async function DashboardPage({
 
   return (
     <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-4 sm:p-8">
-      <div>
-        <p className="text-sm font-semibold uppercase tracking-wide text-gray-400">
-          {rede.nome}
-        </p>
-        <h1 className="mt-1 text-3xl font-bold text-gray-900">
-          {saudacao(new Date().getHours())}, {nomeUsuario}
-        </h1>
-        <p className="mt-1 text-sm font-medium text-brand">Resumo das avaliações</p>
+      <div className="flex items-center gap-3">
+        <Image
+          src="/brasao-mafra.svg"
+          alt={`Brasão de ${rede.municipio}`}
+          width={48}
+          height={41}
+          className="h-16 w-auto shrink-0"
+        />
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-wide text-gray-400">
+            {rede.nome} · {rede.municipio}/{rede.uf}
+          </p>
+          <h1 className="mt-1 text-3xl font-bold text-gray-900">
+            {saudacao(new Date().getHours())}, {nomeUsuario}
+          </h1>
+          <p className="mt-1 text-sm font-medium text-brand">Resumo das avaliações</p>
+        </div>
       </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
