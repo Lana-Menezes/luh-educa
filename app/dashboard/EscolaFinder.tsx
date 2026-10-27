@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AlertTriangle, ChevronDown, ChevronRight, School, Search, X } from "lucide-react";
 import {
   etapasDaEscola,
@@ -26,23 +26,102 @@ import {
   type Ordenacao,
 } from "./filtros";
 
-function chipClass(active: boolean) {
-  return `rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
-    active
-      ? "border-brand bg-brand-soft text-brand"
-      : "border-gray-200 bg-white text-gray-700 hover:border-brand-muted hover:text-gray-900"
-  }`;
+/** Com etapas filtradas, ordena pela média delas; senão, pela média das etapas da escola. */
+function chaveOrdenacao(escola: EscolaRede, etapa: Etapa[], campo: "proficiencia" | "participacao") {
+  const valores = (etapa.length > 0 ? etapa.filter((e) => escola.resultados[e]) : etapasDaEscola(escola)).map(
+    (e) => {
+      const resultado = escola.resultados[e]!;
+      return campo === "proficiencia"
+        ? (resultado.proficiencia.LP + resultado.proficiencia.MT) / 2
+        : resultado.participacao;
+    },
+  );
+  return valores.length > 0 ? valores.reduce((sum, v) => sum + v, 0) / valores.length : -Infinity;
 }
 
-/** Com uma etapa filtrada, ordena por ela; senão, pela média das etapas da escola. */
-function chaveOrdenacao(escola: EscolaRede, etapa: Etapa | "", campo: "proficiencia" | "participacao") {
-  const valores = (etapa ? [etapa] : etapasDaEscola(escola)).map((e) => {
-    const resultado = escola.resultados[e]!;
-    return campo === "proficiencia"
-      ? (resultado.proficiencia.LP + resultado.proficiencia.MT) / 2
-      : resultado.participacao;
-  });
-  return valores.reduce((sum, v) => sum + v, 0) / valores.length;
+/** Dropdown de seleção múltipla (checkboxes), ex.: Etapa Saeb, Zona. */
+function MultiSelectDropdown<T extends string>({
+  label,
+  options,
+  optionLabel,
+  selected,
+  onChange,
+}: {
+  label: string;
+  options: readonly T[];
+  optionLabel: (value: T) => string;
+  selected: T[];
+  onChange: (value: T[]) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function onClickOutside(event: MouseEvent) {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [open]);
+
+  function toggle(value: T) {
+    onChange(selected.includes(value) ? selected.filter((v) => v !== value) : [...selected, value]);
+  }
+
+  const resumo =
+    selected.length === 0
+      ? "Todos"
+      : selected.length === 1
+        ? optionLabel(selected[0])
+        : `${selected.length} selecionadas`;
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
+          selected.length > 0
+            ? "border-brand bg-brand-soft text-brand"
+            : "border-gray-200 bg-white text-gray-700 hover:border-brand-muted hover:text-gray-900"
+        }`}
+      >
+        {label}: {resumo}
+        <ChevronDown className="h-3.5 w-3.5" aria-hidden />
+      </button>
+      {open && (
+        <div className="absolute left-0 top-full z-20 mt-1.5 w-56 rounded-lg border border-gray-200 bg-white p-2 shadow-lg">
+          {options.map((option) => (
+            <label
+              key={option}
+              className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
+            >
+              <input
+                type="checkbox"
+                checked={selected.includes(option)}
+                onChange={() => toggle(option)}
+                className="h-4 w-4 rounded border-gray-300 text-brand focus:ring-brand"
+              />
+              {optionLabel(option)}
+            </label>
+          ))}
+          {selected.length > 0 && (
+            <button
+              type="button"
+              onClick={() => onChange([])}
+              className="mt-1 w-full rounded-md px-2 py-1.5 text-left text-xs font-medium text-brand hover:bg-gray-50"
+            >
+              Limpar seleção
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function EscolaFinder({
@@ -65,8 +144,8 @@ export default function EscolaFinder({
   useEffect(() => {
     const params = new URLSearchParams();
     if (q.trim()) params.set("q", q.trim());
-    if (zona) params.set("zona", zona);
-    if (etapa) params.set("etapa", etapa);
+    if (zona.length > 0) params.set("zona", zona.join(","));
+    if (etapa.length > 0) params.set("etapa", etapa.join(","));
     if (atencao) params.set("atencao", "1");
     if (ordem !== "nome") params.set("ordem", ordem);
     const query = params.toString();
@@ -78,8 +157,8 @@ export default function EscolaFinder({
     const termoDigitos = q.replace(/\D/g, "");
 
     const filtradas = escolas.filter((escola) => {
-      if (zona && escola.zona !== zona) return false;
-      if (etapa && !escola.resultados[etapa]) return false;
+      if (zona.length > 0 && !zona.includes(escola.zona)) return false;
+      if (etapa.length > 0 && !etapa.some((e) => escola.resultados[e])) return false;
       if (atencao && !precisaAtencao(escola)) return false;
       if (!termo) return true;
       return (
@@ -103,7 +182,7 @@ export default function EscolaFinder({
     });
   }, [escolas, q, zona, etapa, atencao, ordem]);
 
-  const temFiltros = Boolean(q || zona || etapa || atencao);
+  const temFiltros = Boolean(q || zona.length > 0 || etapa.length > 0 || atencao);
 
   return (
     <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -163,34 +242,26 @@ export default function EscolaFinder({
       </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        <span className="mr-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
-          Etapa Saeb
-        </span>
-        <button type="button" className={chipClass(etapa === "")} onClick={() => update({ etapa: "" })}>
-          Todas
-        </button>
-        {etapas.map((e) => (
-          <button key={e} type="button" className={chipClass(etapa === e)} onClick={() => update({ etapa: e })}>
-            {ANO_POR_ETAPA[e]}º ano · {e}
-          </button>
-        ))}
+        <MultiSelectDropdown
+          label="Ano Escolar"
+          options={etapas}
+          optionLabel={(e) => `${ANO_POR_ETAPA[e]}º ano · ${e}`}
+          selected={etapa}
+          onChange={(value) => update({ etapa: value })}
+        />
 
-        <span className="ml-3 mr-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
-          Zona
-        </span>
-        <button type="button" className={chipClass(zona === "")} onClick={() => update({ zona: "" })}>
-          Todas
-        </button>
-        {zonas.map((z) => (
-          <button key={z} type="button" className={chipClass(zona === z)} onClick={() => update({ zona: z })}>
-            {z}
-          </button>
-        ))}
+        <MultiSelectDropdown
+          label="Zona"
+          options={zonas}
+          optionLabel={(z) => z}
+          selected={zona}
+          onChange={(value) => update({ zona: value })}
+        />
 
         <button
           type="button"
           aria-pressed={atencao}
-          className={`ml-3 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
+          className={`rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
             atencao
               ? "border-attention bg-attention-soft text-attention"
               : "border-gray-200 bg-white text-gray-700 hover:border-attention hover:text-gray-900"
@@ -209,7 +280,7 @@ export default function EscolaFinder({
         {temFiltros && (
           <button
             type="button"
-            onClick={() => setFiltros({ ...filtros, q: "", zona: "", etapa: "", atencao: false })}
+            onClick={() => setFiltros({ ...filtros, q: "", zona: [], etapa: [], atencao: false })}
             className="font-medium text-brand hover:underline"
           >
             Limpar filtros
@@ -228,12 +299,14 @@ export default function EscolaFinder({
         <ul className="mt-3 divide-y divide-gray-100 rounded-lg border border-gray-100">
           {resultados.map((escola) => {
             const motivos = motivosAtencao(escola);
-            const etapasVisiveis = etapa ? [etapa] : etapasDaEscola(escola);
+            const etapasVisiveis =
+              etapa.length > 0 ? etapa.filter((e) => escola.resultados[e]) : etapasDaEscola(escola);
+            const etapaLink = etapa.length === 1 ? etapa[0] : undefined;
 
             return (
               <li key={escola.id}>
                 <Link
-                  href={`/escolas/${escola.id}${etapa ? `?etapa=${encodeURIComponent(etapa)}` : ""}`}
+                  href={`/escolas/${escola.id}${etapaLink ? `?etapa=${encodeURIComponent(etapaLink)}` : ""}`}
                   className="group flex items-center gap-4 px-4 py-4 transition-colors hover:bg-gray-50"
                 >
                   <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand sm:flex">

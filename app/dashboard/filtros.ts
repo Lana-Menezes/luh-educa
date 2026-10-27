@@ -4,8 +4,10 @@ export type Ordenacao = "nome" | "maior-proficiencia" | "menor-proficiencia" | "
 
 export type EscolaFinderFiltros = {
   q: string;
-  zona: Zona | "";
-  etapa: Etapa | "";
+  /** Vazio = todas as zonas. */
+  zona: Zona[];
+  /** Vazio = todas as etapas. */
+  etapa: Etapa[];
   atencao: boolean;
   ordem: Ordenacao;
 };
@@ -26,14 +28,16 @@ export function parseFiltros(
     const value = params[key];
     return typeof value === "string" ? value : "";
   };
-  const zona = read("zona");
-  const etapa = read("etapa");
+  const readList = <T extends string>(key: string, validos: readonly T[]): T[] => {
+    const valores = read(key).split(",").map((v) => v.trim());
+    return validos.filter((v) => valores.includes(v));
+  };
   const ordem = read("ordem");
 
   return {
     q: read("q"),
-    zona: zonas.includes(zona as Zona) ? (zona as Zona) : "",
-    etapa: etapas.includes(etapa as Etapa) ? (etapa as Etapa) : "",
+    zona: readList("zona", zonas),
+    etapa: readList("etapa", etapas),
     atencao: read("atencao") === "1",
     ordem: ordenacoes.some((o) => o.value === ordem) ? (ordem as Ordenacao) : "nome",
   };

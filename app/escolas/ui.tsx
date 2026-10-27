@@ -4,14 +4,14 @@ import { PADROES, formatPercent, formatProficiencia, type Padrao } from "@/lib/s
 
 export const corPadrao: Record<Padrao, string> = {
   "Abaixo do Básico": "bg-danger",
-  Básico: "bg-accent",
+  Básico: "bg-attention",
   Adequado: "bg-brand",
   Avançado: "bg-success",
 };
 
 const badgePadrao: Record<Padrao, string> = {
   "Abaixo do Básico": "bg-danger-soft text-danger",
-  Básico: "bg-accent-soft text-accent-ink",
+  Básico: "bg-attention-soft text-attention-ink",
   Adequado: "bg-brand-soft text-brand",
   Avançado: "bg-success-soft text-success",
 };
