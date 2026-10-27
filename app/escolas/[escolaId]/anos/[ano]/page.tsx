@@ -9,13 +9,23 @@ import {
   formatProficiencia,
   nivelDaProficiencia,
 } from "@/lib/saeb";
-import { AVALIACAO_ATUAL, AVALIACOES, etapaDoAno, formatData, getTurmas, resumir } from "@/lib/turmas-mock";
-import { Breadcrumb, PadroesBarra, StatCard, deltaClass } from "../../../ui";
+import { AVALIACOES, etapaDoAno, formatData, getTurmas, indiceAvaliacao, resumir } from "@/lib/turmas-mock";
+import {
+  AvaliacaoSeletor,
+  Breadcrumb,
+  CurvaEvolucao,
+  PadroesBarra,
+  StatCard,
+  deltaClass,
+  rotuloAvaliacaoCurto,
+} from "../../../ui";
 
 export default async function AnoPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ escolaId: string; ano: string }>;
+  searchParams: Promise<{ avaliacao?: string }>;
 }) {
   const { escolaId, ano: anoParam } = await params;
   const escola = getEscola(escolaId);
@@ -28,7 +38,10 @@ export default async function AnoPage({
   const turmas = getTurmas(escola, etapa);
   const ano = turmas[0].ano;
   const todos = turmas.flatMap((turma) => turma.alunos);
-  const resumo = resumir(todos, ano);
+  const { avaliacao: avaliacaoParam } = await searchParams;
+  const avaliacaoIdx = indiceAvaliacao(avaliacaoParam);
+  const avaliacaoSelecionada = AVALIACOES[avaliacaoIdx];
+  const resumo = resumir(todos, ano, avaliacaoIdx);
   const evolucao = AVALIACOES.map((avaliacao, i) => ({ avaliacao, resumo: resumir(todos, ano, i) }));
   const saeb = escola.resultados[etapa]!;
   const escolaHref = `/escolas/${escola.id}?etapa=${encodeURIComponent(etapa)}`;
@@ -46,9 +59,17 @@ export default async function AnoPage({
         {ano}º ano <span className="text-brand">{escola.nome}</span>
       </h1>
       <p className="mt-2 text-gray-600">
-        {etapa} · {turmas.length} {turmas.length === 1 ? "turma" : "turmas"} · {AVALIACAO_ATUAL.nome} (
-        {formatData(AVALIACAO_ATUAL.data)})
+        {etapa} · {turmas.length} {turmas.length === 1 ? "turma" : "turmas"} · {avaliacaoSelecionada.nome} (
+        {formatData(avaliacaoSelecionada.data)})
       </p>
+
+      <div className="mt-4">
+        <AvaliacaoSeletor
+          avaliacoes={AVALIACOES}
+          atual={avaliacaoIdx}
+          hrefFor={(i) => `/escolas/${escola.id}/anos/${ano}?avaliacao=${i}`}
+        />
+      </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
@@ -77,7 +98,7 @@ export default async function AnoPage({
               {formatPercent(resumo.adequado.MT)}
             </>
           }
-          detail="Estudantes em Proficiente ou Avançado"
+          detail="Estudantes em Adequado ou Avançado"
         />
       </div>
 
@@ -102,7 +123,7 @@ export default async function AnoPage({
             </thead>
             <tbody>
               {turmas.map((turma) => {
-                const r = resumir(turma.alunos, ano);
+                const r = resumir(turma.alunos, ano, avaliacaoIdx);
                 const href = `/escolas/${escola.id}/anos/${ano}/turmas/${turma.id}`;
                 return (
                   <tr key={turma.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
@@ -143,7 +164,7 @@ export default async function AnoPage({
           </table>
         </div>
         <p className="mt-3 text-xs text-gray-500">
-          Diferença em relação à média do {ano}º ano. Barras: Insuficiente, Básico, Proficiente e Avançado.
+          Diferença em relação à média do {ano}º ano. Barras: Abaixo do Básico, Básico, Adequado e Avançado.
         </p>
       </section>
 
@@ -158,9 +179,22 @@ export default async function AnoPage({
         </section>
 
         <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900">Evolução nas avaliações</h2>
-          <p className="mt-1 text-sm text-gray-500">Média do {ano}º ano na escala Saeb</p>
-          <table className="mt-4 w-full text-left text-sm">
+          <h2 className="text-lg font-semibold text-gray-900">Progresso mês a mês</h2>
+          <p className="mt-1 text-sm text-gray-500">
+            Média do {ano}º ano na escala Saeb, avaliação a avaliação
+          </p>
+          <div className="mt-4 overflow-x-auto">
+            <CurvaEvolucao
+              pontos={evolucao.map(({ avaliacao, resumo: r }, i) => ({
+                id: avaliacao.id,
+                rotulo: rotuloAvaliacaoCurto(avaliacao.nome),
+                selecionado: i === avaliacaoIdx,
+                LP: r.media.LP,
+                MT: r.media.MT,
+              }))}
+            />
+          </div>
+          <table className="mt-6 w-full text-left text-sm">
             <thead className="border-b border-gray-200 text-gray-500">
               <tr>
                 <th className="py-2 pr-3 font-medium">Avaliação</th>
@@ -173,10 +207,21 @@ export default async function AnoPage({
               </tr>
             </thead>
             <tbody>
-              {evolucao.map(({ avaliacao, resumo: r }) => (
-                <tr key={avaliacao.id} className="border-b border-gray-100 last:border-0">
+              {evolucao.map(({ avaliacao, resumo: r }, i) => (
+                <tr
+                  key={avaliacao.id}
+                  className={`border-b border-gray-100 last:border-0 ${
+                    i === avaliacaoIdx ? "bg-brand-soft/60" : ""
+                  }`}
+                >
                   <td className="py-3 pr-3">
-                    <p className="font-medium text-gray-900">{avaliacao.nome}</p>
+                    <p
+                      className={`font-medium ${
+                        i === avaliacaoIdx ? "text-brand" : "text-gray-900"
+                      }`}
+                    >
+                      {avaliacao.nome}
+                    </p>
                     <p className="text-xs text-gray-500">{formatData(avaliacao.data)}</p>
                   </td>
                   {DISCIPLINAS.map(({ codigo }) => (

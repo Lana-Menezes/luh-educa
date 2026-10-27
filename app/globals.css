@@ -14,14 +14,21 @@
   --color-danger-hover: #d40501;
   --color-danger-soft: #ffe5e4;
 
-  --color-accent: #ffd103;
-  --color-accent-hover: #e6bc00;
-  --color-accent-soft: #fff6cc;
-  --color-accent-ink: #9a7b00;
+  --color-accent: #f97316;
+  --color-accent-hover: #d36112;
+  --color-accent-soft: #fef1e7;
+  --color-accent-ink: #883f0c;
 
-  --color-success: #00b800;
-  --color-success-hover: #009a00;
-  --color-success-soft: #e0f8e0;
+  /* Verde da logo Luh Educa. */
+  --color-success: #048a2e;
+  --color-success-hover: #037126;
+  --color-success-soft: #e6f3ea;
+
+  /* Amarelo da logo Luh Educa — usado para alertas de "precisa de atenção". */
+  --color-attention: #fdb403;
+  --color-attention-hover: #d79902;
+  --color-attention-soft: #fef7e5;
+  --color-attention-ink: #8b6301;
 }
 
 /*

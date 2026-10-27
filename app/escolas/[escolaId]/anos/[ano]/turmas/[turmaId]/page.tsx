@@ -9,21 +9,30 @@ import {
 } from "@/lib/saeb";
 import {
   AVALIACOES,
-  AVALIACAO_ATUAL,
   estaInsuficiente,
   formatData,
   getTurma,
   getTurmas,
-  resultadoAtual,
+  indiceAvaliacao,
   resumir,
 } from "@/lib/turmas-mock";
-import { Breadcrumb, PadroesBarra, StatCard, deltaClass } from "../../../../../ui";
+import {
+  AvaliacaoSeletor,
+  Breadcrumb,
+  CurvaEvolucao,
+  PadroesBarra,
+  StatCard,
+  deltaClass,
+  rotuloAvaliacaoCurto,
+} from "../../../../../ui";
 import AlunosTabela from "./AlunosTabela";
 
 export default async function TurmaPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ escolaId: string; ano: string; turmaId: string }>;
+  searchParams: Promise<{ avaliacao?: string }>;
 }) {
   const { escolaId, ano: anoParam, turmaId } = await params;
   const escola = getEscola(escolaId);
@@ -34,10 +43,13 @@ export default async function TurmaPage({
   }
 
   const { ano, etapa } = turma;
-  const resumo = resumir(turma.alunos, ano);
-  const resumoAno = resumir(getTurmas(escola, etapa).flatMap((t) => t.alunos), ano);
+  const { avaliacao: avaliacaoParam } = await searchParams;
+  const avaliacaoIdx = indiceAvaliacao(avaliacaoParam);
+  const avaliacaoSelecionada = AVALIACOES[avaliacaoIdx];
+  const resumo = resumir(turma.alunos, ano, avaliacaoIdx);
+  const resumoAno = resumir(getTurmas(escola, etapa).flatMap((t) => t.alunos), ano, avaliacaoIdx);
   const evolucao = AVALIACOES.map((avaliacao, i) => ({ avaliacao, resumo: resumir(turma.alunos, ano, i) }));
-  const ausentes = turma.alunos.filter((a) => resultadoAtual(a) === null);
+  const ausentes = turma.alunos.filter((a) => (a.resultados[avaliacaoIdx] ?? null) === null);
   const anoHref = `/escolas/${escola.id}/anos/${ano}`;
   const maxEvolucao = Math.max(...evolucao.flatMap(({ resumo: r }) => [r.media.LP, r.media.MT]));
 
@@ -55,9 +67,17 @@ export default async function TurmaPage({
         {turma.nome} <span className="text-brand">{escola.nome}</span>
       </h1>
       <p className="mt-2 text-gray-600">
-        Turno da {turma.turno.toLowerCase()} · {turma.alunos.length} estudantes · {AVALIACAO_ATUAL.nome} (
-        {formatData(AVALIACAO_ATUAL.data)})
+        Turno da {turma.turno.toLowerCase()} · {turma.alunos.length} estudantes · {avaliacaoSelecionada.nome} (
+        {formatData(avaliacaoSelecionada.data)})
       </p>
+
+      <div className="mt-4">
+        <AvaliacaoSeletor
+          avaliacoes={AVALIACOES}
+          atual={avaliacaoIdx}
+          hrefFor={(i) => `${anoHref}/turmas/${turma.id}?avaliacao=${i}`}
+        />
+      </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
@@ -86,12 +106,28 @@ export default async function TurmaPage({
           );
         })}
         <StatCard
-          label="Com padrão Insuficiente"
-          value={turma.alunos.filter((a) => estaInsuficiente(a, ano)).length}
+          label="Com padrão Abaixo do Básico"
+          value={turma.alunos.filter((a) => estaInsuficiente(a, ano, avaliacaoIdx)).length}
           valueClassName="text-danger"
           detail="Em Língua Portuguesa ou Matemática"
         />
       </div>
+
+      <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-gray-900">Progresso mês a mês</h2>
+        <p className="mt-1 text-sm text-gray-500">Média da turma nas avaliações do ano (escala Saeb)</p>
+        <div className="mt-4 overflow-x-auto">
+          <CurvaEvolucao
+            pontos={evolucao.map(({ avaliacao, resumo: r }, i) => ({
+              id: avaliacao.id,
+              rotulo: rotuloAvaliacaoCurto(avaliacao.nome),
+              selecionado: i === avaliacaoIdx,
+              LP: r.media.LP,
+              MT: r.media.MT,
+            }))}
+          />
+        </div>
+      </section>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -104,13 +140,15 @@ export default async function TurmaPage({
         </section>
 
         <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900">Evolução da turma</h2>
-          <p className="mt-1 text-sm text-gray-500">Média nas avaliações do ano (escala Saeb)</p>
+          <h2 className="text-lg font-semibold text-gray-900">Detalhe por avaliação</h2>
+          <p className="mt-1 text-sm text-gray-500">Média da turma nas avaliações do ano (escala Saeb)</p>
           <div className="mt-5 space-y-4">
-            {evolucao.map(({ avaliacao, resumo: r }) => (
-              <div key={avaliacao.id}>
+            {evolucao.map(({ avaliacao, resumo: r }, i) => (
+              <div key={avaliacao.id} className={i === avaliacaoIdx ? "-mx-2 rounded-lg bg-brand-soft/60 px-2 py-1" : ""}>
                 <p className="text-sm text-gray-700">
-                  <span className="font-medium text-gray-900">{avaliacao.nome}</span>{" "}
+                  <span className={`font-medium ${i === avaliacaoIdx ? "text-brand" : "text-gray-900"}`}>
+                    {avaliacao.nome}
+                  </span>{" "}
                   <span className="text-xs text-gray-500">· {formatData(avaliacao.data)}</span>
                 </p>
                 {DISCIPLINAS.map(({ codigo }) => (
@@ -133,7 +171,13 @@ export default async function TurmaPage({
         </section>
       </div>
 
-      <AlunosTabela alunos={turma.alunos} ano={ano} baseHref={`${anoHref}/turmas/${turma.id}`} />
+      <AlunosTabela
+        alunos={turma.alunos}
+        ano={ano}
+        baseHref={`${anoHref}/turmas/${turma.id}`}
+        avaliacaoIndex={avaliacaoIdx}
+        avaliacaoNome={avaliacaoSelecionada.nome}
+      />
     </div>
   );
 }

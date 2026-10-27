@@ -1,7 +1,6 @@
 import {
   ANO_POR_ETAPA,
-  PARTICIPACAO_MINIMA_IDEB,
-  calcularIdeb,
+  PARTICIPACAO_MINIMA_SAEB,
   type AnoSaeb,
   type Disciplina,
   type Etapa,
@@ -20,7 +19,7 @@ export type EscolaRede = {
   resultados: Partial<Record<Etapa, ResultadoSaeb>>;
 };
 
-export type ReferenciaSaeb = { ideb: number; proficiencia: Record<Disciplina, number> };
+export type ReferenciaSaeb = { proficiencia: Record<Disciplina, number> };
 
 export type RedeMock = {
   nome: string;
@@ -45,12 +44,13 @@ function saeb(
 
 export const redeMock: RedeMock = {
   nome: "Rede Municipal de Ensino",
-  municipio: "São José do Vale",
-  uf: "MG",
+  municipio: "Mafra",
+  uf: "SC",
   edicao: "Saeb 2025",
   referenciaNacional: {
-    "Anos Iniciais": { ideb: 5.7, proficiencia: { LP: 210, MT: 220 } },
-    "Anos Finais": { ideb: 4.7, proficiencia: { LP: 255, MT: 250 } },
+    "Alfabetização": { proficiencia: { LP: 130, MT: 135 } },
+    "Anos Iniciais": { proficiencia: { LP: 210, MT: 220 } },
+    "Anos Finais": { proficiencia: { LP: 255, MT: 250 } },
   },
   escolas: [
     {
@@ -60,6 +60,7 @@ export const redeMock: RedeMock = {
       bairro: "Centro",
       zona: "Urbana",
       resultados: {
+        "Alfabetização": saeb(2, 230, 93.5, 96.8, 132.9, 141.4),
         "Anos Iniciais": saeb(5, 238, 94.2, 97.1, 214.3, 228.1),
         "Anos Finais": saeb(9, 248, 91.0, 92.4, 262.4, 258.2),
       },
@@ -71,6 +72,7 @@ export const redeMock: RedeMock = {
       bairro: "Vila Nova",
       zona: "Urbana",
       resultados: {
+        "Alfabetização": saeb(2, 290, 90.8, 95.0, 127.8, 136.0),
         "Anos Iniciais": saeb(5, 301, 91.5, 95.8, 206.2, 219.4),
         "Anos Finais": saeb(9, 311, 88.3, 89.7, 254.1, 249.3),
       },
@@ -92,6 +94,7 @@ export const redeMock: RedeMock = {
       bairro: "Jardim das Flores",
       zona: "Urbana",
       resultados: {
+        "Alfabetização": saeb(2, 265, 95.8, 97.9, 136.0, 143.3),
         "Anos Iniciais": saeb(5, 274, 96.4, 98.2, 219.4, 231.2),
       },
     },
@@ -102,6 +105,7 @@ export const redeMock: RedeMock = {
       bairro: "São Judas Tadeu",
       zona: "Urbana",
       resultados: {
+        "Alfabetização": saeb(2, 250, 80.9, 92.0, 122.8, 128.5),
         "Anos Iniciais": saeb(5, 262, 82.3, 93.4, 198.1, 207.3),
         "Anos Finais": saeb(9, 269, 76.8, 85.1, 241.2, 235.9),
       },
@@ -123,6 +127,7 @@ export const redeMock: RedeMock = {
       bairro: "Bela Vista",
       zona: "Urbana",
       resultados: {
+        "Alfabetização": saeb(2, 172, 92.0, 98.0, 138.5, 146.4),
         "Anos Iniciais": saeb(5, 180, 93.1, 98.5, 223.4, 236.2),
         "Anos Finais": saeb(9, 185, 92.6, 94.0, 268.1, 266.4),
       },
@@ -134,6 +139,7 @@ export const redeMock: RedeMock = {
       bairro: "Bairro Industrial",
       zona: "Urbana",
       resultados: {
+        "Alfabetização": saeb(2, 210, 89.0, 95.3, 129.1, 133.4),
         "Anos Iniciais": saeb(5, 219, 90.2, 96.0, 208.3, 215.1),
       },
     },
@@ -144,6 +150,7 @@ export const redeMock: RedeMock = {
       bairro: "Comunidade Córrego Fundo",
       zona: "Rural",
       resultados: {
+        "Alfabetização": saeb(2, 60, 87.5, 91.0, 118.5, 123.0),
         "Anos Iniciais": saeb(5, 64, 89.1, 92.7, 191.2, 198.4),
       },
     },
@@ -154,6 +161,7 @@ export const redeMock: RedeMock = {
       bairro: "Distrito de Boa Vista",
       zona: "Rural",
       resultados: {
+        "Alfabetização": saeb(2, 58, 78.0, 90.5, 121.8, 126.0),
         "Anos Iniciais": saeb(5, 61, 79.6, 91.8, 196.4, 203.2),
         "Anos Finais": saeb(9, 57, 83.4, 87.9, 239.3, 233.1),
       },
@@ -165,6 +173,7 @@ export const redeMock: RedeMock = {
       bairro: "Povoado Santo Antônio",
       zona: "Rural",
       resultados: {
+        "Alfabetização": saeb(2, 45, 96.5, 96.3, 126.5, 131.6),
         "Anos Iniciais": saeb(5, 47, 97.9, 97.0, 204.1, 212.3),
       },
     },
@@ -175,6 +184,7 @@ export const redeMock: RedeMock = {
       bairro: "Alto da Glória",
       zona: "Urbana",
       resultados: {
+        "Alfabetização": saeb(2, 240, 91.5, 96.0, 131.0, 139.1),
         "Anos Iniciais": saeb(5, 249, 92.8, 96.6, 211.2, 224.3),
         "Anos Finais": saeb(9, 254, 90.1, 91.3, 258.3, 255.1),
       },
@@ -182,7 +192,7 @@ export const redeMock: RedeMock = {
   ],
 };
 
-export const ETAPAS: Etapa[] = ["Anos Iniciais", "Anos Finais"];
+export const ETAPAS: Etapa[] = ["Alfabetização", "Anos Iniciais", "Anos Finais"];
 
 export function getEscola(id: string) {
   return redeMock.escolas.find((escola) => escola.id === id);
@@ -213,18 +223,18 @@ export function getResultadoRede(etapa: Etapa, escolas: EscolaRede[] = redeMock.
 
 export type MotivoAtencao = { etapa: Etapa; motivo: string };
 
-/** Ideb abaixo da referência nacional ou participação insuficiente para divulgação do Ideb. */
+/** Participação insuficiente no Saeb ou proficiência abaixo da referência nacional. */
 export function motivosAtencao(escola: EscolaRede): MotivoAtencao[] {
   return etapasDaEscola(escola).flatMap((etapa) => {
     const resultado = escola.resultados[etapa]!;
-    const { ideb } = calcularIdeb(resultado);
+    const referencia = redeMock.referenciaNacional[etapa];
     const motivos: MotivoAtencao[] = [];
 
-    if (resultado.participacao < PARTICIPACAO_MINIMA_IDEB) {
-      motivos.push({ etapa, motivo: `participação abaixo de ${PARTICIPACAO_MINIMA_IDEB}%` });
+    if (resultado.participacao < PARTICIPACAO_MINIMA_SAEB) {
+      motivos.push({ etapa, motivo: `participação abaixo de ${PARTICIPACAO_MINIMA_SAEB}%` });
     }
-    if (ideb < redeMock.referenciaNacional[etapa].ideb) {
-      motivos.push({ etapa, motivo: "Ideb abaixo da referência nacional" });
+    if (resultado.proficiencia.LP < referencia.proficiencia.LP || resultado.proficiencia.MT < referencia.proficiencia.MT) {
+      motivos.push({ etapa, motivo: "Proficiência abaixo da referência nacional" });
     }
     return motivos;
   });

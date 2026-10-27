@@ -1,6 +1,6 @@
 import { ETAPAS, type Etapa, type Zona } from "@/lib/rede-mock";
 
-export type Ordenacao = "nome" | "maior-ideb" | "menor-ideb" | "menor-participacao";
+export type Ordenacao = "nome" | "maior-proficiencia" | "menor-proficiencia" | "menor-participacao";
 
 export type EscolaFinderFiltros = {
   q: string;
@@ -14,8 +14,8 @@ export const zonas: Zona[] = ["Urbana", "Rural"];
 export const etapas = ETAPAS;
 export const ordenacoes: { value: Ordenacao; label: string }[] = [
   { value: "nome", label: "Nome (A–Z)" },
-  { value: "maior-ideb", label: "Maior Ideb" },
-  { value: "menor-ideb", label: "Menor Ideb" },
+  { value: "maior-proficiencia", label: "Maior proficiência" },
+  { value: "menor-proficiencia", label: "Menor proficiência" },
   { value: "menor-participacao", label: "Menor participação" },
 ];
 

@@ -1,3 +1,4 @@
+import { CICLOS_AVALIATIVOS, tituloCiclo } from "@/lib/avaliacoes-mock";
 import { etapasDaEscola, type EscolaRede } from "@/lib/rede-mock";
 import {
   ANO_POR_ETAPA,
@@ -12,16 +13,28 @@ import {
 
 /**
  * Avaliações aplicadas pela LUH Educa na rede, com resultados por estudante
- * na escala Saeb. O Saeb oficial (Inep) só divulga resultados por escola;
- * o acompanhamento por turma e estudante vem destas avaliações.
+ * na escala Saeb: 1 diagnóstica, 8 formativas e 1 somativa, no mesmo
+ * calendário das provas (lib/avaliacoes-mock.ts). O Saeb oficial (Inep) só
+ * divulga resultados por escola; o acompanhamento mês a mês por turma e
+ * estudante vem destas avaliações.
  */
-export const AVALIACOES = [
-  { id: "diagnostica", nome: "Avaliação diagnóstica", data: "2026-03-16" },
-  { id: "intermediaria", nome: "Avaliação intermediária", data: "2026-06-15" },
-  { id: "simulado", nome: "Simulado Saeb", data: "2026-09-21" },
-] as const;
+export const AVALIACOES = CICLOS_AVALIATIVOS.map((ciclo) => ({
+  id: `${ciclo.tipo.toLowerCase()}-${ciclo.ordem}`,
+  nome: tituloCiclo(ciclo),
+  periodo: ciclo.periodo,
+  data: `2026-${String(ciclo.mes).padStart(2, "0")}-15`,
+}));
 
 export const AVALIACAO_ATUAL = AVALIACOES[AVALIACOES.length - 1];
+
+/** Índice válido de AVALIACOES a partir de um parâmetro de busca; padrão: a mais recente. */
+export function indiceAvaliacao(param?: string) {
+  const i = Number(param);
+  if (!Number.isInteger(i) || i < 0 || i >= AVALIACOES.length) {
+    return AVALIACOES.length - 1;
+  }
+  return i;
+}
 
 export type Proficiencias = Record<Disciplina, number>;
 
@@ -158,12 +171,16 @@ export function resultadoAtual(aluno: Aluno) {
   return aluno.resultados[aluno.resultados.length - 1];
 }
 
-/** Presente na avaliação mais recente e no padrão Insuficiente em LP ou MT. */
-export function estaInsuficiente(aluno: Aluno, ano: AnoSaeb) {
-  const atual = resultadoAtual(aluno);
+/** Presente na avaliação (padrão: a mais recente) e no padrão Abaixo do Básico em LP ou MT. */
+export function estaInsuficiente(
+  aluno: Aluno,
+  ano: AnoSaeb,
+  avaliacaoIndex: number = AVALIACOES.length - 1,
+) {
+  const resultado = aluno.resultados[avaliacaoIndex] ?? null;
   return (
-    atual !== null &&
-    DISCIPLINAS.some(({ codigo }) => padraoDaProficiencia(ano, codigo, atual[codigo]) === "Insuficiente")
+    resultado !== null &&
+    DISCIPLINAS.some(({ codigo }) => padraoDaProficiencia(ano, codigo, resultado[codigo]) === "Abaixo do Básico")
   );
 }
 
@@ -173,7 +190,7 @@ export type ResumoAvaliacao = {
   participacao: number;
   media: Proficiencias;
   padroes: Record<Disciplina, Record<Padrao, number>>;
-  /** % de estudantes avaliados em Proficiente ou Avançado. */
+  /** % de estudantes avaliados em Adequado ou Avançado. */
   adequado: Proficiencias;
 };
 
@@ -193,7 +210,7 @@ export function resumir(
     media[codigo] = presentes.reduce((sum, p) => sum + p[codigo], 0) / n;
     padroes[codigo] = Object.fromEntries(PADROES.map((p) => [p, 0])) as Record<Padrao, number>;
     for (const p of presentes) padroes[codigo][padraoDaProficiencia(ano, codigo, p[codigo])]++;
-    adequado[codigo] = ((padroes[codigo].Proficiente + padroes[codigo].Avançado) / n) * 100;
+    adequado[codigo] = ((padroes[codigo].Adequado + padroes[codigo].Avançado) / n) * 100;
   }
 
   return {

@@ -2,11 +2,9 @@ import { checkPostTableExists } from "@/lib/db-utils";
 import { ETAPAS, getResultadoRede, precisaAtencao, redeMock } from "@/lib/rede-mock";
 import {
   DISCIPLINAS,
-  PARTICIPACAO_MINIMA_IDEB,
+  PARTICIPACAO_MINIMA_SAEB,
   aprendizadoAdequado,
-  calcularIdeb,
   formatDelta,
-  formatIdeb,
   formatPercent,
   formatProficiencia,
   nivelDaProficiencia,
@@ -18,7 +16,7 @@ import { parseFiltros } from "./filtros";
 export const dynamic = "force-dynamic";
 
 function deltaClass(value: number) {
-  return value >= 0 ? "text-success" : "text-accent-ink";
+  return value >= 0 ? "text-success" : "text-attention";
 }
 
 export default async function DashboardPage({
@@ -43,7 +41,6 @@ export default async function DashboardPage({
     return {
       etapa,
       resultado,
-      ideb: calcularIdeb(resultado),
       referencia: rede.referenciaNacional[etapa],
       escolas: rede.escolas.filter((escola) => escola.resultados[etapa]).length,
     };
@@ -61,11 +58,11 @@ export default async function DashboardPage({
         </h1>
         <p className="mt-2 text-gray-600">
           Resultados das escolas municipais no {rede.edicao} (Sistema de Avaliação da Educação
-          Básica) · 5º e 9º ano do Ensino Fundamental
+          Básica) · 2º, 5º e 9º ano do Ensino Fundamental
         </p>
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">Escolas avaliadas</p>
           <p className="mt-2 text-3xl font-bold text-gray-900">{rede.escolas.length}</p>
@@ -73,29 +70,33 @@ export default async function DashboardPage({
             {totalAlunos.toLocaleString("pt-BR")} alunos avaliados no Saeb
           </p>
         </div>
-        {porEtapa.map(({ etapa, resultado, ideb, referencia }) => (
-          <div key={etapa} className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-            <p className="text-sm text-gray-500">
-              Ideb da rede · {etapa} ({resultado.ano}º ano)
-            </p>
-            <p className="mt-2 text-3xl font-bold text-gray-900">{formatIdeb(ideb.ideb)}</p>
-            <p className={`mt-1 text-xs ${deltaClass(ideb.ideb - referencia.ideb)}`}>
-              {formatDelta(ideb.ideb - referencia.ideb, formatIdeb)} vs. referência nacional (
-              {formatIdeb(referencia.ideb)})
-            </p>
-          </div>
-        ))}
+        {porEtapa.map(({ etapa, resultado, referencia }) => {
+          const mediaRede = (resultado.proficiencia.LP + resultado.proficiencia.MT) / 2;
+          const mediaReferencia = (referencia.proficiencia.LP + referencia.proficiencia.MT) / 2;
+          return (
+            <div key={etapa} className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+              <p className="text-sm text-gray-500">
+                Proficiência média · {etapa} ({resultado.ano}º ano)
+              </p>
+              <p className="mt-2 text-3xl font-bold text-gray-900">{formatProficiencia(mediaRede)}</p>
+              <p className={`mt-1 text-xs ${deltaClass(mediaRede - mediaReferencia)}`}>
+                {formatDelta(mediaRede - mediaReferencia)} vs. referência nacional (
+                {formatProficiencia(mediaReferencia)})
+              </p>
+            </div>
+          );
+        })}
         <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-gray-500">Escolas que precisam de atenção</p>
-          <p className="mt-2 text-3xl font-bold text-accent-ink">{escolasEmAtencao}</p>
+          <p className="mt-2 text-3xl font-bold text-attention">{escolasEmAtencao}</p>
           <p className="mt-1 text-xs text-gray-500">
-            Ideb abaixo da referência ou participação &lt; {PARTICIPACAO_MINIMA_IDEB}%
+            Proficiência abaixo da referência ou participação &lt; {PARTICIPACAO_MINIMA_SAEB}%
           </p>
         </div>
       </div>
 
       <section className="mt-6 grid gap-6 lg:grid-cols-2">
-        {porEtapa.map(({ etapa, resultado, ideb, referencia, escolas }) => (
+        {porEtapa.map(({ etapa, resultado, referencia, escolas }) => (
           <div key={etapa} className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -156,11 +157,6 @@ export default async function DashboardPage({
                 );
               })}
             </dl>
-
-            <p className="mt-4 text-xs text-gray-500">
-              Ideb {formatIdeb(ideb.ideb)} = nota padronizada {formatIdeb(ideb.N)} × aprovação{" "}
-              {ideb.P.toLocaleString("pt-BR", { maximumFractionDigits: 2 })}
-            </p>
           </div>
         ))}
       </section>

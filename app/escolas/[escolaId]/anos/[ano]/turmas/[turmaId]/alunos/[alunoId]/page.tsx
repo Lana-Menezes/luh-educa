@@ -9,7 +9,7 @@ import {
   nivelDaProficiencia,
   padraoDaProficiencia,
 } from "@/lib/saeb";
-import { AVALIACOES, formatData, getTurma, resultadoAtual, resumir } from "@/lib/turmas-mock";
+import { AVALIACAO_ATUAL, AVALIACOES, formatData, getTurma, resultadoAtual, resumir } from "@/lib/turmas-mock";
 import { Breadcrumb, PadraoBadge, corPadrao, deltaClass } from "../../../../../../../ui";
 
 export default async function AlunoPage({
@@ -44,15 +44,15 @@ export default async function AlunoPage({
   for (const { codigo, nome } of DISCIPLINAS) {
     if (!ultima) break;
     const padrao = padraoDaProficiencia(ano, codigo, ultima[codigo]);
-    if (padrao === "Insuficiente") {
+    if (padrao === "Abaixo do Básico") {
       recomendacoes.push(
-        `${nome}: padrão Insuficiente. Inclua o estudante no grupo de recomposição das habilidades dos níveis iniciais da escala.`,
+        `${nome}: padrão Abaixo do Básico. Inclua o estudante no grupo de recomposição das habilidades dos níveis iniciais da escala.`,
       );
     } else if (padrao === "Básico") {
       recomendacoes.push(
         `${nome}: padrão Básico, a ${formatProficiencia(
           ESCALA_SAEB[ano][codigo].cortesPadroes[1] - ultima[codigo],
-        )} pontos do Proficiente. Priorize as habilidades do nível seguinte.`,
+        )} pontos do Adequado. Priorize as habilidades do nível seguinte.`,
       );
     }
   }
@@ -90,7 +90,7 @@ export default async function AlunoPage({
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900">{nome}</h2>
                   <p className="mt-1 text-sm text-gray-500">
-                    {atual ? "Simulado Saeb mais recente" : `Última avaliação: ${ultima?.avaliacao.nome ?? "—"}`}
+                    {atual ? `${AVALIACAO_ATUAL.nome} (mais recente)` : `Última avaliação: ${ultima?.avaliacao.nome ?? "—"}`}
                   </p>
                 </div>
                 {valor !== undefined && <PadraoBadge padrao={padraoDaProficiencia(ano, codigo, valor)} />}

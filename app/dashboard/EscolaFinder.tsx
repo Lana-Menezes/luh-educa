@@ -14,9 +14,7 @@ import {
 } from "@/lib/rede-mock";
 import {
   ANO_POR_ETAPA,
-  PARTICIPACAO_MINIMA_IDEB,
-  calcularIdeb,
-  formatIdeb,
+  PARTICIPACAO_MINIMA_SAEB,
   formatPercent,
   formatProficiencia,
 } from "@/lib/saeb";
@@ -37,10 +35,12 @@ function chipClass(active: boolean) {
 }
 
 /** Com uma etapa filtrada, ordena por ela; senão, pela média das etapas da escola. */
-function chaveOrdenacao(escola: EscolaRede, etapa: Etapa | "", campo: "ideb" | "participacao") {
+function chaveOrdenacao(escola: EscolaRede, etapa: Etapa | "", campo: "proficiencia" | "participacao") {
   const valores = (etapa ? [etapa] : etapasDaEscola(escola)).map((e) => {
     const resultado = escola.resultados[e]!;
-    return campo === "ideb" ? calcularIdeb(resultado).ideb : resultado.participacao;
+    return campo === "proficiencia"
+      ? (resultado.proficiencia.LP + resultado.proficiencia.MT) / 2
+      : resultado.participacao;
   });
   return valores.reduce((sum, v) => sum + v, 0) / valores.length;
 }
@@ -91,10 +91,10 @@ export default function EscolaFinder({
 
     return filtradas.sort((a, b) => {
       switch (ordem) {
-        case "maior-ideb":
-          return chaveOrdenacao(b, etapa, "ideb") - chaveOrdenacao(a, etapa, "ideb");
-        case "menor-ideb":
-          return chaveOrdenacao(a, etapa, "ideb") - chaveOrdenacao(b, etapa, "ideb");
+        case "maior-proficiencia":
+          return chaveOrdenacao(b, etapa, "proficiencia") - chaveOrdenacao(a, etapa, "proficiencia");
+        case "menor-proficiencia":
+          return chaveOrdenacao(a, etapa, "proficiencia") - chaveOrdenacao(b, etapa, "proficiencia");
         case "menor-participacao":
           return chaveOrdenacao(a, etapa, "participacao") - chaveOrdenacao(b, etapa, "participacao");
         default:
@@ -190,9 +190,13 @@ export default function EscolaFinder({
         <button
           type="button"
           aria-pressed={atencao}
-          className={`ml-3 ${chipClass(atencao)}`}
+          className={`ml-3 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
+            atencao
+              ? "border-attention bg-attention-soft text-attention"
+              : "border-gray-200 bg-white text-gray-700 hover:border-attention hover:text-gray-900"
+          }`}
           onClick={() => update({ atencao: !atencao })}
-          title={`Ideb abaixo da referência nacional ou participação inferior a ${PARTICIPACAO_MINIMA_IDEB}%`}
+          title={`Proficiência abaixo da referência nacional ou participação inferior a ${PARTICIPACAO_MINIMA_SAEB}%`}
         >
           Precisam de atenção
         </button>
@@ -246,7 +250,7 @@ export default function EscolaFinder({
                             .map((m) => `${ANO_POR_ETAPA[m.etapa]}º ano: ${m.motivo}`)
                             .join("\n")}
                         >
-                          <AlertTriangle className="h-4 w-4 shrink-0 text-accent-ink" aria-hidden />
+                          <AlertTriangle className="h-4 w-4 shrink-0 text-attention" aria-hidden />
                         </span>
                       )}
                     </p>
@@ -258,43 +262,36 @@ export default function EscolaFinder({
                   <div className="shrink-0 space-y-1.5 text-sm">
                     {etapasVisiveis.map((e) => {
                       const resultado = escola.resultados[e]!;
-                      const { ideb, divulgado } = calcularIdeb(resultado);
-                      const abaixo = ideb < referenciaNacional[e].ideb;
+                      const referencia = referenciaNacional[e];
+                      const abaixoLP = resultado.proficiencia.LP < referencia.proficiencia.LP;
+                      const abaixoMT = resultado.proficiencia.MT < referencia.proficiencia.MT;
 
                       return (
                         <div key={e} className="flex items-baseline justify-end gap-4">
                           <span className="w-12 text-xs text-gray-500">{resultado.ano}º ano</span>
                           <span className="w-20 text-right">
-                            <span className="text-xs text-gray-500">Ideb </span>
-                            {divulgado ? (
-                              <span className={`font-semibold ${abaixo ? "text-accent-ink" : "text-gray-900"}`}>
-                                {formatIdeb(ideb)}
-                              </span>
-                            ) : (
-                              <span className="font-semibold text-gray-400" title="Ideb não divulgado: participação abaixo de 80%">
-                                —
-                              </span>
-                            )}
-                          </span>
-                          <span className="hidden w-20 text-right md:inline">
                             <span className="text-xs text-gray-500">LP </span>
-                            <span className="font-medium text-gray-900">
+                            <span className={`font-semibold ${abaixoLP ? "text-attention" : "text-gray-900"}`}>
                               {formatProficiencia(resultado.proficiencia.LP)}
                             </span>
                           </span>
                           <span className="hidden w-20 text-right md:inline">
                             <span className="text-xs text-gray-500">MT </span>
-                            <span className="font-medium text-gray-900">
+                            <span className={`font-medium ${abaixoMT ? "text-attention" : "text-gray-900"}`}>
                               {formatProficiencia(resultado.proficiencia.MT)}
                             </span>
                           </span>
-                          <span
-                            className={`hidden w-14 text-right font-medium lg:inline ${
-                              resultado.participacao < PARTICIPACAO_MINIMA_IDEB ? "text-accent-ink" : "text-gray-600"
-                            }`}
-                            title="Participação no Saeb"
-                          >
-                            {formatPercent(resultado.participacao)}
+                          <span className="hidden w-20 text-right lg:inline" title="Participação no Saeb">
+                            <span className="text-xs text-gray-500">Part. </span>
+                            <span
+                              className={`font-medium ${
+                                resultado.participacao < PARTICIPACAO_MINIMA_SAEB
+                                  ? "text-attention"
+                                  : "text-gray-600"
+                              }`}
+                            >
+                              {formatPercent(resultado.participacao)}
+                            </span>
                           </span>
                         </div>
                       );

@@ -15,9 +15,44 @@ export function nomeSerie(serie: Serie) {
   return `${serie}º Ano`;
 }
 
-const MESES_FORMATIVAS = [
-  "Março", "Abril", "Maio", "Junho", "Agosto", "Setembro", "Outubro", "Novembro",
+const MESES_FORMATIVAS: { nome: string; numero: number }[] = [
+  { nome: "Março", numero: 3 },
+  { nome: "Abril", numero: 4 },
+  { nome: "Maio", numero: 5 },
+  { nome: "Junho", numero: 6 },
+  { nome: "Agosto", numero: 8 },
+  { nome: "Setembro", numero: 9 },
+  { nome: "Outubro", numero: 10 },
+  { nome: "Novembro", numero: 11 },
 ];
+
+export type CicloAvaliativo = {
+  tipo: TipoAvaliacao;
+  /** 1 para Diagnóstica/Somativa; 1–8 para Formativa. */
+  ordem: number;
+  periodo: string;
+  mes: number;
+};
+
+/**
+ * Calendário de aplicação do ano letivo: 1 diagnóstica, 8 formativas e 1
+ * somativa. Compartilhado entre as provas (por série) e os resultados por
+ * turma/estudante (lib/turmas-mock.ts), para manter os nomes e meses alinhados.
+ */
+export const CICLOS_AVALIATIVOS: CicloAvaliativo[] = [
+  { tipo: "Diagnóstica", ordem: 1, periodo: "Fevereiro", mes: 2 },
+  ...MESES_FORMATIVAS.map(({ nome, numero }, i) => ({
+    tipo: "Formativa" as const,
+    ordem: i + 1,
+    periodo: nome,
+    mes: numero,
+  })),
+  { tipo: "Somativa", ordem: 1, periodo: "Dezembro", mes: 12 },
+];
+
+export function tituloCiclo(ciclo: Pick<CicloAvaliativo, "tipo" | "ordem">) {
+  return ciclo.tipo === "Formativa" ? `${ciclo.tipo} ${ciclo.ordem}` : ciclo.tipo;
+}
 
 export type Avaliacao = {
   id: string;
@@ -33,31 +68,18 @@ export type Avaliacao = {
 };
 
 function construirAvaliacoes(serie: Serie): Avaliacao[] {
-  const base: { tipo: TipoAvaliacao; ordem: number; periodo: string }[] = [
-    { tipo: "Diagnóstica", ordem: 1, periodo: "Fevereiro" },
-    ...MESES_FORMATIVAS.map((mes, i) => ({
-      tipo: "Formativa" as const,
-      ordem: i + 1,
-      periodo: mes,
+  return CICLOS_AVALIATIVOS.flatMap(({ tipo, ordem, periodo }) =>
+    DISCIPLINAS.map(({ codigo, nome }) => ({
+      id: `${serie}-${tipo.toLowerCase()}-${ordem}-${codigo.toLowerCase()}`,
+      serie,
+      tipo,
+      ordem,
+      disciplina: codigo,
+      titulo: `${tituloCiclo({ tipo, ordem })} · ${nome}`,
+      periodo,
+      arquivoUrl: "/provas/modelo-prova.pdf",
+      arquivoNome: `${serie}ano-${tipo.toLowerCase()}${tipo === "Formativa" ? ordem : ""}-${codigo.toLowerCase()}.pdf`,
     })),
-    { tipo: "Somativa", ordem: 1, periodo: "Dezembro" },
-  ];
-
-  return base.flatMap(({ tipo, ordem, periodo }) =>
-    DISCIPLINAS.map(({ codigo, nome }) => {
-      const titulo = tipo === "Formativa" ? `${tipo} ${ordem}` : tipo;
-      return {
-        id: `${serie}-${tipo.toLowerCase()}-${ordem}-${codigo.toLowerCase()}`,
-        serie,
-        tipo,
-        ordem,
-        disciplina: codigo,
-        titulo: `${titulo} · ${nome}`,
-        periodo,
-        arquivoUrl: "/provas/modelo-prova.pdf",
-        arquivoNome: `${serie}ano-${tipo.toLowerCase()}${tipo === "Formativa" ? ordem : ""}-${codigo.toLowerCase()}.pdf`,
-      };
-    }),
   );
 }
 

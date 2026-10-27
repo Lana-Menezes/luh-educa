@@ -3,27 +3,25 @@ import { notFound } from "next/navigation";
 import { etapasDaEscola, getEscola, getResultadoRede, redeMock } from "@/lib/rede-mock";
 import {
   DISCIPLINAS,
-  PARTICIPACAO_MINIMA_IDEB,
+  PARTICIPACAO_MINIMA_SAEB,
   aprendizadoAdequado,
-  calcularIdeb,
   distribuicaoNiveis,
   distribuicaoPadroes,
   formatDelta,
-  formatIdeb,
   formatPercent,
   formatProficiencia,
   nivelDaProficiencia,
 } from "@/lib/saeb";
-import { AVALIACAO_ATUAL, formatData, getTurmas, resumir } from "@/lib/turmas-mock";
+import { AVALIACOES, formatData, getTurmas, indiceAvaliacao, resumir } from "@/lib/turmas-mock";
 import { ChevronRight } from "lucide-react";
-import { Breadcrumb, PadroesBarra, corPadrao, deltaClass } from "../ui";
+import { AvaliacaoSeletor, Breadcrumb, PadroesBarra, corPadrao, deltaClass } from "../ui";
 
 export default async function EscolaPage({
   params,
   searchParams,
 }: {
   params: Promise<{ escolaId: string }>;
-  searchParams: Promise<{ etapa?: string }>;
+  searchParams: Promise<{ etapa?: string; avaliacao?: string }>;
 }) {
   const { escolaId } = await params;
   const escola = getEscola(escolaId);
@@ -33,32 +31,25 @@ export default async function EscolaPage({
   }
 
   const etapas = etapasDaEscola(escola);
-  const { etapa: etapaParam } = await searchParams;
+  const { etapa: etapaParam, avaliacao: avaliacaoParam } = await searchParams;
   const etapa = etapas.find((e) => e === etapaParam) ?? etapas[0];
   const resultado = escola.resultados[etapa]!;
-  const ideb = calcularIdeb(resultado);
   const rede = getResultadoRede(etapa);
-  const idebRede = calcularIdeb(rede);
   const referencia = redeMock.referenciaNacional[etapa];
   const ano = resultado.ano;
   const turmas = getTurmas(escola, etapa);
-  const resumoAno = resumir(turmas.flatMap((t) => t.alunos), ano);
+  const avaliacaoIdx = indiceAvaliacao(avaliacaoParam);
+  const avaliacaoSelecionada = AVALIACOES[avaliacaoIdx];
+  const resumoAno = resumir(turmas.flatMap((t) => t.alunos), ano, avaliacaoIdx);
 
   const leituras = [
-    ideb.divulgado
-      ? `O Ideb da escola (${formatIdeb(ideb.ideb)}) está ${formatIdeb(
-          Math.abs(ideb.ideb - referencia.ideb),
-        )} ponto ${ideb.ideb >= referencia.ideb ? "acima" : "abaixo"} da referência nacional e ${formatIdeb(
-          Math.abs(ideb.ideb - idebRede.ideb),
-        )} ${ideb.ideb >= idebRede.ideb ? "acima" : "abaixo"} da média da rede.`
-      : `Com ${formatPercent(resultado.participacao)} de participação, a escola não atinge os ${PARTICIPACAO_MINIMA_IDEB}% exigidos e o Ideb não é divulgado. Priorize a mobilização para a próxima aplicação.`,
+    resultado.participacao >= PARTICIPACAO_MINIMA_SAEB
+      ? `Com ${formatPercent(resultado.participacao)} de participação, o resultado da escola no Saeb é representativo.`
+      : `Com ${formatPercent(resultado.participacao)} de participação, a escola não atinge os ${PARTICIPACAO_MINIMA_SAEB}% recomendados. Priorize a mobilização para a próxima aplicação.`,
     ...DISCIPLINAS.map(({ codigo, nome }) => {
       const insuficiente = distribuicaoPadroes(ano, codigo, resultado.proficiencia[codigo])[0];
-      return `${nome}: ${formatPercent(insuficiente.percentual)} dos alunos estão no padrão Insuficiente — foco de recomposição das habilidades dos níveis iniciais da escala.`;
+      return `${nome}: ${formatPercent(insuficiente.percentual)} dos alunos estão no padrão Abaixo do Básico — foco de recomposição das habilidades dos níveis iniciais da escala.`;
     }),
-    resultado.aprovacao < 90
-      ? `A taxa de aprovação (${formatPercent(resultado.aprovacao)}) reduz o Ideb: mesmo sem mudar a proficiência, melhorar o fluxo eleva o indicador.`
-      : `A taxa de aprovação (${formatPercent(resultado.aprovacao)}) contribui positivamente para o Ideb; o maior ganho está na proficiência.`,
   ];
 
   return (
@@ -103,25 +94,6 @@ export default async function EscolaPage({
       )}
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-gray-500">Ideb · {ano}º ano</p>
-          {ideb.divulgado ? (
-            <>
-              <p className="mt-2 text-3xl font-bold text-gray-900">{formatIdeb(ideb.ideb)}</p>
-              <p className={`mt-1 text-xs ${deltaClass(ideb.ideb - referencia.ideb)}`}>
-                {formatDelta(ideb.ideb - referencia.ideb, formatIdeb)} vs. referência nacional (
-                {formatIdeb(referencia.ideb)})
-              </p>
-            </>
-          ) : (
-            <>
-              <p className="mt-2 text-3xl font-bold text-gray-400">—</p>
-              <p className="mt-1 text-xs text-accent-ink">
-                Não divulgado: participação abaixo de {PARTICIPACAO_MINIMA_IDEB}%
-              </p>
-            </>
-          )}
-        </div>
         {DISCIPLINAS.map(({ codigo, nome }) => {
           const media = resultado.proficiencia[codigo];
           const delta = media - rede.proficiencia[codigo];
@@ -140,13 +112,13 @@ export default async function EscolaPage({
           <p className="text-sm text-gray-500">Participação no Saeb</p>
           <p
             className={`mt-2 text-3xl font-bold ${
-              ideb.divulgado ? "text-gray-900" : "text-accent-ink"
+              resultado.participacao >= PARTICIPACAO_MINIMA_SAEB ? "text-gray-900" : "text-attention"
             }`}
           >
             {formatPercent(resultado.participacao)}
           </p>
           <p className="mt-1 text-xs text-gray-500">
-            {resultado.alunosAvaliados} alunos avaliados · mínimo {PARTICIPACAO_MINIMA_IDEB}%
+            {resultado.alunosAvaliados} alunos avaliados · mínimo {PARTICIPACAO_MINIMA_SAEB}%
           </p>
         </div>
       </div>
@@ -156,7 +128,7 @@ export default async function EscolaPage({
           <div>
             <h2 className="text-lg font-semibold text-gray-900">Turmas do {ano}º ano</h2>
             <p className="mt-1 text-sm text-gray-500">
-              {AVALIACAO_ATUAL.nome} LUH ({formatData(AVALIACAO_ATUAL.data)}) ·{" "}
+              {avaliacaoSelecionada.nome} LUH ({formatData(avaliacaoSelecionada.data)}) ·{" "}
               {resumoAno.avaliados} de {resumoAno.matriculados} estudantes avaliados
             </p>
           </div>
@@ -167,9 +139,18 @@ export default async function EscolaPage({
             Ver o {ano}º ano completo →
           </Link>
         </div>
+        <div className="mt-4">
+          <AvaliacaoSeletor
+            avaliacoes={AVALIACOES}
+            atual={avaliacaoIdx}
+            hrefFor={(i) =>
+              `/escolas/${escola.id}?etapa=${encodeURIComponent(etapa)}&avaliacao=${i}`
+            }
+          />
+        </div>
         <ul className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {turmas.map((turma) => {
-            const r = resumir(turma.alunos, ano);
+            const r = resumir(turma.alunos, ano, avaliacaoIdx);
             return (
               <li key={turma.id}>
                 <Link
@@ -294,30 +275,22 @@ export default async function EscolaPage({
 
       <section className="mt-6 grid gap-6 lg:grid-cols-2">
         <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900">Composição do Ideb</h2>
+          <h2 className="text-lg font-semibold text-gray-900">Fluxo escolar</h2>
           <p className="mt-1 text-sm text-gray-500">
-            Ideb = N (nota padronizada do Saeb, 0–10) × P (aprovação, 0–1)
+            Taxa de aprovação (Censo Escolar) e participação no Saeb
           </p>
           <dl className="mt-5 space-y-3">
-            {[
-              { label: "Nota padronizada · Língua Portuguesa", value: formatIdeb(ideb.notaLP) },
-              { label: "Nota padronizada · Matemática", value: formatIdeb(ideb.notaMT) },
-              { label: "N · média das notas padronizadas", value: formatIdeb(ideb.N) },
-              {
-                label: "P · taxa de aprovação (Censo Escolar)",
-                value: ideb.P.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-              },
-            ].map((item) => (
-              <div key={item.label} className="flex items-center justify-between rounded-lg bg-gray-50 px-4 py-3">
-                <dt className="text-sm text-gray-700">{item.label}</dt>
-                <dd className="text-lg font-bold text-gray-900">{item.value}</dd>
-              </div>
-            ))}
+            <div className="flex items-center justify-between rounded-lg bg-gray-50 px-4 py-3">
+              <dt className="text-sm text-gray-700">Taxa de aprovação</dt>
+              <dd className="text-lg font-bold text-gray-900">{formatPercent(resultado.aprovacao)}</dd>
+            </div>
             <div className="flex items-center justify-between rounded-lg bg-brand-soft px-4 py-3">
-              <dt className="text-sm font-medium text-brand">Ideb (N × P)</dt>
+              <dt className="text-sm font-medium text-brand">Participação no Saeb</dt>
               <dd className="text-lg font-bold text-brand">
-                {formatIdeb(ideb.ideb)}
-                {!ideb.divulgado && <span className="ml-1 text-xs font-normal">(não divulgado)</span>}
+                {formatPercent(resultado.participacao)}
+                {resultado.participacao < PARTICIPACAO_MINIMA_SAEB && (
+                  <span className="ml-1 text-xs font-normal">(abaixo do mínimo)</span>
+                )}
               </dd>
             </div>
           </dl>
@@ -337,12 +310,6 @@ export default async function EscolaPage({
                 </tr>
               </thead>
               <tbody className="text-gray-700">
-                <tr className="border-b border-gray-100">
-                  <td className="py-3 pr-3 font-medium text-gray-900">Ideb</td>
-                  <td className="px-2 py-3 text-right">{ideb.divulgado ? formatIdeb(ideb.ideb) : "—"}</td>
-                  <td className="px-2 py-3 text-right">{formatIdeb(idebRede.ideb)}</td>
-                  <td className="px-2 py-3 text-right">{formatIdeb(referencia.ideb)}</td>
-                </tr>
                 {DISCIPLINAS.map(({ codigo, nome }) => (
                   <tr key={codigo} className="border-b border-gray-100">
                     <td className="py-3 pr-3 font-medium text-gray-900">{nome}</td>

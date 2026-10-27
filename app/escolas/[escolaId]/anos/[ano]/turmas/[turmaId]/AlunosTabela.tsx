@@ -12,7 +12,7 @@ import {
   type AnoSaeb,
   type Disciplina,
 } from "@/lib/saeb";
-import { estaInsuficiente, resultadoAtual, type Aluno } from "@/lib/turmas-mock";
+import { estaInsuficiente, type Aluno } from "@/lib/turmas-mock";
 import { PadraoBadge, deltaClass } from "@/app/escolas/ui";
 
 type Ordem = "nome" | "menor-LP" | "menor-MT" | "maior-evolucao";
@@ -36,10 +36,14 @@ export default function AlunosTabela({
   alunos,
   ano,
   baseHref,
+  avaliacaoIndex,
+  avaliacaoNome,
 }: {
   alunos: Aluno[];
   ano: AnoSaeb;
   baseHref: string;
+  avaliacaoIndex: number;
+  avaliacaoNome: string;
 }) {
   const [busca, setBusca] = useState("");
   const [somenteInsuficiente, setSomenteInsuficiente] = useState(false);
@@ -47,11 +51,12 @@ export default function AlunosTabela({
 
   const linhas = useMemo(() => {
     const termo = normalizeBusca(busca);
-    const valor = (aluno: Aluno, disciplina: Disciplina) => resultadoAtual(aluno)?.[disciplina] ?? Infinity;
+    const valor = (aluno: Aluno, disciplina: Disciplina) =>
+      aluno.resultados[avaliacaoIndex]?.[disciplina] ?? Infinity;
 
     return alunos
       .filter((aluno) => !termo || normalizeBusca(aluno.nome).includes(termo) || aluno.id.includes(termo))
-      .filter((aluno) => !somenteInsuficiente || estaInsuficiente(aluno, ano))
+      .filter((aluno) => !somenteInsuficiente || estaInsuficiente(aluno, ano, avaliacaoIndex))
       .sort((a, b) => {
         switch (ordem) {
           case "menor-LP":
@@ -64,7 +69,7 @@ export default function AlunosTabela({
             return a.nome.localeCompare(b.nome, "pt-BR");
         }
       });
-  }, [alunos, ano, busca, somenteInsuficiente, ordem]);
+  }, [alunos, ano, avaliacaoIndex, busca, somenteInsuficiente, ordem]);
 
   return (
     <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -72,7 +77,7 @@ export default function AlunosTabela({
         <div>
           <h2 className="text-lg font-semibold text-gray-900">Estudantes</h2>
           <p className="mt-1 text-sm text-gray-500">
-            Resultado no simulado mais recente · clique para ver o histórico do estudante
+            Resultado na avaliação {avaliacaoNome} · clique para ver o histórico do estudante
           </p>
         </div>
         <label className="flex items-center gap-2 text-sm text-gray-600">
@@ -122,7 +127,7 @@ export default function AlunosTabela({
               : "border-gray-200 bg-white text-gray-700 hover:border-brand-muted"
           }`}
         >
-          Somente com padrão Insuficiente
+          Somente com padrão Abaixo do Básico
         </button>
         <span className="text-sm text-gray-500" aria-live="polite">
           {linhas.length} de {alunos.length}
@@ -144,7 +149,7 @@ export default function AlunosTabela({
           </thead>
           <tbody>
             {linhas.map((aluno) => {
-              const atual = resultadoAtual(aluno);
+              const atual = aluno.resultados[avaliacaoIndex] ?? null;
               const ev = evolucao(aluno);
               const href = `${baseHref}/alunos/${aluno.id}`;
               return (
