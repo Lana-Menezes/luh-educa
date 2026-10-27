@@ -131,7 +131,7 @@ export function CurvaEvolucao({ pontos }: { pontos: PontoEvolucao[] }) {
                 onMouseLeave={() => setEmFoco(null)}
               >
                 <title>
-                  {p.rotulo} · {chave}: {formatProficiencia(p[chave])}
+                  {`${p.rotulo} · ${chave}: ${formatProficiencia(p[chave])}`}
                 </title>
               </circle>
             ))}
