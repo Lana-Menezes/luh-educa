@@ -1,0 +1,356 @@
+{
+  "2": {
+    "LP": [
+      {
+        "id": "EF12LP01",
+        "descricao": "Ler palavras novas com precisão na decodificação, no caso de palavras de uso frequente, ler globalmente, por memorização.",
+        "anos": [
+          1,
+          2
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 101"
+      },
+      {
+        "id": "EF12LP02",
+        "descricao": "Buscar, selecionar e ler, com a mediação do professor (leitura compartilhada), textos que circulam em meios impressos ou digitais, de acordo com as necessidades e interesses.",
+        "anos": [
+          1,
+          2
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 101"
+      },
+      {
+        "id": "EF12LP03",
+        "descricao": "Copiar textos breves, mantendo suas características e voltando para o texto sempre que tiver dúvidas sobre sua distribuição gráfica, espaçamento entre as palavras, escrita das palavras e pontuação.",
+        "anos": [
+          1,
+          2
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 101"
+      },
+      {
+        "id": "EF12LP04",
+        "descricao": "Ler e compreender, em colaboração com os colegas e com a ajuda do professor ou já com certa autonomia, listas, agendas, calendários, avisos, convites, receitas, instruções de montagem (digitais ou impressos), dentre outros gêneros do campo da vida cotidiana, considerando a situação comunicativa e o tema/assunto do texto e relacionando sua forma de organização à sua finalidade.",
+        "anos": [
+          1,
+          2
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 105"
+      },
+      {
+        "id": "EF12LP05",
+        "descricao": "Planejar e produzir, em colaboração com os colegas e com a ajuda do professor, (re)contagens de histórias, poemas e outros textos versificados (letras de canção, quadrinhas, cordel), poemas visuais, tiras e histórias em quadrinhos, dentre outros gêneros do campo artístico-literário, considerando a situação comunicativa e a finalidade do texto.",
+        "anos": [
+          1,
+          2
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 105"
+      },
+      {
+        "id": "EF12LP06",
+        "descricao": "Planejar e produzir, em colaboração com os colegas e com a ajuda do professor, recados, avisos, convites, receitas, instruções de montagem, dentre outros gêneros do campo da vida cotidiana, que possam ser repassados oralmente por meio de ferramentas digitais, em áudio ou vídeo, considerando a situação comunicativa e o tema/assunto/finalidade do texto.",
+        "anos": [
+          1,
+          2
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 105"
+      }
+    ],
+    "MT": [
+      {
+        "id": "EF02MA01",
+        "descricao": "Comparar e ordenar números naturais (até a ordem de centenas) pela compreensão de características do sistema de numeração decimal (valor posicional e função do zero).",
+        "anos": [
+          2
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285"
+      },
+      {
+        "id": "EF02MA02",
+        "descricao": "Fazer estimativas por meio de estratégias diversas a respeito da quantidade de objetos de coleções e registrar o resultado da contagem desses objetos (até 1000 unidades).",
+        "anos": [
+          2
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285"
+      },
+      {
+        "id": "EF02MA03",
+        "descricao": "Comparar quantidades de objetos de dois conjuntos, por estimativa e/ou por correspondência (um a um, dois a dois, entre outros), para indicar “tem mais”, “tem menos” ou “tem a mesma quantidade”, indicando, quando for o caso, quantos a mais e quantos a menos.",
+        "anos": [
+          2
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285"
+      },
+      {
+        "id": "EF02MA04",
+        "descricao": "Compor e decompor números naturais de até três ordens, com suporte de material manipulável, por meio de diferentes adições.",
+        "anos": [
+          2
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285"
+      },
+      {
+        "id": "EF02MA05",
+        "descricao": "Construir fatos básicos da adição e subtração e utilizá-los no cálculo mental ou escrito.",
+        "anos": [
+          2
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285"
+      },
+      {
+        "id": "EF02MA06",
+        "descricao": "Resolver e elaborar problemas de adição e de subtração, envolvendo números de até três ordens, com os significados de juntar, acrescentar, separar, retirar, utilizando estratégias pessoais.",
+        "anos": [
+          2
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285"
+      }
+    ]
+  },
+  "5": {
+    "LP": [
+      {
+        "id": "EF15LP01",
+        "descricao": "Identificar a função social de textos que circulam em campos da vida social dos quais participa cotidianamente (a casa, a rua, a comunidade, a escola) e nas mídias impressa, de massa e digital, reconhecendo para que foram produzidos, onde circulam, quem os produziu e a quem se destinam.",
+        "anos": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97"
+      },
+      {
+        "id": "EF15LP02",
+        "descricao": "Estabelecer expectativas em relação ao texto que vai ler (pressuposições antecipadoras dos sentidos, da forma e da função social do texto), apoiando-se em seus conhecimentos prévios sobre as condições de produção e recepção desse texto, o gênero, o suporte e o universo temático, bem como sobre saliências textuais, recursos gráficos, imagens, dados da própria obra (índice, prefácio etc.), confirmando antecipações e inferências realizadas antes e durante a leitura de textos, checando a adequação das hipóteses realizadas.",
+        "anos": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97"
+      },
+      {
+        "id": "EF15LP03",
+        "descricao": "Localizar informações explícitas em textos.",
+        "anos": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97"
+      },
+      {
+        "id": "EF15LP04",
+        "descricao": "Identificar o efeito de sentido produzido pelo uso de recursos expressivos gráfico-visuais em textos multissemióticos.",
+        "anos": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97"
+      },
+      {
+        "id": "EF15LP05",
+        "descricao": "Planejar, com a ajuda do professor, o texto que será produzido, considerando a situação comunicativa, os interlocutores (quem escreve/para quem escreve); a finalidade ou o propósito (escrever para quê); a circulação (onde o texto vai circular); o suporte (qual é o portador do texto); a linguagem, organização e forma do texto e seu tema, pesquisando em meios impressos ou digitais, sempre que for preciso, informações necessárias à produção do texto, organizando em tópicos os dados e as fontes pesquisadas.",
+        "anos": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97"
+      },
+      {
+        "id": "EF15LP06",
+        "descricao": "Reler e revisar o texto produzido com a ajuda do professor e a colaboração dos colegas, para corrigi-lo e aprimorá-lo, fazendo cortes, acréscimos, reformulações, correções de ortografia e pontuação.",
+        "anos": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97"
+      }
+    ],
+    "MT": [
+      {
+        "id": "EF05MA01",
+        "descricao": "Ler, escrever e ordenar números naturais até a ordem das centenas de milhar com compreensão das principais características do sistema de numeração decimal.",
+        "anos": [
+          5
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297"
+      },
+      {
+        "id": "EF05MA02",
+        "descricao": "Ler, escrever e ordenar números racionais na forma decimal com compreensão das principais características do sistema de numeração decimal, utilizando, como recursos, a composição e decomposição e a reta numérica.",
+        "anos": [
+          5
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297"
+      },
+      {
+        "id": "EF05MA03",
+        "descricao": "Identificar e representar frações (menores e maiores que a unidade), associando-as ao resultado de uma divisão ou à ideia de parte de um todo, utilizando a reta numérica como recurso.",
+        "anos": [
+          5
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297"
+      },
+      {
+        "id": "EF05MA04",
+        "descricao": "Identificar frações equivalentes.",
+        "anos": [
+          5
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297"
+      },
+      {
+        "id": "EF05MA05",
+        "descricao": "Comparar e ordenar números racionais positivos (representações fracionária e decimal), relacionando-os a pontos na reta numérica.",
+        "anos": [
+          5
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297"
+      },
+      {
+        "id": "EF05MA06",
+        "descricao": "Associar as representações 10%, 25%, 50%, 75% e 100% respectivamente à décima parte, quarta parte, metade, três quartos e um inteiro, para calcular porcentagens, utilizando estratégias pessoais, cálculo mental e calculadora, em contextos de educação financeira, entre outros.",
+        "anos": [
+          5
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297"
+      }
+    ]
+  },
+  "9": {
+    "LP": [
+      {
+        "id": "EF69LP01",
+        "descricao": "Diferenciar liberdade de expressão de discursos de ódio, posicionando-se contrariamente a esse tipo de discurso e vislumbrando possibilidades de denúncia quando for o caso.",
+        "anos": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 143"
+      },
+      {
+        "id": "EF69LP02",
+        "descricao": "Analisar e comparar peças publicitárias variadas (cartazes, folhetos, outdoor, anúncios e propagandas em diferentes mídias, spots, jingle, vídeos etc.), de forma a perceber a articulação entre elas em campanhas, as especificidades das várias semioses e mídias, a adequação dessas peças ao público-alvo, aos objetivos do anunciante e/ou da campanha e à construção composicional e estilo dos gêneros em questão, como forma de ampliar suas possibilidades de compreensão (e produção) de textos pertencentes a esses gêneros.",
+        "anos": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 143"
+      },
+      {
+        "id": "EF69LP03",
+        "descricao": "Identificar, em notícias, o fato central, suas principais circunstâncias e eventuais decorrências; em reportagens e fotorreportagens o fato ou a temática retratada e a perspectiva de abordagem, em entrevistas os principais temas/subtemas abordados, explicações dadas ou teses defendidas em relação a esses subtemas; em tirinhas, memes, charge, a crítica, ironia ou humor presente.",
+        "anos": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 143"
+      },
+      {
+        "id": "EF69LP04",
+        "descricao": "Identificar e analisar os efeitos de sentido que fortalecem a persuasão nos textos publicitários, relacionando as estratégias de persuasão e apelo ao consumo com os recursos linguístico-discursivos utilizados, como imagens, tempo verbal, jogos de palavras, figuras de linguagem etc., com vistas a fomentar práticas de consumo conscientes.",
+        "anos": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 143"
+      },
+      {
+        "id": "EF69LP05",
+        "descricao": "Inferir e justificar, em textos multissemióticos – tirinhas, charges, memes, gifs etc. –, o efeito de humor, ironia e/ou crítica pelo uso ambíguo de palavras, expressões ou imagens ambíguas, de clichês, de recursos iconográficos, de pontuação etc.",
+        "anos": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 143"
+      },
+      {
+        "id": "EF69LP06",
+        "descricao": "Produzir e publicar notícias, fotodenúncias, fotorreportagens, reportagens, reportagens multimidiáticas, infográficos, podcasts noticiosos, entrevistas, cartas de leitor, comentários, artigos de opinião de interesse local ou global, textos de apresentação e apreciação de produção cultural – resenhas e outros próprios das formas de expressão das culturas juvenis, tais como vlogs e podcasts culturais, gameplay, detonado etc.– e cartazes, anúncios, propagandas, spots, jingles de campanhas sociais, dentre outros em várias mídias, vivenciando de forma significativa o papel de repórter, de comentador, de analista, de crítico, de editor ou articulista, de booktuber, de vlogger (vlogueiro) etc., como forma de compreender as condições de produção que envolvem a circulação desses textos e poder participar e vislumbrar possibilidades de participação nas práticas de linguagem do campo jornalístico e do campo midiático de forma ética e responsável, levando-se em consideração o contexto da Web 2.0, que amplia a possibilidade de circulação desses textos e “funde” os papéis de leitor e autor, de consumidor e produtor.",
+        "anos": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 145"
+      }
+    ],
+    "MT": [
+      {
+        "id": "EF09MA01",
+        "descricao": "Reconhecer que, uma vez fixada uma unidade de comprimento, existem segmentos de reta cujo comprimento não é expresso por número racional (como as medidas de diagonais de um polígono e alturas de um triângulo, quando se toma a medida de cada lado como unidade).",
+        "anos": [
+          9
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319"
+      },
+      {
+        "id": "EF09MA02",
+        "descricao": "Reconhecer um número irracional como um número real cuja representação decimal é infinita e não periódica, e estimar a localização de alguns deles na reta numérica.",
+        "anos": [
+          9
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319"
+      },
+      {
+        "id": "EF09MA03",
+        "descricao": "Efetuar cálculos com números reais, inclusive potências com expoentes fracionários.",
+        "anos": [
+          9
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319"
+      },
+      {
+        "id": "EF09MA04",
+        "descricao": "Resolver e elaborar problemas com números reais, inclusive em notação científica, envolvendo diferentes operações.",
+        "anos": [
+          9
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319"
+      },
+      {
+        "id": "EF09MA05",
+        "descricao": "Resolver e elaborar problemas que envolvam porcentagens, com a ideia de aplicação de percentuais sucessivos e a determinação das taxas percentuais, preferencialmente com o uso de tecnologias digitais, no contexto da educação financeira.",
+        "anos": [
+          9
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319"
+      },
+      {
+        "id": "EF09MA06",
+        "descricao": "Compreender as funções como relações de dependência unívoca entre duas variáveis e suas representações numérica, algébrica e gráfica e utilizar esse conceito para analisar situações que envolvam relações funcionais entre duas variáveis.",
+        "anos": [
+          9
+        ],
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319"
+      }
+    ]
+  }
+}
