@@ -2,9 +2,9 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { AlertTriangle, ChevronRight } from "lucide-react";
 import { authOptions } from "@/auth";
-import { ETAPAS, motivosAtencao, precisaAtencao, redeMock } from "@/lib/rede-mock";
+import { ETAPAS, redeMock } from "@/lib/rede-mock";
 import { formatPercent } from "@/lib/saeb";
-import { AVALIACOES, getTurmas, indiceAvaliacao } from "@/lib/turmas-mock";
+import { AVALIACOES, getTurmas, indiceAvaliacao, motivosAtencaoAvaliacao, precisaAtencaoAvaliacao } from "@/lib/turmas-mock";
 import AvaliacaoDropdown from "../escolas/AvaliacaoDropdown";
 
 export const dynamic = "force-dynamic";
@@ -37,7 +37,7 @@ export default async function DashboardPage({
   const totalAlunos = todosAlunos.filter((a) => a.resultados[avaliacaoIdx] !== null).length;
   const participacao = matriculados ? (totalAlunos / matriculados) * 100 : 0;
 
-  const escolasEmAtencao = rede.escolas.filter(precisaAtencao);
+  const escolasEmAtencao = rede.escolas.filter((escola) => precisaAtencaoAvaliacao(escola, avaliacaoIdx));
 
   return (
     <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-4 sm:p-8">
@@ -89,7 +89,7 @@ export default async function DashboardPage({
           </div>
           <ul className="mt-3 divide-y divide-gray-100">
             {escolasEmAtencao.slice(0, 5).map((escola) => {
-              const motivos = motivosAtencao(escola);
+              const motivos = motivosAtencaoAvaliacao(escola, avaliacaoIdx);
               return (
                 <li key={escola.id}>
                   <Link

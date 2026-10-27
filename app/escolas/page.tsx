@@ -1,7 +1,7 @@
 import { checkPostTableExists } from "@/lib/db-utils";
-import { ETAPAS, getResultadoRede, precisaAtencao, redeMock } from "@/lib/rede-mock";
+import { ETAPAS, getResultadoRede, redeMock } from "@/lib/rede-mock";
 import { DISCIPLINAS, PARTICIPACAO_MINIMA_SAEB, formatDelta, formatPercent, formatProficiencia, nivelDaProficiencia } from "@/lib/saeb";
-import { AVALIACOES, getTurmas, indiceAvaliacao, resumir } from "@/lib/turmas-mock";
+import { AVALIACOES, getTurmas, indiceAvaliacao, precisaAtencaoAvaliacao, resumir } from "@/lib/turmas-mock";
 import { redirect } from "next/navigation";
 import EscolaFinder from "./EscolaFinder";
 import AvaliacaoDropdown from "./AvaliacaoDropdown";
@@ -35,7 +35,7 @@ export default async function EscolasPage({
       sum + ETAPAS.reduce((s, etapa) => s + (escola.resultados[etapa]?.alunosAvaliados ?? 0), 0),
     0,
   );
-  const escolasEmAtencao = rede.escolas.filter(precisaAtencao).length;
+  const escolasEmAtencao = rede.escolas.filter((escola) => precisaAtencaoAvaliacao(escola, avaliacaoIdx)).length;
   const porEtapa = ETAPAS.map((etapa) => {
     const resultado = getResultadoRede(etapa);
     const alunosEtapa = rede.escolas.flatMap((escola) => getTurmas(escola, etapa).flatMap((t) => t.alunos));
@@ -172,6 +172,7 @@ export default async function EscolasPage({
         escolas={rede.escolas}
         referenciaNacional={rede.referenciaNacional}
         initialFiltros={initialFiltros}
+        avaliacaoIndex={avaliacaoIdx}
       />
 
       <p className="mt-6 text-xs text-gray-400">

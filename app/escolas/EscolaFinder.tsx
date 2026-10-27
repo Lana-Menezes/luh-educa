@@ -5,9 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AlertTriangle, ChevronDown, ChevronRight, School, Search, X } from "lucide-react";
 import {
   etapasDaEscola,
-  motivosAtencao,
   normalizeBusca,
-  precisaAtencao,
   type EscolaRede,
   type Etapa,
   type ReferenciaSaeb,
@@ -18,6 +16,7 @@ import {
   formatPercent,
   formatProficiencia,
 } from "@/lib/saeb";
+import { motivosAtencaoAvaliacao, precisaAtencaoAvaliacao } from "@/lib/turmas-mock";
 import {
   etapas,
   ordenacoes,
@@ -128,10 +127,12 @@ export default function EscolaFinder({
   escolas,
   referenciaNacional,
   initialFiltros,
+  avaliacaoIndex,
 }: {
   escolas: EscolaRede[];
   referenciaNacional: Record<Etapa, ReferenciaSaeb>;
   initialFiltros: EscolaFinderFiltros;
+  avaliacaoIndex: number;
 }) {
   const [filtros, setFiltros] = useState(initialFiltros);
   const { q, zona, etapa, atencao, ordem } = filtros;
@@ -161,7 +162,7 @@ export default function EscolaFinder({
     const filtradas = escolas.filter((escola) => {
       if (zona.length > 0 && !zona.includes(escola.zona)) return false;
       if (etapa.length > 0 && !etapa.some((e) => escola.resultados[e])) return false;
-      if (atencao && !precisaAtencao(escola)) return false;
+      if (atencao && !precisaAtencaoAvaliacao(escola, avaliacaoIndex)) return false;
       if (!termo) return true;
       return (
         normalizeBusca(escola.nome).includes(termo) ||
@@ -182,7 +183,7 @@ export default function EscolaFinder({
           return a.nome.localeCompare(b.nome, "pt-BR");
       }
     });
-  }, [escolas, q, zona, etapa, atencao, ordem]);
+  }, [escolas, q, zona, etapa, atencao, ordem, avaliacaoIndex]);
 
   const temFiltros = Boolean(q || zona.length > 0 || etapa.length > 0 || atencao);
 
@@ -300,7 +301,7 @@ export default function EscolaFinder({
       ) : (
         <ul className="mt-3 divide-y divide-gray-100 rounded-lg border border-gray-100">
           {resultados.map((escola) => {
-            const motivos = motivosAtencao(escola);
+            const motivos = motivosAtencaoAvaliacao(escola, avaliacaoIndex);
             const etapasVisiveis =
               etapa.length > 0 ? etapa.filter((e) => escola.resultados[e]) : etapasDaEscola(escola);
             const etapaLink = etapa.length === 1 ? etapa[0] : undefined;

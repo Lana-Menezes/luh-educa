@@ -1,9 +1,10 @@
 import { CICLOS_AVALIATIVOS, tituloCiclo } from "@/lib/avaliacoes-mock";
-import { etapasDaEscola, type EscolaRede } from "@/lib/rede-mock";
+import { etapasDaEscola, redeMock, type EscolaRede } from "@/lib/rede-mock";
 import {
   ANO_POR_ETAPA,
   DISCIPLINAS,
   PADROES,
+  PARTICIPACAO_MINIMA_SAEB,
   padraoDaProficiencia,
   type AnoSaeb,
   type Disciplina,
@@ -118,19 +119,24 @@ export function getTurmas(escola: EscolaRede, etapa: Etapa): Turma[] {
 
     const alunos = Array.from({ length: tamanho }, (_, j): Aluno => {
       const habilidade = normal(rand) * 40;
-      const crescimento = 8 + rand() * 22;
-      const final: Proficiencias = {
-        LP: resultado.proficiencia.LP + efeitoTurma + habilidade + normal(rand) * 18,
-        MT: resultado.proficiencia.MT + efeitoTurma + habilidade + normal(rand) * 18,
-      };
+      // Ponto de partida (Diagnóstica) abaixo do nível final, para haver espaço de recomposição.
+      const atraso = 18 + rand() * 24;
+      let atualLP = resultado.proficiencia.LP + efeitoTurma + habilidade - atraso;
+      let atualMT = resultado.proficiencia.MT + efeitoTurma + habilidade - atraso;
+
       const resultados = AVALIACOES.map((_, k) => {
+        if (k > 0) {
+          // Caminhada com viés positivo: cada avaliação tende a vir melhor que a anterior.
+          atualLP += 1.5 + rand() * 3.5 + normal(rand) * 1.2;
+          atualMT += 1.5 + rand() * 3.5 + normal(rand) * 1.2;
+        }
+
         const ultima = k === AVALIACOES.length - 1;
         const presente = ultima ? rand() < participacaoTurma : rand() < 0.95;
         if (!presente) return null;
-        const recuo = (crescimento * (AVALIACOES.length - 1 - k)) / (AVALIACOES.length - 1);
         return {
-          LP: Math.round((final.LP - recuo + normal(rand) * 6) * 10) / 10,
-          MT: Math.round((final.MT - recuo + normal(rand) * 6) * 10) / 10,
+          LP: Math.round(atualLP * 10) / 10,
+          MT: Math.round(atualMT * 10) / 10,
         };
       });
 
@@ -225,4 +231,79 @@ export function resumir(
 
 export function formatData(iso: string) {
   return new Date(`${iso}T12:00:00`).toLocaleDateString("pt-BR");
+}
+
+export type MotivoAtencao = { etapa: Etapa; motivo: string };
+
+/**
+ * Ordem fixa de prioridade (mock), da escola que mais demora a sair do grupo
+ * "precisa de atenção" até a que sai primeiro — refletindo as escolas com
+ * menor participação/desempenho no cadastro (lib/rede-mock.ts). Combinada com
+ * `contagemAtencao`, garante que a rede comece com 8 escolas em atenção na
+ * Diagnóstica e termine com 2 na Somativa, à medida que o desempenho melhora.
+ */
+const ORDEM_PRIORIDADE_ATENCAO = [
+  "emef-joao-guimaraes-rosa",
+  "em-rural-boa-vista-da-serra",
+  "em-rural-corrego-fundo",
+  "em-paulo-freire",
+  "em-tiradentes",
+  "emef-dom-pedro-ii",
+  "em-sao-sebastiao",
+  "emef-monteiro-lobato",
+  "em-anisio-teixeira",
+  "em-professora-maria-das-dores",
+  "em-cecilia-meireles",
+  "em-rural-santo-antonio",
+];
+
+/** Quantas escolas devem estar em atenção numa avaliação: 8 na primeira, caindo até 2 na última. */
+function contagemAtencao(avaliacaoIndex: number) {
+  const inicio = 8;
+  const fim = 2;
+  const passos = AVALIACOES.length - 1;
+  return Math.round(inicio - ((inicio - fim) * avaliacaoIndex) / passos);
+}
+
+function escolaEmAtencao(escolaId: string, avaliacaoIndex: number) {
+  const posicao = ORDEM_PRIORIDADE_ATENCAO.indexOf(escolaId);
+  return posicao !== -1 && posicao < contagemAtencao(avaliacaoIndex);
+}
+
+/**
+ * Participação insuficiente ou proficiência abaixo da referência nacional
+ * numa avaliação específica. Diferente de `motivosAtencao` (lib/rede-mock.ts),
+ * que usa o resultado oficial fixo do Saeb, esta versão acompanha a avaliação
+ * selecionada: como o desempenho dos estudantes melhora ao longo do ano, o
+ * número de escolas em atenção vai diminuindo nas avaliações mais recentes.
+ */
+export function motivosAtencaoAvaliacao(escola: EscolaRede, avaliacaoIndex: number): MotivoAtencao[] {
+  if (!escolaEmAtencao(escola.id, avaliacaoIndex)) return [];
+
+  const motivos: MotivoAtencao[] = etapasDaEscola(escola).flatMap((etapa) => {
+    const ano = ANO_POR_ETAPA[etapa];
+    const alunos = getTurmas(escola, etapa).flatMap((turma) => turma.alunos);
+    const resumo = resumir(alunos, ano, avaliacaoIndex);
+    const referencia = redeMock.referenciaNacional[etapa];
+    const motivosEtapa: MotivoAtencao[] = [];
+
+    if (resumo.participacao < PARTICIPACAO_MINIMA_SAEB) {
+      motivosEtapa.push({ etapa, motivo: `participação abaixo de ${PARTICIPACAO_MINIMA_SAEB}%` });
+    }
+    if (resumo.media.LP < referencia.proficiencia.LP || resumo.media.MT < referencia.proficiencia.MT) {
+      motivosEtapa.push({ etapa, motivo: "Proficiência abaixo da referência nacional" });
+    }
+    return motivosEtapa;
+  });
+
+  if (motivos.length > 0) return motivos;
+
+  // Mesmo com números já próximos da referência, a escola segue no
+  // acompanhamento prioritário até concluir o ciclo de recomposição.
+  const etapa = etapasDaEscola(escola)[0];
+  return etapa ? [{ etapa, motivo: "Acompanhamento prioritário de recomposição" }] : [];
+}
+
+export function precisaAtencaoAvaliacao(escola: EscolaRede, avaliacaoIndex: number) {
+  return escolaEmAtencao(escola.id, avaliacaoIndex);
 }
