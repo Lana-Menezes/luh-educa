@@ -260,7 +260,7 @@ export default async function DashboardPage({
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">
-              Cálculo para Redução de Desigualdades
+              Acompanhamento para Redução de Desigualdades
             </h2>
             <p className="mt-1 text-sm text-gray-500">
               Metodologia oficial (Nota Técnica nº 2/2026/CGEFE/DIRED-INEP): cruza o Censo Escolar
