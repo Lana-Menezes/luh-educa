@@ -21,3 +21,13 @@ export async function GET() {
 
   return Response.json({ dbInfo, user, totalUsers: count });
 }
+
+// Correção pontual temporária: a conta de teste tinha name === email.
+export async function POST() {
+  const updated = await prisma.user.update({
+    where: { email: "john@doe.com" },
+    data: { name: "John" },
+    select: { id: true, name: true, email: true },
+  });
+  return Response.json({ updated });
+}
