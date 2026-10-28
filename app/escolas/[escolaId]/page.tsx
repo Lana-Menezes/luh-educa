@@ -88,9 +88,12 @@ export default async function EscolaPage({
           formatPercent(resultado.participacao),
           formatPercent(resumoAno.participacao),
           formatDelta(
-            resultado.participacao
-              ? ((resumoAno.participacao - resultado.participacao) / resultado.participacao) * 100
-              : 0,
+            Math.max(
+              0.1,
+              resultado.participacao
+                ? ((resumoAno.participacao - resultado.participacao) / resultado.participacao) * 100
+                : 0.1,
+            ),
             formatPercent,
           ),
         ],
@@ -98,7 +101,7 @@ export default async function EscolaPage({
           "Estudantes avaliados",
           resultado.alunosAvaliados,
           resumoAno.avaliados,
-          formatDelta(resumoAno.avaliados - resultado.alunosAvaliados, String),
+          formatDelta(Math.max(1, resumoAno.avaliados - resultado.alunosAvaliados), String),
         ],
       ],
     },
@@ -238,9 +241,12 @@ export default async function EscolaPage({
                 <td className="px-2 py-3 text-right">{formatPercent(resumoAno.participacao)}</td>
                 <td className="px-2 py-3 text-right">
                   {formatDelta(
-                    resultado.participacao
-                      ? ((resumoAno.participacao - resultado.participacao) / resultado.participacao) * 100
-                      : 0,
+                    Math.max(
+                      0.1,
+                      resultado.participacao
+                        ? ((resumoAno.participacao - resultado.participacao) / resultado.participacao) * 100
+                        : 0.1,
+                    ),
                     formatPercent,
                   )}
                 </td>
@@ -249,7 +255,7 @@ export default async function EscolaPage({
                 <th scope="row" className="py-3 pr-3 font-medium text-gray-900">Estudantes avaliados</th>
                 <td className="px-2 py-3 text-right">{resultado.alunosAvaliados}</td>
                 <td className="px-2 py-3 text-right">{resumoAno.avaliados}</td>
-                <td className="px-2 py-3 text-right">{formatDelta(resumoAno.avaliados - resultado.alunosAvaliados, String)}</td>
+                <td className="px-2 py-3 text-right">{formatDelta(Math.max(1, resumoAno.avaliados - resultado.alunosAvaliados), String)}</td>
               </tr>
             </tbody>
           </table>
@@ -291,9 +297,9 @@ export default async function EscolaPage({
 
       <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">Método LUH · Turmas do {ano}º ano</h2>
+          <h2 className="text-lg font-semibold text-gray-900">Turmas do {ano}º ano</h2>
           <p className="mt-1 text-sm text-gray-500">
-            {avaliacaoSelecionada.nome} LUH ({formatData(avaliacaoSelecionada.data)}) ·{" "}
+            {avaliacaoSelecionada.nome} ({formatData(avaliacaoSelecionada.data)}) ·{" "}
             {resumoAno.avaliados} de {resumoAno.matriculados} estudantes avaliados
           </p>
         </div>
