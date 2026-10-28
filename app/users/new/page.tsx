@@ -28,6 +28,7 @@ export default function NewUser() {
             type="text"
             id="name"
             name="name"
+            required
             placeholder="Digite o nome do usuário..."
             className="w-full px-4 py-2 border rounded-lg"
           />

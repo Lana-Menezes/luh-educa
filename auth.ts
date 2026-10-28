@@ -125,9 +125,22 @@ export const authOptions = {
         };
       }
 
+      // Busca name/email atuais no banco a cada checagem de sessão, em vez de
+      // confiar no snapshot gravado no JWT no momento do login: assim uma
+      // correção de cadastro aparece sem exigir logout/login.
+      const user = await prisma.user.findUnique({
+        where: { id: String(token.id) },
+        select: { name: true, email: true },
+      });
+
       return {
         ...session,
-        user: { ...session.user, id: String(token.id) },
+        user: {
+          ...session.user,
+          id: String(token.id),
+          name: user?.name ?? session.user?.name ?? "",
+          email: user?.email ?? session.user?.email ?? "",
+        },
       };
     },
   },
