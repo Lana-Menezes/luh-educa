@@ -73,6 +73,19 @@ function LoginForm() {
 
   return (
     <div className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto bg-[#eef1ff] py-12 px-4 sm:px-6 lg:px-8">
+      {pending && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-3 bg-white/70 backdrop-blur-sm"
+        >
+          <span
+            aria-hidden
+            className="h-10 w-10 animate-spin rounded-full border-4 border-brand border-t-transparent"
+          />
+          <span className="text-sm font-medium text-gray-700">Acessando...</span>
+        </div>
+      )}
       <div className="w-full max-w-md space-y-8">
         <div>
           <Image

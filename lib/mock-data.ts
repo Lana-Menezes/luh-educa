@@ -1,10 +1,15 @@
 import {
   ANOS_SAEB,
+  APROVACAO_MINIMA_VAAR,
   DISCIPLINAS,
   PADROES,
   PARTICIPACAO_MINIMA_SAEB,
+  PONTO_CORTE_ADEQUADO_VAAR,
+  TETO_VAAR,
+  faixaFlutuacaoVaar,
   padraoDaProficiencia,
   type AnoSaeb,
+  type AnoVaar,
   type Disciplina,
   type ResultadoSaeb,
   type Padrao,
@@ -400,6 +405,10 @@ export type Aluno = {
   nome: string;
   /** Proficiência em cada avaliação (mesma ordem de AVALIACOES); null = ausente. */
   resultados: (Proficiencias | null)[];
+  /** Pertencimento ao grupo preto, pardo ou indígena (dado do Censo Escolar/Saeb, mock ilustrativo). */
+  ppi: boolean;
+  /** Escore de nível socioeconômico (Inse, mock ilustrativo, 0–100). */
+  nse: number;
 };
 
 export type Turma = {
@@ -530,6 +539,10 @@ export function getTurmas(escola: EscolaRede, ano: AnoSaeb): Turma[] {
           SOBRENOMES[Math.floor(rand() * SOBRENOMES.length)]
         } ${SOBRENOMES[Math.floor(rand() * SOBRENOMES.length)]}`,
         resultados,
+        // Pertencimento racial e escore socioeconômico (mock ilustrativo, gerados
+        // após os resultados para não alterar a trajetória de proficiência já calculada).
+        ppi: rand() < 0.42,
+        nse: Math.round(rand() * 1000) / 10,
       };
     });
 
@@ -650,4 +663,224 @@ export function motivosAtencaoAvaliacao(escola: EscolaRede, avaliacaoIndex: numb
 
 export function precisaAtencaoAvaliacao(escola: EscolaRede, avaliacaoIndex: number) {
   return motivosAtencaoAvaliacao(escola, avaliacaoIndex).length > 0;
+}
+
+// ---------------------------------------------------------------------------
+// Condicionalidade III do VAAR — redução das desigualdades educacionais
+// (metodologia da Nota Técnica nº 2/2026/CGEFE/DIRED-INEP), cruzada com o
+// Censo Escolar (participação no Saeb e aprovação) para o acompanhamento
+// pelas escolas.
+// ---------------------------------------------------------------------------
+
+export type GrupoVulnerabilidade = "ppi" | "baixoNse";
+
+export type AlunoComAno = { aluno: Aluno; ano: AnoSaeb };
+
+/** Alunos do 2º, 5º e 9º ano da escola, cada um com o ano a que pertence. */
+export function alunosComAnoDaEscola(escola: EscolaRede): AlunoComAno[] {
+  return anosDaEscola(escola).flatMap((ano) =>
+    getTurmas(escola, ano).flatMap((turma) => turma.alunos.map((aluno) => ({ aluno, ano }))),
+  );
+}
+
+/** Alunos do 2º, 5º e 9º ano de toda a rede. */
+export function alunosComAnoDaRede(rede: RedeMock = redeMock): AlunoComAno[] {
+  return rede.escolas.flatMap((escola) => alunosComAnoDaEscola(escola));
+}
+
+/** Quantil (método Tipo I/Hyndman-Fan) de uma lista de valores. */
+function quantil(valores: number[], fracao: number) {
+  if (valores.length === 0) return 0;
+  const ordenados = [...valores].sort((a, b) => a - b);
+  const posicao = (ordenados.length - 1) * fracao;
+  const base = Math.floor(posicao);
+  const resto = posicao - base;
+  const proximo = ordenados[Math.min(base + 1, ordenados.length - 1)];
+  return ordenados[base] + (proximo - ordenados[base]) * resto;
+}
+
+function pertenceAoGrupo(item: AlunoComAno, grupo: GrupoVulnerabilidade, limiarNse: number) {
+  return grupo === "ppi" ? item.aluno.ppi : item.aluno.nse <= limiarNse;
+}
+
+/**
+ * Proporção (0–100) de um grupo de estudantes do 5º/9º ano com desempenho
+ * adequado (Tabela 1 da Nota Técnica), média entre LP e MT — equações (1) e
+ * (2) da metodologia (sem pesos amostrais, dado mockado).
+ */
+function proporcaoAdequada(itens: AlunoComAno[], avaliacaoIndex: number) {
+  let participantes = 0;
+  let adequadosLP = 0;
+  let adequadosMT = 0;
+
+  for (const { aluno, ano } of itens) {
+    if (ano === 2) continue; // Condicionalidade III considera só 5º e 9º do EF
+    const resultado = aluno.resultados[avaliacaoIndex];
+    if (!resultado) continue;
+    const corte = PONTO_CORTE_ADEQUADO_VAAR[ano as AnoVaar];
+    participantes++;
+    if (resultado.LP > corte.LP) adequadosLP++;
+    if (resultado.MT > corte.MT) adequadosMT++;
+  }
+
+  if (participantes === 0) return null;
+  return {
+    participantes,
+    proporcao: ((adequadosLP / participantes) * 100 + (adequadosMT / participantes) * 100) / 2,
+  };
+}
+
+export type VaarGrupoResultado = {
+  grupo: GrupoVulnerabilidade;
+  participantesAnterior: number;
+  participantesAtual: number;
+  proporcaoAnterior: number | null;
+  proporcaoAtual: number | null;
+  /** p̄atual − p̄anterior, em pontos percentuais (IDPPI/IDNSE da metodologia). */
+  indice: number | null;
+  /** Proporção atual já no "efeito teto" (≥ TETO_VAAR): queda não conta. */
+  tetoOk: boolean;
+  /** Índice dentro da faixa de flutuação (Tabela 2), tratado como estabilidade. */
+  dentroFaixa: boolean;
+  /** Menos de 10 participantes num dos ciclos — grupo não usado na habilitação. */
+  dadosInsuficientes: boolean;
+  habilitadoGrupo: boolean;
+};
+
+export type CondicionalidadeIIIResultado = {
+  totalEstudantes: number;
+  faixaFlutuacaoPP: number;
+  grupos: VaarGrupoResultado[];
+  habilitado: boolean;
+  /** Sem estudantes do 5º/9º ano em nenhum dos ciclos — habilitado automaticamente (regra i). */
+  semEstudantesPrioritarios: boolean;
+};
+
+/**
+ * Aplica a metodologia oficial da Condicionalidade III do VAAR (Nota Técnica
+ * nº 2/2026/CGEFE/DIRED-INEP, Lei do Fundeb art. 14 § 1º III): compara, entre
+ * a avaliação anterior e a selecionada, a proporção de estudantes PPI
+ * (pretos, pardos e indígenas) e de baixo nível socioeconômico (quartil
+ * inferior) do 5º/9º ano com desempenho adequado (Tabela 1) em LP e MT.
+ * Habilitado quando os dois grupos mantêm ou melhoram essa proporção —
+ * dentro da faixa de flutuação (Tabela 2) ou do "efeito teto" (≥ 90%).
+ */
+export function condicionalidadeIII(
+  alunosComAno: AlunoComAno[],
+  avaliacaoIndexAnterior: number,
+  avaliacaoIndexAtual: number,
+): CondicionalidadeIIIResultado {
+  const prioritarios = alunosComAno.filter((item) => item.ano !== 2);
+
+  if (prioritarios.length === 0) {
+    return {
+      totalEstudantes: 0,
+      faixaFlutuacaoPP: 0,
+      grupos: [],
+      habilitado: true,
+      semEstudantesPrioritarios: true,
+    };
+  }
+
+  const limiarNse = quantil(prioritarios.map((item) => item.aluno.nse), 0.25);
+  const faixaFlutuacaoPP = faixaFlutuacaoVaar(prioritarios.length);
+
+  const grupos = (["ppi", "baixoNse"] as const).map((grupo): VaarGrupoResultado => {
+    const itensGrupo = prioritarios.filter((item) => pertenceAoGrupo(item, grupo, limiarNse));
+    const anterior = proporcaoAdequada(itensGrupo, avaliacaoIndexAnterior);
+    const atual = proporcaoAdequada(itensGrupo, avaliacaoIndexAtual);
+    const dadosInsuficientes = (anterior?.participantes ?? 0) < 10 || (atual?.participantes ?? 0) < 10;
+    const indice = anterior && atual ? atual.proporcao - anterior.proporcao : null;
+    const tetoOk = (atual?.proporcao ?? 0) >= TETO_VAAR;
+    const dentroFaixa = indice !== null && indice >= faixaFlutuacaoPP;
+
+    return {
+      grupo,
+      participantesAnterior: anterior?.participantes ?? 0,
+      participantesAtual: atual?.participantes ?? 0,
+      proporcaoAnterior: anterior?.proporcao ?? null,
+      proporcaoAtual: atual?.proporcao ?? null,
+      indice,
+      tetoOk,
+      dentroFaixa,
+      dadosInsuficientes,
+      habilitadoGrupo: dadosInsuficientes || dentroFaixa || tetoOk,
+    };
+  });
+
+  // Regras (ii)-(iv): grupo com dados insuficientes não entra na habilitação;
+  // se os dois faltarem, habilita automaticamente.
+  const gruposComDados = grupos.filter((g) => !g.dadosInsuficientes);
+  const habilitado = gruposComDados.length === 0 || gruposComDados.every((g) => g.habilitadoGrupo);
+
+  return {
+    totalEstudantes: prioritarios.length,
+    faixaFlutuacaoPP,
+    grupos,
+    habilitado,
+    semEstudantesPrioritarios: false,
+  };
+}
+
+/** Participação no Saeb e aprovação (Censo Escolar) ponderadas pelos alunos avaliados do grupo de escolas. */
+function resumoCensoEscolas(escolas: EscolaRede[]) {
+  const resultados = escolas.flatMap((escola) => ANOS_SAEB.flatMap((ano) => escola.resultados[ano] ?? []));
+  const alunos = resultados.reduce((sum, r) => sum + r.alunosAvaliados, 0);
+  const ponderado = (valor: (r: ResultadoSaeb) => number) =>
+    alunos ? resultados.reduce((sum, r) => sum + valor(r) * r.alunosAvaliados, 0) / alunos : 0;
+  return {
+    participacao: ponderado((r) => r.participacao),
+    aprovacao: ponderado((r) => r.aprovacao),
+  };
+}
+
+export type StatusVaar = {
+  /** Participação no Saeb (Censo Escolar/Inep) ≥ PARTICIPACAO_MINIMA_SAEB. */
+  participacaoSaebOk: boolean;
+  participacaoSaeb: number;
+  /** Taxa de aprovação (Censo Escolar) ≥ APROVACAO_MINIMA_VAAR. */
+  aprovacaoOk: boolean;
+  aprovacao: number;
+  condicionalidadeIII: CondicionalidadeIIIResultado;
+  /** Atende às três frentes simultaneamente (Censo + Condicionalidade III). */
+  elegivel: boolean;
+};
+
+function statusVaar(
+  escolas: EscolaRede[],
+  alunosComAno: AlunoComAno[],
+  avaliacaoIndexAtual: number,
+  avaliacaoIndexAnterior: number,
+): StatusVaar {
+  const censo = resumoCensoEscolas(escolas);
+  const participacaoSaebOk = censo.participacao >= PARTICIPACAO_MINIMA_SAEB;
+  const aprovacaoOk = censo.aprovacao >= APROVACAO_MINIMA_VAAR;
+  const condIII = condicionalidadeIII(alunosComAno, avaliacaoIndexAnterior, avaliacaoIndexAtual);
+
+  return {
+    participacaoSaebOk,
+    participacaoSaeb: censo.participacao,
+    aprovacaoOk,
+    aprovacao: censo.aprovacao,
+    condicionalidadeIII: condIII,
+    elegivel: participacaoSaebOk && aprovacaoOk && condIII.habilitado,
+  };
+}
+
+/** Status do VAAR da escola (Censo + Condicionalidade III), na avaliação LUH selecionada vs. a Diagnóstica. */
+export function statusVaarDaEscola(
+  escola: EscolaRede,
+  avaliacaoIndexAtual: number,
+  avaliacaoIndexAnterior = 0,
+): StatusVaar {
+  return statusVaar([escola], alunosComAnoDaEscola(escola), avaliacaoIndexAtual, avaliacaoIndexAnterior);
+}
+
+/** Status do VAAR de toda a rede (Censo + Condicionalidade III) — é neste nível que o Fundeb apura a habilitação. */
+export function statusVaarDaRede(
+  rede: RedeMock,
+  avaliacaoIndexAtual: number,
+  avaliacaoIndexAnterior = 0,
+): StatusVaar {
+  return statusVaar(rede.escolas, alunosComAnoDaRede(rede), avaliacaoIndexAtual, avaliacaoIndexAnterior);
 }

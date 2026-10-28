@@ -11,6 +11,52 @@ export const DISCIPLINAS: { codigo: Disciplina; nome: string }[] = [
 /** Participação mínima no Saeb para o resultado ser considerado representativo. */
 export const PARTICIPACAO_MINIMA_SAEB = 80;
 
+/**
+ * Taxa de aprovação (Censo Escolar) mínima para a escola atender à
+ * condicionante de fluxo do VAAR: abaixo disso, reprovação/abandono alto
+ * compromete o valor agregado mesmo com proficiência em alta (demonstração).
+ */
+export const APROVACAO_MINIMA_VAAR = 90;
+
+// ---------------------------------------------------------------------------
+// Condicionalidade III do VAAR (Fundeb, Lei nº 14.113/2020, art. 14, § 1º,
+// inciso III) — redução das desigualdades educacionais socioeconômicas e
+// raciais, conforme a Nota Técnica nº 2/2026/CGEFE/DIRED-INEP.
+// ---------------------------------------------------------------------------
+
+export type AnoVaar = 5 | 9;
+
+/** Ponto de corte do desempenho "adequado" na escala do Saeb (Tabela 1 da Nota Técnica). */
+export const PONTO_CORTE_ADEQUADO_VAAR: Record<AnoVaar, Record<Disciplina, number>> = {
+  5: { LP: 200, MT: 225 },
+  9: { LP: 275, MT: 300 },
+};
+
+/** Patamar a partir do qual uma queda na proporção de adequados é tratada como neutra ("efeito teto"). */
+export const TETO_VAAR = 90;
+
+/**
+ * Faixa de flutuação (Tabela 2): quanto menor o nº de estudantes avaliados,
+ * maior a queda (em pontos percentuais) ainda considerada estabilidade, não
+ * queda real. Ordenada do maior para o menor "número médio de estudantes".
+ */
+const FAIXAS_FLUTUACAO_VAAR: { maisQue: number; faixaPP: number }[] = [
+  { maisQue: 10000, faixaPP: -1 },
+  { maisQue: 1000, faixaPP: -2.5 },
+  { maisQue: 500, faixaPP: -5 },
+  { maisQue: 200, faixaPP: -7.5 },
+  { maisQue: 100, faixaPP: -10 },
+  { maisQue: 0, faixaPP: -15 },
+];
+
+/** Faixa de flutuação (em p.p., valor negativo) aplicável a `numEstudantes` estudantes avaliados. */
+export function faixaFlutuacaoVaar(numEstudantes: number) {
+  for (const faixa of FAIXAS_FLUTUACAO_VAAR) {
+    if (numEstudantes > faixa.maisQue) return faixa.faixaPP;
+  }
+  return FAIXAS_FLUTUACAO_VAAR[FAIXAS_FLUTUACAO_VAAR.length - 1].faixaPP;
+}
+
 type EscalaConfig = {
   /** Início do Nível 1; abaixo disso é Nível 0. Cada nível tem 25 pontos. */
   inicioNivel1: number;
