@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
+import { cookies } from "next/headers";
 import { AlertTriangle, ChevronRight } from "lucide-react";
 import { authOptions } from "@/auth";
+import { AVALIACAO_COOKIE } from "@/lib/avaliacao-cookie";
 import { formatPercent } from "@/lib/saeb";
 import {
   AVALIACOES,
@@ -16,6 +18,7 @@ import {
 } from "@/lib/mock-data";
 import AvaliacaoDropdown from "../escolas/AvaliacaoDropdown";
 import { CurvaEvolucao, rotuloAvaliacaoCurto } from "../escolas/ui";
+import { AvaliacaoSync } from "../AvaliacaoSync";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +40,8 @@ export default async function DashboardPage({
   const resolvedSearchParams = await searchParams;
   const avaliacaoParam =
     typeof resolvedSearchParams.avaliacao === "string" ? resolvedSearchParams.avaliacao : undefined;
-  const avaliacaoIdx = indiceAvaliacao(avaliacaoParam);
+  const avaliacaoCookie = (await cookies()).get(AVALIACAO_COOKIE)?.value;
+  const avaliacaoIdx = indiceAvaliacao(avaliacaoParam, avaliacaoCookie);
   const avaliacaoSelecionada = AVALIACOES[avaliacaoIdx];
 
   const todosAlunos = rede.escolas.flatMap((escola) =>
@@ -62,6 +66,7 @@ export default async function DashboardPage({
 
   return (
     <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-4 sm:p-8">
+      <AvaliacaoSync atual={avaliacaoIdx} />
       <div className="flex items-center gap-3">
         <Image
           src="/brasao-mafra.svg"
@@ -125,7 +130,7 @@ export default async function DashboardPage({
         <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between gap-3">
             <h2 className="text-lg font-semibold text-gray-900">Escolas que precisam de atenção</h2>
-            <Link href="/escolas?atencao=1" className="text-sm font-medium text-brand hover:underline">
+            <Link href={`/escolas?atencao=1&avaliacao=${avaliacaoIdx}`} className="text-sm font-medium text-brand hover:underline">
               Ver todas →
             </Link>
           </div>
@@ -135,7 +140,7 @@ export default async function DashboardPage({
               return (
                 <li key={escola.id}>
                   <Link
-                    href={`/escolas/${escola.id}`}
+                    href={`/escolas/${escola.id}?avaliacao=${avaliacaoIdx}`}
                     className="group flex items-center gap-3 py-3 hover:bg-gray-50"
                   >
                     <AlertTriangle className="h-4 w-4 shrink-0 text-attention" aria-hidden />

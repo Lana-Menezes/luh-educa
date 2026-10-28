@@ -15,9 +15,12 @@ import {
   type ResumoAvaliacao,
 } from "@/lib/mock-data";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import EscolaFinder from "./EscolaFinder";
 import AvaliacaoDropdown from "./AvaliacaoDropdown";
 import { parseFiltros } from "./filtros";
+import { AvaliacaoSync } from "../AvaliacaoSync";
+import { AVALIACAO_COOKIE } from "@/lib/avaliacao-cookie";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +42,8 @@ export default async function EscolasPage({
   const resolvedSearchParams = await searchParams;
   const avaliacaoParam =
     typeof resolvedSearchParams.avaliacao === "string" ? resolvedSearchParams.avaliacao : undefined;
-  const avaliacaoIdx = indiceAvaliacao(avaliacaoParam);
+  const avaliacaoCookie = (await cookies()).get(AVALIACAO_COOKIE)?.value;
+  const avaliacaoIdx = indiceAvaliacao(avaliacaoParam, avaliacaoCookie);
   const avaliacaoSelecionada = AVALIACOES[avaliacaoIdx];
 
   const totalAlunos = rede.escolas.reduce(
@@ -75,6 +79,7 @@ export default async function EscolasPage({
 
   return (
     <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-8">
+      <AvaliacaoSync atual={avaliacaoIdx} />
       <div>
         <p className="text-sm font-semibold uppercase tracking-wide text-gray-400">
           {rede.nome}
@@ -197,6 +202,7 @@ export default async function EscolasPage({
         initialFiltros={initialFiltros}
         resumosPorEscola={resumosPorEscola}
         motivosPorEscola={motivosPorEscola}
+        avaliacaoIdx={avaliacaoIdx}
       />
 
       <p className="mt-6 text-xs text-gray-400">

@@ -24,7 +24,10 @@ import {
   nivelDaProficiencia,
 } from "@/lib/saeb";
 import { ChevronRight } from "lucide-react";
+import { cookies } from "next/headers";
 import { AvaliacaoSeletor, Breadcrumb, PadroesBarra, corPadrao, deltaClass } from "../ui";
+import { AvaliacaoSync } from "../../AvaliacaoSync";
+import { AVALIACAO_COOKIE } from "@/lib/avaliacao-cookie";
 
 export default async function EscolaPage({
   params,
@@ -48,7 +51,8 @@ export default async function EscolaPage({
   const referencia = redeMock.referenciaNacional[etapa];
   const ano = resultado.ano;
   const turmas = getTurmas(escola, etapa);
-  const avaliacaoIdx = indiceAvaliacao(avaliacaoParam);
+  const avaliacaoCookie = (await cookies()).get(AVALIACAO_COOKIE)?.value;
+  const avaliacaoIdx = indiceAvaliacao(avaliacaoParam, avaliacaoCookie);
   const avaliacaoSelecionada = AVALIACOES[avaliacaoIdx];
   const resumoAno = resumir(turmas.flatMap((t) => t.alunos), ano, avaliacaoIdx);
 
@@ -64,6 +68,7 @@ export default async function EscolaPage({
 
   return (
     <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-8">
+      <AvaliacaoSync atual={avaliacaoIdx} />
       <div>
         <Breadcrumb
           itens={[
@@ -89,7 +94,7 @@ export default async function EscolaPage({
               return (
                 <Link
                   key={e}
-                  href={`/escolas/${escola.id}?etapa=${encodeURIComponent(e)}`}
+                  href={`/escolas/${escola.id}?etapa=${encodeURIComponent(e)}&avaliacao=${avaliacaoIdx}`}
                   aria-current={active ? "page" : undefined}
                   className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
                     active
@@ -104,7 +109,7 @@ export default async function EscolaPage({
           </nav>
         )}
         <Link
-          href={`/escolas/${escola.id}/anos/${ano}`}
+          href={`/escolas/${escola.id}/anos/${ano}?avaliacao=${avaliacaoIdx}`}
           className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-hover"
         >
           Ver o {ano}º ano completo →
@@ -221,7 +226,7 @@ export default async function EscolaPage({
             return (
               <li key={turma.id}>
                 <Link
-                  href={`/escolas/${escola.id}/anos/${ano}/turmas/${turma.id}`}
+                  href={`/escolas/${escola.id}/anos/${ano}/turmas/${turma.id}?avaliacao=${avaliacaoIdx}`}
                   className="group block rounded-lg border border-gray-200 p-4 transition hover:border-brand-muted hover:shadow-sm"
                 >
                   <div className="flex items-center justify-between">

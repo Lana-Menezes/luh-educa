@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import { AVALIACOES, etapasDaEscola, formatData, getEscola, getTurmas, redeMock, resumir } from "@/lib/mock-data";
 import { ANO_POR_ETAPA, DISCIPLINAS, formatPercent, formatProficiencia } from "@/lib/saeb";
 import { AvaliacaoSeletor, Breadcrumb } from "../../escolas/ui";
+import { AvaliacaoSync } from "../../AvaliacaoSync";
+import { AVALIACAO_COOKIE } from "@/lib/avaliacao-cookie";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +27,9 @@ export default async function PlanejamentoEscolaPage({
   const realizadas = AVALIACOES.map((avaliacao, indice) => ({ ...avaliacao, indice }))
     .filter((avaliacao) => avaliacao.data <= hoje);
   const { avaliacao: avaliacaoParam } = await searchParams;
+  const avaliacaoCookie = (await cookies()).get(AVALIACAO_COOKIE)?.value;
   const selecionada = realizadas.find((avaliacao) => String(avaliacao.indice) === avaliacaoParam)
+    ?? realizadas.find((avaliacao) => String(avaliacao.indice) === avaliacaoCookie)
     ?? realizadas.at(-1);
 
   return (
@@ -47,6 +52,7 @@ export default async function PlanejamentoEscolaPage({
         <p className="mt-6 text-gray-600">O planejamento estará disponível após a primeira avaliação do calendário.</p>
       ) : (
         <>
+          <AvaliacaoSync atual={selecionada.indice} />
           <div className="mt-6">
             <AvaliacaoSeletor
               avaliacoes={realizadas}

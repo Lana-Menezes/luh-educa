@@ -1,5 +1,6 @@
 import HabilidadesResultados from "@/app/escolas/HabilidadesResultados";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import TurmaLinha from "./TurmaLinha";
 import {
   AVALIACOES,
@@ -25,6 +26,8 @@ import {
   StatCard,
   rotuloAvaliacaoCurto,
 } from "../../../ui";
+import { AvaliacaoSync } from "../../../../AvaliacaoSync";
+import { AVALIACAO_COOKIE } from "@/lib/avaliacao-cookie";
 
 export default async function AnoPage({
   params,
@@ -45,15 +48,17 @@ export default async function AnoPage({
   const ano = turmas[0].ano;
   const todos = turmas.flatMap((turma) => turma.alunos);
   const { avaliacao: avaliacaoParam } = await searchParams;
-  const avaliacaoIdx = indiceAvaliacao(avaliacaoParam);
+  const avaliacaoCookie = (await cookies()).get(AVALIACAO_COOKIE)?.value;
+  const avaliacaoIdx = indiceAvaliacao(avaliacaoParam, avaliacaoCookie);
   const avaliacaoSelecionada = AVALIACOES[avaliacaoIdx];
   const resumo = resumir(todos, ano, avaliacaoIdx);
   const evolucao = AVALIACOES.map((avaliacao, i) => ({ avaliacao, resumo: resumir(todos, ano, i) }));
   const saeb = escola.resultados[etapa]!;
-  const escolaHref = `/escolas/${escola.id}?etapa=${encodeURIComponent(etapa)}`;
+  const escolaHref = `/escolas/${escola.id}?etapa=${encodeURIComponent(etapa)}&avaliacao=${avaliacaoIdx}`;
 
   return (
     <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-y-none bg-gray-50 p-8">
+      <AvaliacaoSync atual={avaliacaoIdx} />
       <Breadcrumb
         itens={[
           { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/escolas" },

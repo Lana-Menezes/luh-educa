@@ -1,5 +1,6 @@
 import HabilidadesResultados from "@/app/escolas/HabilidadesResultados";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import {
   AVALIACOES,
   estaInsuficiente,
@@ -27,6 +28,8 @@ import {
   deltaClass,
   rotuloAvaliacaoCurto,
 } from "../../../../../ui";
+import { AvaliacaoSync } from "../../../../../../AvaliacaoSync";
+import { AVALIACAO_COOKIE } from "@/lib/avaliacao-cookie";
 import AlunosTabela from "./AlunosTabela";
 
 export default async function TurmaPage({
@@ -46,7 +49,8 @@ export default async function TurmaPage({
 
   const { ano, etapa } = turma;
   const { avaliacao: avaliacaoParam } = await searchParams;
-  const avaliacaoIdx = indiceAvaliacao(avaliacaoParam);
+  const avaliacaoCookie = (await cookies()).get(AVALIACAO_COOKIE)?.value;
+  const avaliacaoIdx = indiceAvaliacao(avaliacaoParam, avaliacaoCookie);
   const avaliacaoSelecionada = AVALIACOES[avaliacaoIdx];
   const resumo = resumir(turma.alunos, ano, avaliacaoIdx);
   const resumoAno = resumir(getTurmas(escola, etapa).flatMap((t) => t.alunos), ano, avaliacaoIdx);
@@ -57,11 +61,12 @@ export default async function TurmaPage({
 
   return (
     <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-y-none bg-gray-50 p-8">
+      <AvaliacaoSync atual={avaliacaoIdx} />
       <Breadcrumb
         itens={[
           { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/escolas" },
-          { label: escola.nome, href: `/escolas/${escola.id}?etapa=${encodeURIComponent(etapa)}` },
-          { label: `${ano}º ano`, href: anoHref },
+          { label: escola.nome, href: `/escolas/${escola.id}?etapa=${encodeURIComponent(etapa)}&avaliacao=${avaliacaoIdx}` },
+          { label: `${ano}º ano`, href: `${anoHref}?avaliacao=${avaliacaoIdx}` },
           { label: turma.nome },
         ]}
       />

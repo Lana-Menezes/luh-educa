@@ -137,12 +137,14 @@ export default function EscolaFinder({
   initialFiltros,
   resumosPorEscola,
   motivosPorEscola,
+  avaliacaoIdx,
 }: {
   escolas: EscolaRede[];
   referenciaNacional: Record<Etapa, ReferenciaSaeb>;
   initialFiltros: EscolaFinderFiltros;
   resumosPorEscola: ResumosPorEscola;
   motivosPorEscola: MotivosPorEscola;
+  avaliacaoIdx: number;
 }) {
   const [filtros, setFiltros] = useState(initialFiltros);
   const { q, zona, etapa, atencao, ordem } = filtros;
@@ -325,11 +327,14 @@ export default function EscolaFinder({
             const etapasVisiveis =
               etapa.length > 0 ? etapa.filter((e) => escola.resultados[e]) : etapasDaEscola(escola);
             const etapaLink = etapa.length === 1 ? etapa[0] : undefined;
+            const linkParams = new URLSearchParams();
+            if (etapaLink) linkParams.set("etapa", etapaLink);
+            linkParams.set("avaliacao", String(avaliacaoIdx));
 
             return (
               <li key={escola.id}>
                 <Link
-                  href={`/escolas/${escola.id}${etapaLink ? `?etapa=${encodeURIComponent(etapaLink)}` : ""}`}
+                  href={`/escolas/${escola.id}?${linkParams.toString()}`}
                   className="group flex items-center gap-4 px-4 py-4 transition-colors hover:bg-gray-50"
                 >
                   <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand sm:flex">

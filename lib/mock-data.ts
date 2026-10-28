@@ -382,13 +382,18 @@ export const AVALIACOES = CICLOS_AVALIATIVOS.map((ciclo) => ({
 
 export const AVALIACAO_ATUAL = AVALIACOES[AVALIACOES.length - 1];
 
-/** Índice válido de AVALIACOES a partir de um parâmetro de busca; padrão: a mais recente. */
-export function indiceAvaliacao(param?: string) {
-  const i = Number(param);
-  if (!Number.isInteger(i) || i < 0 || i >= AVALIACOES.length) {
-    return AVALIACOES.length - 1;
-  }
-  return i;
+function indiceAvaliacaoValido(valor?: string) {
+  const i = Number(valor);
+  return Number.isInteger(i) && i >= 0 && i < AVALIACOES.length ? i : undefined;
+}
+
+/**
+ * Índice válido de AVALIACOES a partir do parâmetro de busca `?avaliacao=`.
+ * Se ausente/invalido, usa `fallback` (ex.: o cookie da última avaliação
+ * selecionada); sem nenhum dos dois, usa a mais recente.
+ */
+export function indiceAvaliacao(param?: string, fallback?: string) {
+  return indiceAvaliacaoValido(param) ?? indiceAvaliacaoValido(fallback) ?? AVALIACOES.length - 1;
 }
 
 export type Proficiencias = Record<Disciplina, number>;

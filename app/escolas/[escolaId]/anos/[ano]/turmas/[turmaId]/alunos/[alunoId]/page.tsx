@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import HabilidadesResultados from "@/app/escolas/HabilidadesResultados";
 import AvaliacaoDropdown from "@/app/escolas/AvaliacaoDropdown";
 import {
@@ -29,6 +30,8 @@ import {
   deltaClass,
   rotuloAvaliacaoCurto,
 } from "../../../../../../../ui";
+import { AvaliacaoSync } from "../../../../../../../../AvaliacaoSync";
+import { AVALIACAO_COOKIE } from "@/lib/avaliacao-cookie";
 
 export default async function AlunoPage({
   params,
@@ -38,7 +41,8 @@ export default async function AlunoPage({
   searchParams: Promise<{ avaliacao?: string }>;
 }) {
   const { avaliacao } = await searchParams;
-  const avaliacaoIdx = indiceAvaliacao(avaliacao);
+  const avaliacaoCookie = (await cookies()).get(AVALIACAO_COOKIE)?.value;
+  const avaliacaoIdx = indiceAvaliacao(avaliacao, avaliacaoCookie);
   const { escolaId, ano: anoParam, turmaId, alunoId } = await params;
   const escola = getEscola(escolaId);
   const turma = escola && getTurma(escola, Number(anoParam), turmaId);
@@ -54,8 +58,8 @@ export default async function AlunoPage({
   const presentes = aluno.resultados.flatMap((r, i) => (r ? [{ ...r, avaliacao: AVALIACOES[i] }] : []));
   const primeira = presentes[0];
   const ultima = presentes[presentes.length - 1];
-  const anoHref = `/escolas/${escola.id}/anos/${ano}`;
-  const turmaHref = `${anoHref}/turmas/${turma.id}`;
+  const anoHref = `/escolas/${escola.id}/anos/${ano}?avaliacao=${avaliacaoIdx}`;
+  const turmaHref = `/escolas/${escola.id}/anos/${ano}/turmas/${turma.id}?avaliacao=${avaliacaoIdx}`;
 
   const recomendacoes: string[] = [];
   if (!atual) {
@@ -92,10 +96,11 @@ export default async function AlunoPage({
 
   return (
     <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-8">
+      <AvaliacaoSync atual={avaliacaoIdx} />
       <Breadcrumb
         itens={[
           { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/escolas" },
-          { label: escola.nome, href: `/escolas/${escola.id}?etapa=${encodeURIComponent(etapa)}` },
+          { label: escola.nome, href: `/escolas/${escola.id}?etapa=${encodeURIComponent(etapa)}&avaliacao=${avaliacaoIdx}` },
           { label: `${ano}º ano`, href: anoHref },
           { label: turma.nome, href: turmaHref },
           { label: aluno.nome },
