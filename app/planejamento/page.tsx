@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CalendarDays, ChevronRight } from "lucide-react";
-import { etapasDaEscola, redeMock } from "@/lib/mock-data";
+import { anosDaEscola, redeMock } from "@/lib/mock-data";
 import { Breadcrumb } from "../escolas/ui";
 
 export default function PlanejamentoPage() {
@@ -34,7 +34,7 @@ export default function PlanejamentoPage() {
                     {escola.nome}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {etapasDaEscola(escola).join(" · ")}
+                    {anosDaEscola(escola).map((ano) => `${ano}º ano`).join(" · ")}
                   </p>
                 </div>
               </div>

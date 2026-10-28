@@ -5,10 +5,9 @@ import { cookies } from "next/headers";
 import { AlertTriangle, ChevronRight } from "lucide-react";
 import { authOptions } from "@/auth";
 import { AVALIACAO_COOKIE } from "@/lib/avaliacao-cookie";
-import { formatPercent } from "@/lib/saeb";
+import { ANOS_SAEB, formatPercent } from "@/lib/saeb";
 import {
   AVALIACOES,
-  ETAPAS,
   getTurmas,
   indiceAvaliacao,
   motivosAtencaoAvaliacao,
@@ -45,7 +44,7 @@ export default async function DashboardPage({
   const avaliacaoSelecionada = AVALIACOES[avaliacaoIdx];
 
   const todosAlunos = rede.escolas.flatMap((escola) =>
-    ETAPAS.flatMap((etapa) => getTurmas(escola, etapa).flatMap((t) => t.alunos)),
+    ANOS_SAEB.flatMap((ano) => getTurmas(escola, ano).flatMap((t) => t.alunos)),
   );
   const matriculados = todosAlunos.length;
   const totalAlunos = todosAlunos.filter((a) => a.resultados[avaliacaoIdx] !== null).length;
@@ -89,7 +88,8 @@ export default async function DashboardPage({
       <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap gap-3">
           <Link href={`/escolas?avaliacao=${avaliacaoIdx}`} className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white hover:opacity-90">Explorar escolas</Link>
-          <Link href="/avaliacoes" className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-brand hover:bg-brand-soft">Ver provas</Link>
+          <Link href="/avaliacoes" className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-brand hover:bg-brand-soft">Provas</Link>
+          <Link href="/planejamento" className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-brand hover:bg-brand-soft">Planejamento</Link>
         </div>
         <AvaliacaoDropdown avaliacoes={AVALIACOES} atual={avaliacaoIdx} />
       </div>
@@ -116,7 +116,7 @@ export default async function DashboardPage({
         </div>
 
         <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900">Progresso mês a mês · rede municipal</h2>
+          <h2 className="text-lg font-semibold text-gray-900">Progresso mês a mês · Rede municipal</h2>
           <p className="mt-1 text-sm text-gray-500">
             Média da rede nas avaliações do ano, por Língua Portuguesa e Matemática (escala Saeb)
           </p>
@@ -149,7 +149,7 @@ export default async function DashboardPage({
                         {escola.nome}
                       </p>
                       <p className="truncate text-xs text-gray-500">
-                        {motivos.map((m) => `${m.etapa}: ${m.motivo}`).join(" · ")}
+                        {motivos.map((m) => `${m.ano}º ano: ${m.motivo}`).join(" · ")}
                       </p>
                     </div>
                     <ChevronRight className="h-4 w-4 shrink-0 text-gray-300 group-hover:text-brand" aria-hidden />

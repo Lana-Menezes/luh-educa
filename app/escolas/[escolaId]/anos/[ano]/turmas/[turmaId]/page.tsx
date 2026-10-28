@@ -47,13 +47,13 @@ export default async function TurmaPage({
     notFound();
   }
 
-  const { ano, etapa } = turma;
+  const { ano } = turma;
   const { avaliacao: avaliacaoParam } = await searchParams;
   const avaliacaoCookie = (await cookies()).get(AVALIACAO_COOKIE)?.value;
   const avaliacaoIdx = indiceAvaliacao(avaliacaoParam, avaliacaoCookie);
   const avaliacaoSelecionada = AVALIACOES[avaliacaoIdx];
   const resumo = resumir(turma.alunos, ano, avaliacaoIdx);
-  const resumoAno = resumir(getTurmas(escola, etapa).flatMap((t) => t.alunos), ano, avaliacaoIdx);
+  const resumoAno = resumir(getTurmas(escola, ano).flatMap((t) => t.alunos), ano, avaliacaoIdx);
   const evolucao = AVALIACOES.map((avaliacao, i) => ({ avaliacao, resumo: resumir(turma.alunos, ano, i) }));
   const ausentes = turma.alunos.filter((a) => (a.resultados[avaliacaoIdx] ?? null) === null);
   const anoHref = `/escolas/${escola.id}/anos/${ano}`;
@@ -65,7 +65,7 @@ export default async function TurmaPage({
       <Breadcrumb
         itens={[
           { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/escolas" },
-          { label: escola.nome, href: `/escolas/${escola.id}?etapa=${encodeURIComponent(etapa)}&avaliacao=${avaliacaoIdx}` },
+          { label: escola.nome, href: `/escolas/${escola.id}?ano=${ano}&avaliacao=${avaliacaoIdx}` },
           { label: `${ano}º ano`, href: `${anoHref}?avaliacao=${avaliacaoIdx}` },
           { label: turma.nome },
         ]}

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   AVALIACOES,
-  etapasDaEscola,
+  anosDaEscola,
   formatData,
   getEscola,
   getResultadoRede,
@@ -22,6 +22,7 @@ import {
   formatPercent,
   formatProficiencia,
   nivelDaProficiencia,
+  type AnoSaeb,
 } from "@/lib/saeb";
 import { ChevronRight } from "lucide-react";
 import { cookies } from "next/headers";
@@ -34,7 +35,7 @@ export default async function EscolaPage({
   searchParams,
 }: {
   params: Promise<{ escolaId: string }>;
-  searchParams: Promise<{ etapa?: string; avaliacao?: string }>;
+  searchParams: Promise<{ ano?: string; avaliacao?: string }>;
 }) {
   const { escolaId } = await params;
   const escola = getEscola(escolaId);
@@ -43,14 +44,13 @@ export default async function EscolaPage({
     notFound();
   }
 
-  const etapas = etapasDaEscola(escola);
-  const { etapa: etapaParam, avaliacao: avaliacaoParam } = await searchParams;
-  const etapa = etapas.find((e) => e === etapaParam) ?? etapas[0];
-  const resultado = escola.resultados[etapa]!;
-  const rede = getResultadoRede(etapa);
-  const referencia = redeMock.referenciaNacional[etapa];
-  const ano = resultado.ano;
-  const turmas = getTurmas(escola, etapa);
+  const anosEscola = anosDaEscola(escola);
+  const { ano: anoParam, avaliacao: avaliacaoParam } = await searchParams;
+  const ano: AnoSaeb = anosEscola.find((a) => String(a) === anoParam) ?? anosEscola[0];
+  const resultado = escola.resultados[ano]!;
+  const rede = getResultadoRede(ano);
+  const referencia = redeMock.referenciaNacional[ano];
+  const turmas = getTurmas(escola, ano);
   const avaliacaoCookie = (await cookies()).get(AVALIACAO_COOKIE)?.value;
   const avaliacaoIdx = indiceAvaliacao(avaliacaoParam, avaliacaoCookie);
   const avaliacaoSelecionada = AVALIACOES[avaliacaoIdx];
@@ -83,18 +83,17 @@ export default async function EscolaPage({
           INEP {escola.codigoInep} · {escola.bairro} · Zona {escola.zona.toLowerCase()} ·{" "}
           {redeMock.municipio}/{redeMock.uf}
         </p>
-        <p className="mt-1 text-gray-600">Resultados no {redeMock.edicao} e acompanhamento pelo método LUH</p>
       </div>
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-        {etapas.length > 1 && (
-          <nav className="flex flex-wrap gap-2" aria-label="Etapa avaliada">
-            {etapas.map((e) => {
-              const active = e === etapa;
+        {anosEscola.length > 1 && (
+          <nav className="flex flex-wrap gap-2" aria-label="Ano avaliado">
+            {anosEscola.map((a) => {
+              const active = a === ano;
               return (
                 <Link
-                  key={e}
-                  href={`/escolas/${escola.id}?etapa=${encodeURIComponent(e)}&avaliacao=${avaliacaoIdx}`}
+                  key={a}
+                  href={`/escolas/${escola.id}?ano=${a}&avaliacao=${avaliacaoIdx}`}
                   aria-current={active ? "page" : undefined}
                   className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
                     active
@@ -102,7 +101,7 @@ export default async function EscolaPage({
                       : "border-gray-200 bg-white text-gray-700 hover:border-brand-muted"
                   }`}
                 >
-                  {escola.resultados[e]!.ano}º ano · {e}
+                  {a}º ano
                 </Link>
               );
             })}
@@ -117,21 +116,19 @@ export default async function EscolaPage({
       </div>
 
       <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-gray-900">{redeMock.edicao} × Método LUH</h2>
+        <h2 className="text-lg font-semibold text-gray-900">{redeMock.edicao} × {escola.nome}</h2>
         <p className="mt-1 text-sm text-gray-500">
-          {ano}º ano · Compare a referência do Saeb com a avaliação LUH selecionada.
+          {ano}º ano · Compare a referência do Saeb com a avaliação selecionada.
         </p>
         <div className="mt-4">
           <AvaliacaoSeletor
             avaliacoes={AVALIACOES}
             atual={avaliacaoIdx}
-            hrefFor={(i) =>
-              `/escolas/${escola.id}?etapa=${encodeURIComponent(etapa)}&avaliacao=${i}`
-            }
+            hrefFor={(i) => `/escolas/${escola.id}?ano=${ano}&avaliacao=${i}`}
           />
         </div>
         <p className="mt-4 text-sm text-gray-500">
-          Método LUH · {avaliacaoSelecionada.nome} · {formatData(avaliacaoSelecionada.data)}
+          {avaliacaoSelecionada.nome} · {formatData(avaliacaoSelecionada.data)}
         </p>
         <div className="mt-3 overflow-x-auto">
           <table className="w-full min-w-[32rem] text-left text-sm">
@@ -140,20 +137,23 @@ export default async function EscolaPage({
               <tr>
                 <th scope="col" className="py-2 pr-3 font-medium">Indicador</th>
                 <th scope="col" className="px-2 py-2 text-right font-medium">{redeMock.edicao}</th>
-                <th scope="col" className="px-2 py-2 text-right font-medium">Método LUH</th>
-                <th scope="col" className="px-2 py-2 text-right font-medium">Diferença (LUH − Saeb)</th>
+                <th scope="col" className="px-2 py-2 text-right font-medium">Escola {escola.nome}</th>
+                <th scope="col" className="px-2 py-2 text-right font-medium">Diferença</th>
               </tr>
             </thead>
             <tbody className="text-gray-700">
               {DISCIPLINAS.map(({ codigo, nome }) => {
                 const delta = resumoAno.media[codigo] - resultado.proficiencia[codigo];
+                const deltaPercent = resultado.proficiencia[codigo]
+                  ? (delta / resultado.proficiencia[codigo]) * 100
+                  : 0;
                 return (
                   <tr key={codigo} className="border-b border-gray-100">
                     <th scope="row" className="py-3 pr-3 font-medium text-gray-900">Proficiência em {nome}</th>
                     <td className="px-2 py-3 text-right">{formatProficiencia(resultado.proficiencia[codigo])}</td>
                     <td className="px-2 py-3 text-right">{resumoAno.avaliados ? formatProficiencia(resumoAno.media[codigo]) : "—"}</td>
                     <td className={`px-2 py-3 text-right ${resumoAno.avaliados ? deltaClass(delta) : "text-gray-400"}`}>
-                      {resumoAno.avaliados ? `${formatDelta(delta)} pontos` : "—"}
+                      {resumoAno.avaliados ? formatDelta(deltaPercent, formatPercent) : "—"}
                     </td>
                   </tr>
                 );
@@ -162,7 +162,14 @@ export default async function EscolaPage({
                 <th scope="row" className="py-3 pr-3 font-medium text-gray-900">Participação</th>
                 <td className="px-2 py-3 text-right">{formatPercent(resultado.participacao)}</td>
                 <td className="px-2 py-3 text-right">{formatPercent(resumoAno.participacao)}</td>
-                <td className="px-2 py-3 text-right">{formatDelta(resumoAno.participacao - resultado.participacao)} p.p.</td>
+                <td className="px-2 py-3 text-right">
+                  {formatDelta(
+                    resultado.participacao
+                      ? ((resumoAno.participacao - resultado.participacao) / resultado.participacao) * 100
+                      : 0,
+                    formatPercent,
+                  )}
+                </td>
               </tr>
               <tr>
                 <th scope="row" className="py-3 pr-3 font-medium text-gray-900">Estudantes avaliados</th>
@@ -173,10 +180,6 @@ export default async function EscolaPage({
             </tbody>
           </table>
         </div>
-        <p className="mt-3 text-xs text-gray-500">
-          Dados de demonstração. As avaliações podem envolver estudantes e períodos diferentes;
-          a diferença apresentada não mede, isoladamente, o efeito do método LUH.
-        </p>
       </section>
 
       <HabilidadesResultados alunos={turmas.flatMap((turma) => turma.alunos)} ano={ano} avaliacao={avaliacaoIdx} />
@@ -370,7 +373,7 @@ export default async function EscolaPage({
 
         <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900">Escola, rede e referência nacional</h2>
-          <p className="mt-1 text-sm text-gray-500">{ano}º ano · {etapa}</p>
+          <p className="mt-1 text-sm text-gray-500">{ano}º ano</p>
           <div className="mt-4 overflow-x-auto">
             <table className="w-full min-w-[24rem] text-left text-sm">
               <thead className="border-b border-gray-200 text-gray-500">

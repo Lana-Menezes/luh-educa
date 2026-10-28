@@ -4,50 +4,49 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AlertTriangle, ChevronDown, ChevronRight, School, Search, X } from "lucide-react";
 import {
-  etapasDaEscola,
+  anosDaEscola,
   normalizeBusca,
+  type AnoSaeb,
   type EscolaRede,
-  type Etapa,
   type MotivoAtencao,
   type ReferenciaSaeb,
   type ResumoAvaliacao,
 } from "@/lib/mock-data";
 import {
-  ANO_POR_ETAPA,
   PARTICIPACAO_MINIMA_SAEB,
   formatPercent,
   formatProficiencia,
 } from "@/lib/saeb";
 import {
-  etapas,
+  anos,
   ordenacoes,
   zonas,
   type EscolaFinderFiltros,
   type Ordenacao,
 } from "./filtros";
 
-type ResumosPorEscola = Record<string, Partial<Record<Etapa, ResumoAvaliacao>>>;
+type ResumosPorEscola = Record<string, Partial<Record<AnoSaeb, ResumoAvaliacao>>>;
 type MotivosPorEscola = Record<string, MotivoAtencao[]>;
 
-/** Com etapas filtradas, ordena pela média delas; senão, pela média das etapas da escola. */
+/** Com anos filtrados, ordena pela média deles; senão, pela média dos anos da escola. */
 function chaveOrdenacao(
   escola: EscolaRede,
-  etapa: Etapa[],
+  ano: AnoSaeb[],
   campo: "proficiencia" | "participacao",
   resumosPorEscola: ResumosPorEscola,
 ) {
   const resumosEscola = resumosPorEscola[escola.id] ?? {};
-  const etapasConsideradas = etapa.length > 0 ? etapa.filter((e) => resumosEscola[e]) : etapasDaEscola(escola);
-  const valores = etapasConsideradas.flatMap((e) => {
-    const resumo = resumosEscola[e];
+  const anosConsiderados = ano.length > 0 ? ano.filter((a) => resumosEscola[a]) : anosDaEscola(escola);
+  const valores = anosConsiderados.flatMap((a) => {
+    const resumo = resumosEscola[a];
     if (!resumo) return [];
     return [campo === "proficiencia" ? (resumo.media.LP + resumo.media.MT) / 2 : resumo.participacao];
   });
   return valores.length > 0 ? valores.reduce((sum, v) => sum + v, 0) / valores.length : -Infinity;
 }
 
-/** Dropdown de seleção múltipla (checkboxes), ex.: Etapa Saeb, Zona. */
-function MultiSelectDropdown<T extends string>({
+/** Dropdown de seleção múltipla (checkboxes), ex.: Ano Saeb, Zona. */
+function MultiSelectDropdown<T extends string | number>({
   label,
   options,
   optionLabel,
@@ -140,14 +139,14 @@ export default function EscolaFinder({
   avaliacaoIdx,
 }: {
   escolas: EscolaRede[];
-  referenciaNacional: Record<Etapa, ReferenciaSaeb>;
+  referenciaNacional: Record<AnoSaeb, ReferenciaSaeb>;
   initialFiltros: EscolaFinderFiltros;
   resumosPorEscola: ResumosPorEscola;
   motivosPorEscola: MotivosPorEscola;
   avaliacaoIdx: number;
 }) {
   const [filtros, setFiltros] = useState(initialFiltros);
-  const { q, zona, etapa, atencao, ordem } = filtros;
+  const { q, zona, ano, atencao, ordem } = filtros;
 
   function update(patch: Partial<EscolaFinderFiltros>) {
     setFiltros((current) => ({ ...current, ...patch }));
@@ -160,12 +159,12 @@ export default function EscolaFinder({
     if (avaliacaoAtual) params.set("avaliacao", avaliacaoAtual);
     if (q.trim()) params.set("q", q.trim());
     if (zona.length > 0) params.set("zona", zona.join(","));
-    if (etapa.length > 0) params.set("etapa", etapa.join(","));
+    if (ano.length > 0) params.set("ano", ano.join(","));
     if (atencao) params.set("atencao", "1");
     if (ordem !== "nome") params.set("ordem", ordem);
     const query = params.toString();
     window.history.replaceState(null, "", query ? `?${query}` : window.location.pathname);
-  }, [q, zona, etapa, atencao, ordem]);
+  }, [q, zona, ano, atencao, ordem]);
 
   const resultados = useMemo(() => {
     const termo = normalizeBusca(q);
@@ -173,7 +172,7 @@ export default function EscolaFinder({
 
     const filtradas = escolas.filter((escola) => {
       if (zona.length > 0 && !zona.includes(escola.zona)) return false;
-      if (etapa.length > 0 && !etapa.some((e) => escola.resultados[e])) return false;
+      if (ano.length > 0 && !ano.some((a) => escola.resultados[a])) return false;
       if (atencao && (motivosPorEscola[escola.id]?.length ?? 0) === 0) return false;
       if (!termo) return true;
       return (
@@ -187,26 +186,26 @@ export default function EscolaFinder({
       switch (ordem) {
         case "maior-proficiencia":
           return (
-            chaveOrdenacao(b, etapa, "proficiencia", resumosPorEscola) -
-            chaveOrdenacao(a, etapa, "proficiencia", resumosPorEscola)
+            chaveOrdenacao(b, ano, "proficiencia", resumosPorEscola) -
+            chaveOrdenacao(a, ano, "proficiencia", resumosPorEscola)
           );
         case "menor-proficiencia":
           return (
-            chaveOrdenacao(a, etapa, "proficiencia", resumosPorEscola) -
-            chaveOrdenacao(b, etapa, "proficiencia", resumosPorEscola)
+            chaveOrdenacao(a, ano, "proficiencia", resumosPorEscola) -
+            chaveOrdenacao(b, ano, "proficiencia", resumosPorEscola)
           );
         case "menor-participacao":
           return (
-            chaveOrdenacao(a, etapa, "participacao", resumosPorEscola) -
-            chaveOrdenacao(b, etapa, "participacao", resumosPorEscola)
+            chaveOrdenacao(a, ano, "participacao", resumosPorEscola) -
+            chaveOrdenacao(b, ano, "participacao", resumosPorEscola)
           );
         default:
           return a.nome.localeCompare(b.nome, "pt-BR");
       }
     });
-  }, [escolas, q, zona, etapa, atencao, ordem, resumosPorEscola, motivosPorEscola]);
+  }, [escolas, q, zona, ano, atencao, ordem, resumosPorEscola, motivosPorEscola]);
 
-  const temFiltros = Boolean(q || zona.length > 0 || etapa.length > 0 || atencao);
+  const temFiltros = Boolean(q || zona.length > 0 || ano.length > 0 || atencao);
 
   return (
     <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -268,10 +267,10 @@ export default function EscolaFinder({
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <MultiSelectDropdown
           label="Ano Escolar"
-          options={etapas}
-          optionLabel={(e) => `${ANO_POR_ETAPA[e]}º ano · ${e}`}
-          selected={etapa}
-          onChange={(value) => update({ etapa: value })}
+          options={anos}
+          optionLabel={(a) => `${a}º ano`}
+          selected={ano}
+          onChange={(value) => update({ ano: value })}
         />
 
         <MultiSelectDropdown
@@ -304,7 +303,7 @@ export default function EscolaFinder({
         {temFiltros && (
           <button
             type="button"
-            onClick={() => setFiltros({ ...filtros, q: "", zona: [], etapa: [], atencao: false })}
+            onClick={() => setFiltros({ ...filtros, q: "", zona: [], ano: [], atencao: false })}
             className="font-medium text-brand hover:underline"
           >
             Limpar filtros
@@ -324,11 +323,11 @@ export default function EscolaFinder({
           {resultados.map((escola) => {
             const motivos = motivosPorEscola[escola.id] ?? [];
             const resumosEscola = resumosPorEscola[escola.id] ?? {};
-            const etapasVisiveis =
-              etapa.length > 0 ? etapa.filter((e) => escola.resultados[e]) : etapasDaEscola(escola);
-            const etapaLink = etapa.length === 1 ? etapa[0] : undefined;
+            const anosVisiveis =
+              ano.length > 0 ? ano.filter((a) => escola.resultados[a]) : anosDaEscola(escola);
+            const anoLink = ano.length === 1 ? ano[0] : undefined;
             const linkParams = new URLSearchParams();
-            if (etapaLink) linkParams.set("etapa", etapaLink);
+            if (anoLink) linkParams.set("ano", String(anoLink));
             linkParams.set("avaliacao", String(avaliacaoIdx));
 
             return (
@@ -348,7 +347,7 @@ export default function EscolaFinder({
                           role="img"
                           aria-label="Precisa de atenção"
                           title={motivos
-                            .map((m) => `${ANO_POR_ETAPA[m.etapa]}º ano: ${m.motivo}`)
+                            .map((m) => `${m.ano}º ano: ${m.motivo}`)
                             .join("\n")}
                         >
                           <AlertTriangle className="h-4 w-4 shrink-0 text-attention" aria-hidden />
@@ -361,10 +360,10 @@ export default function EscolaFinder({
                   </div>
 
                   <div className="shrink-0 space-y-1.5 text-sm">
-                    {etapasVisiveis.map((e) => {
-                      const resultado = escola.resultados[e]!;
-                      const resumo = resumosEscola[e];
-                      const referencia = referenciaNacional[e];
+                    {anosVisiveis.map((a) => {
+                      const resultado = escola.resultados[a]!;
+                      const resumo = resumosEscola[a];
+                      const referencia = referenciaNacional[a];
                       const mediaLP = resumo?.media.LP ?? resultado.proficiencia.LP;
                       const mediaMT = resumo?.media.MT ?? resultado.proficiencia.MT;
                       const participacao = resumo?.participacao ?? resultado.participacao;
@@ -372,7 +371,7 @@ export default function EscolaFinder({
                       const abaixoMT = mediaMT < referencia.proficiencia.MT;
 
                       return (
-                        <div key={e} className="flex items-baseline justify-end gap-4">
+                        <div key={a} className="flex items-baseline justify-end gap-4">
                           <span className="w-12 text-xs text-gray-500">{resultado.ano}º ano</span>
                           <span className="w-20 text-right">
                             <span className="text-xs text-gray-500">LP </span>

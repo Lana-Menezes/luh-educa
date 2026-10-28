@@ -14,7 +14,7 @@ export default function AvaliacoesPage() {
       />
       <h1 className="mt-4 text-3xl font-bold text-gray-900">Avaliações</h1>
       <p className="mt-2 max-w-2xl text-gray-600">
-        Provas da rede LUH Educa por ano: 1 diagnóstica, 8 formativas e 1 somativa, em
+        Avaliações LUH Educa por ano: 1 diagnóstica, 8 formativas e 1 somativa, em
         Língua Portuguesa e Matemática. Selecione o ano para ver e baixar os arquivos a
         serem aplicados aos estudantes.
       </p>

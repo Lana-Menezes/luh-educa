@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import TurmaLinha from "./TurmaLinha";
 import {
   AVALIACOES,
-  etapaDoAno,
+  anoValidoDaEscola,
   formatData,
   getEscola,
   getTurmas,
@@ -38,14 +38,13 @@ export default async function AnoPage({
 }) {
   const { escolaId, ano: anoParam } = await params;
   const escola = getEscola(escolaId);
-  const etapa = escola && etapaDoAno(escola, Number(anoParam));
+  const ano = escola && anoValidoDaEscola(escola, Number(anoParam));
 
-  if (!escola || !etapa) {
+  if (!escola || !ano) {
     notFound();
   }
 
-  const turmas = getTurmas(escola, etapa);
-  const ano = turmas[0].ano;
+  const turmas = getTurmas(escola, ano);
   const todos = turmas.flatMap((turma) => turma.alunos);
   const { avaliacao: avaliacaoParam } = await searchParams;
   const avaliacaoCookie = (await cookies()).get(AVALIACAO_COOKIE)?.value;
@@ -53,8 +52,8 @@ export default async function AnoPage({
   const avaliacaoSelecionada = AVALIACOES[avaliacaoIdx];
   const resumo = resumir(todos, ano, avaliacaoIdx);
   const evolucao = AVALIACOES.map((avaliacao, i) => ({ avaliacao, resumo: resumir(todos, ano, i) }));
-  const saeb = escola.resultados[etapa]!;
-  const escolaHref = `/escolas/${escola.id}?etapa=${encodeURIComponent(etapa)}&avaliacao=${avaliacaoIdx}`;
+  const saeb = escola.resultados[ano]!;
+  const escolaHref = `/escolas/${escola.id}?ano=${ano}&avaliacao=${avaliacaoIdx}`;
 
   return (
     <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-y-none bg-gray-50 p-8">
@@ -70,7 +69,7 @@ export default async function AnoPage({
         {ano}º ano <span className="text-brand">{escola.nome}</span>
       </h1>
       <p className="mt-2 text-gray-600">
-        {etapa} · {turmas.length} {turmas.length === 1 ? "turma" : "turmas"} · {avaliacaoSelecionada.nome} (
+        {turmas.length} {turmas.length === 1 ? "turma" : "turmas"} · {avaliacaoSelecionada.nome} (
         {formatData(avaliacaoSelecionada.data)})
       </p>
 

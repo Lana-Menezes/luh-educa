@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
-import { AVALIACOES, etapasDaEscola, formatData, getEscola, getTurmas, redeMock, resumir } from "@/lib/mock-data";
-import { ANO_POR_ETAPA, DISCIPLINAS, formatPercent, formatProficiencia } from "@/lib/saeb";
+import { AVALIACOES, anosDaEscola, formatData, getEscola, getTurmas, redeMock, resumir } from "@/lib/mock-data";
+import { DISCIPLINAS, formatPercent, formatProficiencia } from "@/lib/saeb";
 import { AvaliacaoSeletor, Breadcrumb } from "../../escolas/ui";
 import { AvaliacaoSync } from "../../AvaliacaoSync";
 import { AVALIACAO_COOKIE } from "@/lib/avaliacao-cookie";
@@ -62,15 +62,14 @@ export default async function PlanejamentoEscolaPage({
           </div>
           <p className="mt-4 text-sm text-gray-500">{selecionada.nome} · {formatData(selecionada.data)}</p>
 
-          {etapasDaEscola(escola).map((etapa) => {
-            const ano = ANO_POR_ETAPA[etapa];
-            const turmas = getTurmas(escola, etapa);
+          {anosDaEscola(escola).map((ano) => {
+            const turmas = getTurmas(escola, ano);
             const resumo = resumir(turmas.flatMap((turma) => turma.alunos), ano, selecionada.indice);
             return (
-              <section key={etapa} className="mt-5 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+              <section key={ano} className="mt-5 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">{ano}º ano · {etapa}</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">{ano}º ano</h3>
                     <p className="mt-1 text-sm text-gray-500">{resumo.avaliados} de {resumo.matriculados} estudantes avaliados · participação de {formatPercent(resumo.participacao)}</p>
                   </div>
                   <Link href={`/escolas/${escola.id}/anos/${ano}?avaliacao=${selecionada.indice}`} className="text-sm font-medium text-brand hover:underline">Consultar resultados →</Link>

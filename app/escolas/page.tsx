@@ -1,16 +1,14 @@
 import { checkPostTableExists } from "@/lib/db-utils";
-import { ANO_POR_ETAPA, DISCIPLINAS, PARTICIPACAO_MINIMA_SAEB, formatDelta, formatPercent, formatProficiencia, nivelDaProficiencia } from "@/lib/saeb";
+import { ANOS_SAEB, DISCIPLINAS, PARTICIPACAO_MINIMA_SAEB, formatDelta, formatPercent, formatProficiencia, nivelDaProficiencia, type AnoSaeb } from "@/lib/saeb";
 import {
   AVALIACOES,
-  ETAPAS,
-  etapasDaEscola,
+  anosDaEscola,
   getResultadoRede,
   getTurmas,
   indiceAvaliacao,
   motivosAtencaoAvaliacao,
   redeMock,
   resumir,
-  type Etapa,
   type MotivoAtencao,
   type ResumoAvaliacao,
 } from "@/lib/mock-data";
@@ -48,31 +46,31 @@ export default async function EscolasPage({
 
   const totalAlunos = rede.escolas.reduce(
     (sum, escola) =>
-      sum + ETAPAS.reduce((s, etapa) => s + (escola.resultados[etapa]?.alunosAvaliados ?? 0), 0),
+      sum + ANOS_SAEB.reduce((s, ano) => s + (escola.resultados[ano]?.alunosAvaliados ?? 0), 0),
     0,
   );
-  const resumosPorEscola: Record<string, Partial<Record<Etapa, ResumoAvaliacao>>> = {};
+  const resumosPorEscola: Record<string, Partial<Record<AnoSaeb, ResumoAvaliacao>>> = {};
   const motivosPorEscola: Record<string, MotivoAtencao[]> = {};
   for (const escola of rede.escolas) {
-    const porEtapaEscola: Partial<Record<Etapa, ResumoAvaliacao>> = {};
-    for (const etapa of etapasDaEscola(escola)) {
-      const alunos = getTurmas(escola, etapa).flatMap((t) => t.alunos);
-      porEtapaEscola[etapa] = resumir(alunos, ANO_POR_ETAPA[etapa], avaliacaoIdx);
+    const porAnoEscola: Partial<Record<AnoSaeb, ResumoAvaliacao>> = {};
+    for (const ano of anosDaEscola(escola)) {
+      const alunos = getTurmas(escola, ano).flatMap((t) => t.alunos);
+      porAnoEscola[ano] = resumir(alunos, ano, avaliacaoIdx);
     }
-    resumosPorEscola[escola.id] = porEtapaEscola;
+    resumosPorEscola[escola.id] = porAnoEscola;
     motivosPorEscola[escola.id] = motivosAtencaoAvaliacao(escola, avaliacaoIdx);
   }
   const escolasEmAtencao = Object.values(motivosPorEscola).filter((m) => m.length > 0).length;
-  const porEtapa = ETAPAS.map((etapa) => {
-    const resultado = getResultadoRede(etapa);
-    const alunosEtapa = rede.escolas.flatMap((escola) => getTurmas(escola, etapa).flatMap((t) => t.alunos));
-    const resumoAvaliacao = resumir(alunosEtapa, resultado.ano, avaliacaoIdx);
+  const porAno = ANOS_SAEB.map((ano) => {
+    const resultado = getResultadoRede(ano);
+    const alunosAno = rede.escolas.flatMap((escola) => getTurmas(escola, ano).flatMap((t) => t.alunos));
+    const resumoAvaliacao = resumir(alunosAno, resultado.ano, avaliacaoIdx);
     return {
-      etapa,
+      ano,
       resultado,
       resumoAvaliacao,
-      referencia: rede.referenciaNacional[etapa],
-      escolas: rede.escolas.filter((escola) => escola.resultados[etapa]).length,
+      referencia: rede.referenciaNacional[ano],
+      escolas: rede.escolas.filter((escola) => escola.resultados[ano]).length,
     };
   });
   const initialFiltros = parseFiltros(resolvedSearchParams);
@@ -105,13 +103,13 @@ export default async function EscolasPage({
             {totalAlunos.toLocaleString("pt-BR")} alunos avaliados no Saeb
           </p>
         </div>
-        {porEtapa.map(({ etapa, resumoAvaliacao, referencia }) => {
+        {porAno.map(({ ano, resumoAvaliacao, referencia }) => {
           const mediaRede = (resumoAvaliacao.media.LP + resumoAvaliacao.media.MT) / 2;
           const mediaReferencia = (referencia.proficiencia.LP + referencia.proficiencia.MT) / 2;
           return (
-            <div key={etapa} className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+            <div key={ano} className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
               <p className="text-sm text-gray-500">
-                Proficiência média · {etapa} ({avaliacaoSelecionada.nome})
+                Proficiência média · {ano}º ano ({avaliacaoSelecionada.nome})
               </p>
               <p className="mt-2 text-3xl font-bold text-gray-900">{formatProficiencia(mediaRede)}</p>
               <p className={`mt-1 text-xs ${deltaClass(mediaRede - mediaReferencia)}`}>
@@ -131,13 +129,13 @@ export default async function EscolasPage({
       </div>
 
       <section className="mt-6 grid gap-6 lg:grid-cols-2">
-        {porEtapa.map(({ etapa, resultado, resumoAvaliacao, referencia, escolas }) => (
-          <div key={etapa} className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        {porAno.map(({ ano, resultado, resumoAvaliacao, referencia, escolas }) => (
+          <div key={ano} className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-brand">{etapa}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-brand">{ano}º ano</p>
                 <h2 className="mt-1 text-lg font-semibold text-gray-900">
-                  {avaliacaoSelecionada.nome} · {resultado.ano}º ano · rede municipal
+                  {avaliacaoSelecionada.nome} · rede municipal
                 </h2>
                 <p className="mt-1 text-sm text-gray-500">
                   {escolas} escolas · {resumoAvaliacao.avaliados.toLocaleString("pt-BR")} alunos avaliados

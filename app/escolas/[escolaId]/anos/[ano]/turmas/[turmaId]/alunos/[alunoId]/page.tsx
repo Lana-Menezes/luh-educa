@@ -52,7 +52,7 @@ export default async function AlunoPage({
     notFound();
   }
 
-  const { ano, etapa } = turma;
+  const { ano } = turma;
   const atual = resultadoAtual(aluno);
   const resumoTurma = resumir(turma.alunos, ano);
   const presentes = aluno.resultados.flatMap((r, i) => (r ? [{ ...r, avaliacao: AVALIACOES[i] }] : []));
@@ -100,7 +100,7 @@ export default async function AlunoPage({
       <Breadcrumb
         itens={[
           { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/escolas" },
-          { label: escola.nome, href: `/escolas/${escola.id}?etapa=${encodeURIComponent(etapa)}&avaliacao=${avaliacaoIdx}` },
+          { label: escola.nome, href: `/escolas/${escola.id}?ano=${ano}&avaliacao=${avaliacaoIdx}` },
           { label: `${ano}º ano`, href: anoHref },
           { label: turma.nome, href: turmaHref },
           { label: aluno.nome },
