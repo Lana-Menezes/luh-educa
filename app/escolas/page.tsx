@@ -133,9 +133,9 @@ export default async function EscolasPage({
           <div key={ano} className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-brand">{ano}º ano</p>
+                
                 <h2 className="mt-1 text-lg font-semibold text-gray-900">
-                  {avaliacaoSelecionada.nome} · rede municipal
+                {ano}º ano · {avaliacaoSelecionada.nome}
                 </h2>
                 <p className="mt-1 text-sm text-gray-500">
                   {escolas} escolas · {resumoAvaliacao.avaliados.toLocaleString("pt-BR")} alunos avaliados
