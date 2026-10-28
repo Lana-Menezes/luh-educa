@@ -124,13 +124,13 @@ export function getAvaliacoes(serie: Serie) {
   return AVALIACOES_POR_SERIE[serie];
 }
 
-export function agruparPorTipo(avaliacoes: Avaliacao[]) {
-  const porOrdem = (a: Avaliacao, b: Avaliacao) => a.ordem - b.ordem;
+export function agruparPorTipo<T extends { tipo: TipoAvaliacao; ordem: number }>(itens: T[]) {
+  const porOrdem = (a: T, b: T) => a.ordem - b.ordem;
 
   return {
-    diagnostica: avaliacoes.filter((a) => a.tipo === "Diagnóstica").sort(porOrdem),
-    formativas: avaliacoes.filter((a) => a.tipo === "Formativa").sort(porOrdem),
-    somativa: avaliacoes.filter((a) => a.tipo === "Somativa").sort(porOrdem),
+    diagnostica: itens.filter((a) => a.tipo === "Diagnóstica").sort(porOrdem),
+    formativas: itens.filter((a) => a.tipo === "Formativa").sort(porOrdem),
+    somativa: itens.filter((a) => a.tipo === "Somativa").sort(porOrdem),
   };
 }
 
@@ -139,6 +139,50 @@ export function isSerie(value: string): value is `${Serie}` {
 }
 
 export const TOTAL_AVALIACOES_POR_SERIE = 10;
+
+// ---------------------------------------------------------------------------
+// Planejamento pedagógico (arquivos) por escola e ano — mesma estrutura das
+// provas: 1 diagnóstica, 8 formativas e 1 somativa, em LP e MT.
+// ---------------------------------------------------------------------------
+
+export type Planejamento = {
+  id: string;
+  escolaId: string;
+  ano: AnoSaeb;
+  tipo: TipoAvaliacao;
+  /** 1 para Diagnóstica/Somativa; 1–8 para Formativa. */
+  ordem: number;
+  disciplina: Disciplina;
+  titulo: string;
+  periodo: string;
+  /** Data de disponibilização online (YYYY-MM-DD). */
+  disponibilizadaEm: string;
+  arquivoUrl: string;
+  arquivoNome: string;
+};
+
+/**
+ * Arquivos de planejamento pedagógico de uma escola, por ano, a partir dos
+ * resultados de cada avaliação. Os PDFs são um modelo de demonstração até a
+ * integração com os arquivos reais de planejamento.
+ */
+export function getPlanejamentos(escolaId: string, ano: AnoSaeb): Planejamento[] {
+  return CICLOS_AVALIATIVOS.flatMap(({ tipo, ordem, periodo, mes }) =>
+    DISCIPLINAS.map(({ codigo, nome }) => ({
+      id: `${escolaId}-${ano}-${tipo.toLowerCase()}-${ordem}-${codigo.toLowerCase()}`,
+      escolaId,
+      ano,
+      tipo,
+      ordem,
+      disciplina: codigo,
+      titulo: `${tituloCiclo({ tipo, ordem })} · ${nome}`,
+      periodo,
+      disponibilizadaEm: `2026-${String(mes).padStart(2, "0")}-01`,
+      arquivoUrl: "/provas/modelo-prova.pdf",
+      arquivoNome: `${escolaId}-${ano}ano-${tipo.toLowerCase()}${tipo === "Formativa" ? ordem : ""}-${codigo.toLowerCase()}-planejamento.pdf`,
+    })),
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Rede, escolas e resultados oficiais do Saeb

@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Download, Eye, FileText } from "lucide-react";
 import { PADROES, formatPercent, type Padrao } from "@/lib/saeb";
+import { formatData } from "@/lib/mock-data";
 
 export const corPadrao: Record<Padrao, string> = {
   "Abaixo do Básico": "bg-danger",
@@ -160,5 +161,72 @@ export function PadroesBarra({
         </ul>
       )}
     </div>
+  );
+}
+
+export type ArquivoBaixavel = {
+  id: string;
+  titulo: string;
+  periodo: string;
+  disponibilizadaEm: string;
+  arquivoUrl: string;
+  arquivoNome: string;
+};
+
+/** Lista de arquivos para visualizar/baixar (provas ou planejamentos), agrupados por tipo de avaliação. */
+export function CardArquivos({ titulo, itens }: { titulo: string; itens: ArquivoBaixavel[] }) {
+  return (
+    <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+      <h3 className="font-semibold text-gray-900">{titulo}</h3>
+      <ul className="mt-3 space-y-2">
+        {itens.map((arquivo) => (
+          <li
+            key={arquivo.id}
+            className="flex items-center justify-between gap-3 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5"
+          >
+            <a
+              href={arquivo.arquivoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex min-w-0 flex-1 items-center gap-2.5"
+              title={`Visualizar ${arquivo.titulo}`}
+            >
+              <FileText className="h-4 w-4 shrink-0 text-gray-400 group-hover:text-brand" aria-hidden />
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium text-gray-900 group-hover:text-brand group-hover:underline">
+                  {arquivo.titulo}
+                </p>
+                <p className="text-xs text-gray-500">
+                  {arquivo.periodo} · Disponibilizada em{" "}
+                  <time dateTime={arquivo.disponibilizadaEm}>
+                    {formatData(arquivo.disponibilizadaEm)}
+                  </time>
+                </p>
+              </div>
+            </a>
+            <div className="flex shrink-0 items-center gap-2">
+              <a
+                href={arquivo.arquivoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Visualizar ${arquivo.titulo}`}
+                className="flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 transition-colors hover:border-brand-muted hover:text-brand"
+              >
+                <Eye className="h-3.5 w-3.5" aria-hidden />
+              </a>
+              <a
+                href={arquivo.arquivoUrl}
+                download={arquivo.arquivoNome}
+                aria-label={`Baixar ${arquivo.titulo}`}
+                className="flex items-center gap-1.5 rounded-md bg-brand px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-brand-hover"
+              >
+                <Download className="h-3.5 w-3.5" aria-hidden />
+                Baixar
+              </a>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }

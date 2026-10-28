@@ -1,73 +1,13 @@
 import { notFound } from "next/navigation";
-import { Download, Eye, FileText } from "lucide-react";
 import {
   agruparPorTipo,
-  formatData,
   getAvaliacoes,
   isSerie,
   nomeSerie,
   redeMock,
-  type Avaliacao,
   type Serie,
 } from "@/lib/mock-data";
-import { Breadcrumb } from "../../escolas/ui";
-
-function CardAvaliacao({ titulo, itens }: { titulo: string; itens: Avaliacao[] }) {
-  return (
-    <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-      <h3 className="font-semibold text-gray-900">{titulo}</h3>
-      <ul className="mt-3 space-y-2">
-        {itens.map((avaliacao) => (
-          <li
-            key={avaliacao.id}
-            className="flex items-center justify-between gap-3 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2.5"
-          >
-            <a
-              href={avaliacao.arquivoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex min-w-0 flex-1 items-center gap-2.5"
-              title={`Visualizar ${avaliacao.titulo}`}
-            >
-              <FileText className="h-4 w-4 shrink-0 text-gray-400 group-hover:text-brand" aria-hidden />
-              <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-gray-900 group-hover:text-brand group-hover:underline">
-                  {avaliacao.titulo}
-                </p>
-                <p className="text-xs text-gray-500">
-                  {avaliacao.periodo} · Disponibilizada em{" "}
-                  <time dateTime={avaliacao.disponibilizadaEm}>
-                    {formatData(avaliacao.disponibilizadaEm)}
-                  </time>
-                </p>
-              </div>
-            </a>
-            <div className="flex shrink-0 items-center gap-2">
-              <a
-                href={avaliacao.arquivoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Visualizar ${avaliacao.titulo}`}
-                className="flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-700 transition-colors hover:border-brand-muted hover:text-brand"
-              >
-                <Eye className="h-3.5 w-3.5" aria-hidden />
-              </a>
-              <a
-                href={avaliacao.arquivoUrl}
-                download={avaliacao.arquivoNome}
-                aria-label={`Baixar ${avaliacao.titulo}`}
-                className="flex items-center gap-1.5 rounded-md bg-brand px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-brand-hover"
-              >
-                <Download className="h-3.5 w-3.5" aria-hidden />
-                Baixar
-              </a>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
+import { Breadcrumb, CardArquivos } from "../../escolas/ui";
 
 export default async function AvaliacoesSeriePage({
   params,
@@ -101,9 +41,9 @@ export default async function AvaliacoesSeriePage({
       </p>
 
       <div className="mt-6 grid gap-5">
-        <CardAvaliacao titulo="Avaliação diagnóstica" itens={diagnostica} />
-        <CardAvaliacao titulo="Avaliações formativas (1 a 8)" itens={formativas} />
-        <CardAvaliacao titulo="Avaliação somativa" itens={somativa} />
+        <CardArquivos titulo="Avaliação diagnóstica" itens={diagnostica} />
+        <CardArquivos titulo="Avaliações formativas (1 a 8)" itens={formativas} />
+        <CardArquivos titulo="Avaliação somativa" itens={somativa} />
       </div>
 
       <p className="mt-6 text-xs text-gray-400">
