@@ -621,6 +621,21 @@ export function resultadoAtual(aluno: Aluno) {
   return aluno.resultados[aluno.resultados.length - 1];
 }
 
+/**
+ * Evolução em LP e MT da primeira avaliação com resultado até a avaliação
+ * selecionada. Sem resultado nela, o estudante está ausente e não há
+ * evolução a mostrar; com menos de duas avaliações com resultado, também não
+ * há evolução a calcular.
+ */
+export function evolucaoAluno(aluno: Aluno, avaliacaoIndex: number): Proficiencias | null {
+  const atual = aluno.resultados[avaliacaoIndex];
+  if (!atual) return null;
+  const presentes = aluno.resultados.slice(0, avaliacaoIndex + 1).filter((r) => r !== null);
+  if (presentes.length < 2) return null;
+  const primeira = presentes[0];
+  return { LP: atual.LP - primeira.LP, MT: atual.MT - primeira.MT };
+}
+
 /** Presente na avaliação (padrão: a mais recente) e no padrão Abaixo do Básico em LP ou MT. */
 export function estaInsuficiente(
   aluno: Aluno,

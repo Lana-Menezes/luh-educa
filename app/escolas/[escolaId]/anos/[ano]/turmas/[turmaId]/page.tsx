@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import {
   AVALIACOES,
   estaInsuficiente,
+  evolucaoAluno,
   formatData,
   getEscola,
   getTurma,
@@ -30,6 +31,7 @@ import {
 } from "../../../../../ui";
 import { AvaliacaoSync } from "../../../../../../AvaliacaoSync";
 import { AVALIACAO_COOKIE } from "@/lib/avaliacao-cookie";
+import { ExportButtons, type SecaoRelatorio } from "../../../../../ExportButtons";
 import AlunosTabela from "./AlunosTabela";
 
 export default async function TurmaPage({
@@ -59,24 +61,65 @@ export default async function TurmaPage({
   const anoHref = `/escolas/${escola.id}/anos/${ano}`;
   const maxEvolucao = Math.max(...evolucao.flatMap(({ resumo: r }) => [r.media.LP, r.media.MT]));
 
+  const secoes: SecaoRelatorio[] = [
+    {
+      titulo: "Estudantes",
+      colunas: ["Estudante", "Matrícula", "LP", "MT", "Evolução LP", "Evolução MT"],
+      linhas: turma.alunos.map((aluno) => {
+        const atual = aluno.resultados[avaliacaoIdx] ?? null;
+        const ev = evolucaoAluno(aluno, avaliacaoIdx);
+        return [
+          aluno.nome,
+          aluno.id,
+          atual ? formatProficiencia(atual.LP) : "Ausente",
+          atual ? formatProficiencia(atual.MT) : "Ausente",
+          ev ? formatDelta(ev.LP) : "—",
+          ev ? formatDelta(ev.MT) : "—",
+        ];
+      }),
+    },
+    {
+      titulo: "Progresso mês a mês",
+      colunas: ["Avaliação", "Data", "LP", "MT", "Participação"],
+      linhas: evolucao.map(({ avaliacao, resumo: r }) => [
+        avaliacao.nome,
+        formatData(avaliacao.data),
+        formatProficiencia(r.media.LP),
+        formatProficiencia(r.media.MT),
+        formatPercent(r.participacao),
+      ]),
+    },
+  ];
+
   return (
     <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-y-none bg-gray-50 p-8">
       <AvaliacaoSync atual={avaliacaoIdx} />
-      <Breadcrumb
-        itens={[
-          { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/escolas" },
-          { label: escola.nome, href: `/escolas/${escola.id}?ano=${ano}&avaliacao=${avaliacaoIdx}` },
-          { label: `${ano}º ano`, href: `${anoHref}?avaliacao=${avaliacaoIdx}` },
-          { label: turma.nome },
-        ]}
-      />
-      <h1 className="mt-4 text-3xl font-bold text-gray-900">
-        {turma.nome} <span className="text-brand">{escola.nome}</span>
-      </h1>
-      <p className="mt-2 text-gray-600">
-        Turno da {turma.turno.toLowerCase()} · {turma.alunos.length} estudantes · {avaliacaoSelecionada.nome} (
-        {formatData(avaliacaoSelecionada.data)})
-      </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <Breadcrumb
+            itens={[
+              { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/escolas" },
+              { label: escola.nome, href: `/escolas/${escola.id}?ano=${ano}&avaliacao=${avaliacaoIdx}` },
+              { label: `${ano}º ano`, href: `${anoHref}?avaliacao=${avaliacaoIdx}` },
+              { label: turma.nome },
+            ]}
+          />
+          <h1 className="mt-4 text-3xl font-bold text-gray-900">
+            {turma.nome} <span className="text-brand">{escola.nome}</span>
+          </h1>
+          <p className="mt-2 text-gray-600">
+            Turno da {turma.turno.toLowerCase()} · {turma.alunos.length} estudantes · {avaliacaoSelecionada.nome} (
+            {formatData(avaliacaoSelecionada.data)})
+          </p>
+        </div>
+        <ExportButtons
+          arquivo={`relatorio-turma-${escola.id}-${turma.id}-${ano}ano-${avaliacaoSelecionada.id}`}
+          titulo={`Relatório da turma · ${turma.nome} · ${escola.nome}`}
+          subtitulo={`${ano}º ano · ${avaliacaoSelecionada.nome} (${formatData(avaliacaoSelecionada.data)})`}
+          secoes={secoes}
+          graficos={[{ titulo: "Progresso mês a mês", elementId: "grafico-evolucao" }]}
+        />
+      </div>
 
       <div className="mt-4">
         <AvaliacaoSeletor
@@ -134,7 +177,7 @@ export default async function TurmaPage({
         <section className="min-w-0 rounded-xl border border-gray-200 bg-white p-6 shadow-sm lg:col-span-2">
           <h2 className="text-lg font-semibold text-gray-900">Progresso mês a mês</h2>
           <p className="mt-1 text-sm text-gray-500">Média da turma nas avaliações do ano (escala Saeb)</p>
-          <div className="mt-4 w-full overflow-x-auto">
+          <div id="grafico-evolucao" className="mt-4 w-full overflow-x-auto bg-white">
             <CurvaEvolucao
               pontos={evolucao.map(({ avaliacao, resumo: r }, i) => ({
                 id: avaliacao.id,

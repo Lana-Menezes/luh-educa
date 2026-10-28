@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { formatDelta, formatProficiencia, type Padrao } from "@/lib/saeb";
 import { PadroesBarra, deltaClass } from "../../../ui";
+import { ExportButtons, type RelatorioExportavel } from "../../../ExportButtons";
 
 export default function TurmaLinha({
   href,
@@ -12,6 +13,7 @@ export default function TurmaLinha({
   totalAlunos,
   participacao,
   disciplinas,
+  relatorio,
 }: {
   href: string;
   nome: string;
@@ -24,6 +26,7 @@ export default function TurmaLinha({
     delta: number;
     padroes: Record<Padrao, number>;
   }[];
+  relatorio: RelatorioExportavel;
 }) {
   const router = useRouter();
 
@@ -50,6 +53,9 @@ export default function TurmaLinha({
           </div>
         </td>
       ))}
+      <td className="px-2 py-3">
+        <ExportButtons {...relatorio} compacto />
+      </td>
       <td>
         <ChevronRight
           className="h-5 w-5 text-gray-300 group-hover:text-brand"

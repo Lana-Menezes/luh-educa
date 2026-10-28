@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import {
   AVALIACOES,
   anosDaEscola,
+  evolucaoAluno,
   formatData,
   getEscola,
   getResultadoRede,
@@ -29,6 +30,7 @@ import { cookies } from "next/headers";
 import { AvaliacaoSeletor, Breadcrumb, PadroesBarra, corPadrao, deltaClass } from "../ui";
 import { AvaliacaoSync } from "../../AvaliacaoSync";
 import { AVALIACAO_COOKIE } from "@/lib/avaliacao-cookie";
+import { ExportButtons, type RelatorioExportavel, type SecaoRelatorio } from "../ExportButtons";
 
 export default async function EscolaPage({
   params,
@@ -66,23 +68,95 @@ export default async function EscolaPage({
     }),
   ];
 
+  const secoes: SecaoRelatorio[] = [
+    {
+      titulo: `${redeMock.edicao} × Avaliação · ${escola.nome}`,
+      colunas: ["Indicador", redeMock.edicao, `Escola ${escola.nome}`, "Diferença"],
+      linhas: [
+        ...DISCIPLINAS.map(({ codigo, nome }) => {
+          const delta = resumoAno.media[codigo] - resultado.proficiencia[codigo];
+          const deltaPercent = resultado.proficiencia[codigo] ? (delta / resultado.proficiencia[codigo]) * 100 : 0;
+          return [
+            `Proficiência em ${nome}`,
+            formatProficiencia(resultado.proficiencia[codigo]),
+            resumoAno.avaliados ? formatProficiencia(resumoAno.media[codigo]) : "—",
+            resumoAno.avaliados ? formatDelta(deltaPercent, formatPercent) : "—",
+          ];
+        }),
+        [
+          "Participação",
+          formatPercent(resultado.participacao),
+          formatPercent(resumoAno.participacao),
+          formatDelta(
+            resultado.participacao
+              ? ((resumoAno.participacao - resultado.participacao) / resultado.participacao) * 100
+              : 0,
+            formatPercent,
+          ),
+        ],
+        [
+          "Estudantes avaliados",
+          resultado.alunosAvaliados,
+          resumoAno.avaliados,
+          formatDelta(resumoAno.avaliados - resultado.alunosAvaliados, String),
+        ],
+      ],
+    },
+    {
+      titulo: `Turmas do ${ano}º ano`,
+      colunas: ["Turma", "Turno", "Estudantes", "Participação", "LP", "MT"],
+      linhas: turmas.map((turma) => {
+        const r = resumir(turma.alunos, ano, avaliacaoIdx);
+        return [
+          turma.nome,
+          turma.turno,
+          turma.alunos.length,
+          formatPercent(r.participacao),
+          formatProficiencia(r.media.LP),
+          formatProficiencia(r.media.MT),
+        ];
+      }),
+    },
+    {
+      titulo: "Escola, rede e referência nacional",
+      colunas: ["Indicador", "Escola", "Rede", "Nacional"],
+      linhas: [
+        ...DISCIPLINAS.map(({ codigo, nome }) => [
+          nome,
+          formatProficiencia(resultado.proficiencia[codigo]),
+          formatProficiencia(rede.proficiencia[codigo]),
+          formatProficiencia(referencia.proficiencia[codigo]),
+        ]),
+        ["Participação", formatPercent(resultado.participacao), formatPercent(rede.participacao), "—"],
+      ],
+    },
+  ];
+
   return (
     <div className="min-h-0 flex-1 overflow-y-auto bg-gray-50 p-8">
       <AvaliacaoSync atual={avaliacaoIdx} />
-      <div>
-        <Breadcrumb
-          itens={[
-            { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/escolas" },
-            { label: escola.nome },
-          ]}
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <Breadcrumb
+            itens={[
+              { label: `${redeMock.municipio}/${redeMock.uf}`, href: "/escolas" },
+              { label: escola.nome },
+            ]}
+          />
+          <h1 className="mt-4 text-3xl font-bold text-gray-900">
+            <span className="text-brand">{escola.nome}</span>
+          </h1>
+          <p className="mt-2 text-gray-600">
+            INEP {escola.codigoInep} · {escola.bairro} · Zona {escola.zona.toLowerCase()} ·{" "}
+            {redeMock.municipio}/{redeMock.uf}
+          </p>
+        </div>
+        <ExportButtons
+          arquivo={`relatorio-escola-${escola.id}-${ano}ano-${avaliacaoSelecionada.id}`}
+          titulo={`Relatório da escola · ${escola.nome}`}
+          subtitulo={`${ano}º ano · ${avaliacaoSelecionada.nome} (${formatData(avaliacaoSelecionada.data)})`}
+          secoes={secoes}
         />
-        <h1 className="mt-4 text-3xl font-bold text-gray-900">
-          <span className="text-brand">{escola.nome}</span>
-        </h1>
-        <p className="mt-2 text-gray-600">
-          INEP {escola.codigoInep} · {escola.bairro} · Zona {escola.zona.toLowerCase()} ·{" "}
-          {redeMock.municipio}/{redeMock.uf}
-        </p>
       </div>
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
@@ -226,13 +300,39 @@ export default async function EscolaPage({
         <ul className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {turmas.map((turma) => {
             const r = resumir(turma.alunos, ano, avaliacaoIdx);
+            const relatorioTurma: RelatorioExportavel = {
+              arquivo: `relatorio-turma-${escola.id}-${turma.id}-${ano}ano-${avaliacaoSelecionada.id}`,
+              titulo: `Relatório da turma · ${turma.nome} · ${escola.nome}`,
+              subtitulo: `${ano}º ano · ${avaliacaoSelecionada.nome} (${formatData(avaliacaoSelecionada.data)})`,
+              secoes: [
+                {
+                  titulo: "Estudantes",
+                  colunas: ["Estudante", "Matrícula", "LP", "MT", "Evolução LP", "Evolução MT"],
+                  linhas: turma.alunos.map((aluno) => {
+                    const atual = aluno.resultados[avaliacaoIdx] ?? null;
+                    const ev = evolucaoAluno(aluno, avaliacaoIdx);
+                    return [
+                      aluno.nome,
+                      aluno.id,
+                      atual ? formatProficiencia(atual.LP) : "Ausente",
+                      atual ? formatProficiencia(atual.MT) : "Ausente",
+                      ev ? formatDelta(ev.LP) : "—",
+                      ev ? formatDelta(ev.MT) : "—",
+                    ];
+                  }),
+                },
+              ],
+            };
             return (
-              <li key={turma.id}>
+              <li key={turma.id} className="relative">
+                <div className="absolute right-3 top-3 z-10">
+                  <ExportButtons {...relatorioTurma} compacto />
+                </div>
                 <Link
                   href={`/escolas/${escola.id}/anos/${ano}/turmas/${turma.id}?avaliacao=${avaliacaoIdx}`}
                   className="group block rounded-lg border border-gray-200 p-4 transition hover:border-brand-muted hover:shadow-sm"
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between pr-8">
                     <p className="font-semibold text-gray-900 group-hover:text-brand">{turma.nome}</p>
                     <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-brand" aria-hidden />
                   </div>

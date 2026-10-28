@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ChevronDown, Search } from "lucide-react";
-import { estaInsuficiente, normalizeBusca, type Aluno } from "@/lib/mock-data";
+import { estaInsuficiente, evolucaoAluno, normalizeBusca, type Aluno } from "@/lib/mock-data";
 import {
   DISCIPLINAS,
   formatDelta,
@@ -22,19 +22,6 @@ const ordens: { value: Ordem; label: string }[] = [
   { value: "menor-MT", label: "Menor proficiência em MT" },
   { value: "maior-evolucao", label: "Maior evolução" },
 ];
-
-/**
- * Evolução em LP e MT da primeira avaliação até a avaliação selecionada.
- * Sem resultado nela, o estudante está ausente e não há evolução a mostrar.
- */
-function evolucao(aluno: Aluno, avaliacaoIndex: number): { LP: number; MT: number } | null {
-  const atual = aluno.resultados[avaliacaoIndex];
-  if (!atual) return null;
-  const presentes = aluno.resultados.slice(0, avaliacaoIndex + 1).filter((r) => r !== null);
-  if (presentes.length < 2) return null;
-  const primeira = presentes[0];
-  return { LP: atual.LP - primeira.LP, MT: atual.MT - primeira.MT };
-}
 
 /** Média de LP e MT, usada para ordenar por "Maior evolução". */
 function evolucaoMedia(ev: { LP: number; MT: number } | null) {
@@ -74,7 +61,7 @@ export default function AlunosTabela({
             return valor(a, "MT") - valor(b, "MT");
           case "maior-evolucao":
             return (
-              evolucaoMedia(evolucao(b, avaliacaoIndex)) - evolucaoMedia(evolucao(a, avaliacaoIndex))
+              evolucaoMedia(evolucaoAluno(b, avaliacaoIndex)) - evolucaoMedia(evolucaoAluno(a, avaliacaoIndex))
             );
           default:
             return a.nome.localeCompare(b.nome, "pt-BR");
@@ -169,7 +156,7 @@ export default function AlunosTabela({
           <tbody>
             {linhas.map((aluno) => {
               const atual = aluno.resultados[avaliacaoIndex] ?? null;
-              const ev = evolucao(aluno, avaliacaoIndex);
+              const ev = evolucaoAluno(aluno, avaliacaoIndex);
               const href = `${baseHref}/alunos/${aluno.id}?avaliacao=${avaliacaoIndex}`;
               return (
                 <tr key={aluno.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">

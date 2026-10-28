@@ -33,9 +33,29 @@ export default function HabilidadesResultados({ alunos, ano, avaliacao, matriz =
               <h3 className="font-semibold text-black">{nome} · {habilidades.length} questões</h3>
               <ChevronDown className="h-5 w-5 shrink-0 text-gray-600 transition-transform group-open/disciplina:rotate-180" aria-hidden />
             </summary>
+            {matriz && <div className="mt-4 overflow-x-auto rounded-lg border border-gray-200" tabIndex={0} role="region" aria-label={`Matriz de estudantes e habilidades de ${nome}`}>
+              <table className="w-full min-w-[40rem] text-left text-sm text-gray-900">
+                <caption className="sr-only">Desempenho individual por habilidade em {nome} · {AVALIACOES[avaliacao].nome}</caption>
+                <thead className="bg-brand text-white"><tr>
+                  <th scope="col" className="sticky left-0 bg-brand px-4 py-3">Estudante</th>
+                  <th scope="col" className="px-3 py-3">Proficiência</th>
+                  {habilidades.map((h) => <th key={h.id} scope="col" className="px-3 py-3 text-center" title={h.descricao}><span className="block">Q{String(h.questao).padStart(2, "0")}</span><span className="block whitespace-nowrap text-xs font-normal">{h.id}</span></th>)}
+                </tr></thead>
+                <tbody>{alunos.map((aluno, index) => <tr key={`${aluno.id}-${index}`} className="border-t border-gray-100">
+                  <th scope="row" className="sticky left-0 min-w-52 bg-white px-4 py-3 font-medium text-gray-900">{aluno.nome}</th>
+                  <td className="px-3 py-3 font-semibold">{aluno.resultados[avaliacao] ? formatProficiencia(aluno.resultados[avaliacao]![codigo]) : "—"}</td>
+                  {habilidades.map((h) => {
+                    const r = resultadoHabilidade(aluno, avaliacao, h);
+                    return <td key={h.id} className="px-3 py-3 text-center" title={`${h.descricao} ${ESTADOS[r.status].texto}${r.itens ? ` · ${r.acertos}/${r.itens} acertos` : ""}`}><Indicador status={r.status} />{r.itens > 0 && <span className="block text-xs text-gray-700">{r.acertos}/{r.itens}</span>}</td>;
+                  })}
+                </tr>)}</tbody>
+              </table>
+              {!alunos.length && <p className="p-4 text-sm text-gray-700">Nenhum estudante encontrado.</p>}
+            </div>}
             <div className="mt-3 overflow-x-auto rounded-lg border border-gray-200" tabIndex={0} role="region" aria-label={`Resumo de habilidades de ${nome}`}>
               <table className="w-full min-w-[42rem] text-left text-sm text-gray-900">
                 <caption className="sr-only">Habilidades aplicadas e desempenho em {nome}</caption>
+                
                 <thead className="bg-brand-soft text-gray-900"><tr>
                   {["Questão / habilidade aplicada", "% de acertos", "Acertaram", "Erraram", "Sem resultado"].map((titulo) => <th key={titulo} scope="col" className="px-3 py-3 font-semibold">{titulo}</th>)}
                 </tr></thead>
@@ -56,25 +76,6 @@ export default function HabilidadesResultados({ alunos, ano, avaliacao, matriz =
               </table>
             </div>
             <p className="mt-2 text-xs text-gray-700">Contagens por estudante. O percentual de acertos considera somente os itens dos estudantes com resultado.</p>
-            {matriz && <div className="mt-4 overflow-x-auto rounded-lg border border-gray-200" tabIndex={0} role="region" aria-label={`Matriz de estudantes e habilidades de ${nome}`}>
-              <table className="w-full min-w-[40rem] text-left text-sm text-gray-900">
-                <caption className="sr-only">Desempenho individual por habilidade em {nome} · {AVALIACOES[avaliacao].nome}</caption>
-                <thead className="bg-brand text-white"><tr>
-                  <th scope="col" className="sticky left-0 bg-brand px-4 py-3">Estudante</th>
-                  <th scope="col" className="px-3 py-3">Proficiência</th>
-                  {habilidades.map((h) => <th key={h.id} scope="col" className="px-3 py-3 text-center" title={h.descricao}><span className="block">Q{String(h.questao).padStart(2, "0")}</span><span className="block whitespace-nowrap text-xs font-normal">{h.id}</span></th>)}
-                </tr></thead>
-                <tbody>{alunos.map((aluno, index) => <tr key={`${aluno.id}-${index}`} className="border-t border-gray-100">
-                  <th scope="row" className="sticky left-0 min-w-52 bg-white px-4 py-3 font-medium text-gray-900">{aluno.nome}</th>
-                  <td className="px-3 py-3 font-semibold">{aluno.resultados[avaliacao] ? formatProficiencia(aluno.resultados[avaliacao]![codigo]) : "—"}</td>
-                  {habilidades.map((h) => {
-                    const r = resultadoHabilidade(aluno, avaliacao, h);
-                    return <td key={h.id} className="px-3 py-3 text-center" title={`${h.descricao} ${ESTADOS[r.status].texto}${r.itens ? ` · ${r.acertos}/${r.itens} acertos` : ""}`}><Indicador status={r.status} />{r.itens > 0 && <span className="block text-xs text-gray-700">{r.acertos}/{r.itens}</span>}</td>;
-                  })}
-                </tr>)}</tbody>
-              </table>
-              {!alunos.length && <p className="p-4 text-sm text-gray-700">Nenhum estudante encontrado.</p>}
-            </div>}
           </details>
         );
       })}
