@@ -1,17 +1,16 @@
 import {
-  ANO_POR_ETAPA,
+  ANOS_SAEB,
   DISCIPLINAS,
   PADROES,
   PARTICIPACAO_MINIMA_SAEB,
   padraoDaProficiencia,
   type AnoSaeb,
   type Disciplina,
-  type Etapa,
   type ResultadoSaeb,
   type Padrao,
 } from "@/lib/saeb";
 
-export type { Etapa } from "@/lib/saeb";
+export type { AnoSaeb } from "@/lib/saeb";
 
 /**
  * Fonte única dos dados mockados da rede: provas por série (avaliacoesPorSerie),
@@ -148,7 +147,7 @@ export type EscolaRede = {
   codigoInep: string;
   bairro: string;
   zona: Zona;
-  resultados: Partial<Record<Etapa, ResultadoSaeb>>;
+  resultados: Partial<Record<AnoSaeb, ResultadoSaeb>>;
 };
 
 export type ReferenciaSaeb = { proficiencia: Record<Disciplina, number> };
@@ -159,7 +158,7 @@ export type RedeMock = {
   uf: string;
   edicao: string;
   /** Valores de referência fictícios para comparação; não são dados oficiais do Inep. */
-  referenciaNacional: Record<Etapa, ReferenciaSaeb>;
+  referenciaNacional: Record<AnoSaeb, ReferenciaSaeb>;
   escolas: EscolaRede[];
 };
 
@@ -180,9 +179,9 @@ export const redeMock: RedeMock = {
   uf: "SC",
   edicao: "Saeb 2025",
   referenciaNacional: {
-    "Alfabetização": { proficiencia: { LP: 130, MT: 135 } },
-    "Anos Iniciais": { proficiencia: { LP: 210, MT: 220 } },
-    "Anos Finais": { proficiencia: { LP: 255, MT: 250 } },
+    2: { proficiencia: { LP: 130, MT: 135 } },
+    5: { proficiencia: { LP: 210, MT: 220 } },
+    9: { proficiencia: { LP: 255, MT: 250 } },
   },
   escolas: [
     {
@@ -192,9 +191,9 @@ export const redeMock: RedeMock = {
       bairro: "Centro",
       zona: "Urbana",
       resultados: {
-        "Alfabetização": saeb(2, 230, 93.5, 96.8, 132.9, 141.4),
-        "Anos Iniciais": saeb(5, 238, 94.2, 97.1, 214.3, 228.1),
-        "Anos Finais": saeb(9, 248, 91.0, 92.4, 262.4, 258.2),
+        2: saeb(2, 230, 93.5, 96.8, 132.9, 141.4),
+        5: saeb(5, 238, 94.2, 97.1, 214.3, 228.1),
+        9: saeb(9, 248, 91.0, 92.4, 262.4, 258.2),
       },
     },
     {
@@ -204,9 +203,9 @@ export const redeMock: RedeMock = {
       bairro: "Vila Nova",
       zona: "Urbana",
       resultados: {
-        "Alfabetização": saeb(2, 290, 90.8, 95.0, 127.8, 136.0),
-        "Anos Iniciais": saeb(5, 301, 91.5, 95.8, 206.2, 219.4),
-        "Anos Finais": saeb(9, 311, 88.3, 89.7, 254.1, 249.3),
+        2: saeb(2, 290, 90.8, 95.0, 127.8, 136.0),
+        5: saeb(5, 301, 91.5, 95.8, 206.2, 219.4),
+        9: saeb(9, 311, 88.3, 89.7, 254.1, 249.3),
       },
     },
     {
@@ -216,7 +215,7 @@ export const redeMock: RedeMock = {
       bairro: "Santa Efigênia",
       zona: "Urbana",
       resultados: {
-        "Anos Finais": saeb(9, 398, 87.2, 86.5, 246.3, 240.8),
+        9: saeb(9, 398, 87.2, 86.5, 246.3, 240.8),
       },
     },
     {
@@ -226,8 +225,8 @@ export const redeMock: RedeMock = {
       bairro: "Jardim das Flores",
       zona: "Urbana",
       resultados: {
-        "Alfabetização": saeb(2, 265, 95.8, 97.9, 136.0, 143.3),
-        "Anos Iniciais": saeb(5, 274, 96.4, 98.2, 219.4, 231.2),
+        2: saeb(2, 265, 95.8, 97.9, 136.0, 143.3),
+        5: saeb(5, 274, 96.4, 98.2, 219.4, 231.2),
       },
     },
     {
@@ -237,9 +236,9 @@ export const redeMock: RedeMock = {
       bairro: "São Judas Tadeu",
       zona: "Urbana",
       resultados: {
-        "Alfabetização": saeb(2, 250, 80.9, 92.0, 122.8, 128.5),
-        "Anos Iniciais": saeb(5, 262, 82.3, 93.4, 198.1, 207.3),
-        "Anos Finais": saeb(9, 269, 76.8, 85.1, 241.2, 235.9),
+        2: saeb(2, 250, 80.9, 92.0, 122.8, 128.5),
+        5: saeb(5, 262, 82.3, 93.4, 198.1, 207.3),
+        9: saeb(9, 269, 76.8, 85.1, 241.2, 235.9),
       },
     },
     {
@@ -249,7 +248,7 @@ export const redeMock: RedeMock = {
       bairro: "Nova Esperança",
       zona: "Urbana",
       resultados: {
-        "Anos Finais": saeb(9, 447, 86.7, 84.2, 238.4, 232.1),
+        9: saeb(9, 447, 86.7, 84.2, 238.4, 232.1),
       },
     },
     {
@@ -259,9 +258,9 @@ export const redeMock: RedeMock = {
       bairro: "Bela Vista",
       zona: "Urbana",
       resultados: {
-        "Alfabetização": saeb(2, 172, 92.0, 98.0, 138.5, 146.4),
-        "Anos Iniciais": saeb(5, 180, 93.1, 98.5, 223.4, 236.2),
-        "Anos Finais": saeb(9, 185, 92.6, 94.0, 268.1, 266.4),
+        2: saeb(2, 172, 92.0, 98.0, 138.5, 146.4),
+        5: saeb(5, 180, 93.1, 98.5, 223.4, 236.2),
+        9: saeb(9, 185, 92.6, 94.0, 268.1, 266.4),
       },
     },
     {
@@ -271,8 +270,8 @@ export const redeMock: RedeMock = {
       bairro: "Bairro Industrial",
       zona: "Urbana",
       resultados: {
-        "Alfabetização": saeb(2, 210, 89.0, 95.3, 129.1, 133.4),
-        "Anos Iniciais": saeb(5, 219, 90.2, 96.0, 208.3, 215.1),
+        2: saeb(2, 210, 89.0, 95.3, 129.1, 133.4),
+        5: saeb(5, 219, 90.2, 96.0, 208.3, 215.1),
       },
     },
     {
@@ -282,8 +281,8 @@ export const redeMock: RedeMock = {
       bairro: "Comunidade Córrego Fundo",
       zona: "Rural",
       resultados: {
-        "Alfabetização": saeb(2, 60, 87.5, 91.0, 118.5, 123.0),
-        "Anos Iniciais": saeb(5, 64, 89.1, 92.7, 191.2, 198.4),
+        2: saeb(2, 60, 87.5, 91.0, 118.5, 123.0),
+        5: saeb(5, 64, 89.1, 92.7, 191.2, 198.4),
       },
     },
     {
@@ -293,9 +292,9 @@ export const redeMock: RedeMock = {
       bairro: "Distrito de Boa Vista",
       zona: "Rural",
       resultados: {
-        "Alfabetização": saeb(2, 58, 78.0, 90.5, 121.8, 126.0),
-        "Anos Iniciais": saeb(5, 61, 79.6, 91.8, 196.4, 203.2),
-        "Anos Finais": saeb(9, 57, 83.4, 87.9, 239.3, 233.1),
+        2: saeb(2, 58, 78.0, 90.5, 121.8, 126.0),
+        5: saeb(5, 61, 79.6, 91.8, 196.4, 203.2),
+        9: saeb(9, 57, 83.4, 87.9, 239.3, 233.1),
       },
     },
     {
@@ -305,8 +304,8 @@ export const redeMock: RedeMock = {
       bairro: "Povoado Santo Antônio",
       zona: "Rural",
       resultados: {
-        "Alfabetização": saeb(2, 45, 96.5, 96.3, 126.5, 131.6),
-        "Anos Iniciais": saeb(5, 47, 97.9, 97.0, 204.1, 212.3),
+        2: saeb(2, 45, 96.5, 96.3, 126.5, 131.6),
+        5: saeb(5, 47, 97.9, 97.0, 204.1, 212.3),
       },
     },
     {
@@ -316,33 +315,31 @@ export const redeMock: RedeMock = {
       bairro: "Alto da Glória",
       zona: "Urbana",
       resultados: {
-        "Alfabetização": saeb(2, 240, 91.5, 96.0, 131.0, 139.1),
-        "Anos Iniciais": saeb(5, 249, 92.8, 96.6, 211.2, 224.3),
-        "Anos Finais": saeb(9, 254, 90.1, 91.3, 258.3, 255.1),
+        2: saeb(2, 240, 91.5, 96.0, 131.0, 139.1),
+        5: saeb(5, 249, 92.8, 96.6, 211.2, 224.3),
+        9: saeb(9, 254, 90.1, 91.3, 258.3, 255.1),
       },
     },
   ],
 };
 
-export const ETAPAS: Etapa[] = ["Alfabetização", "Anos Iniciais", "Anos Finais"];
-
 export function getEscola(id: string) {
   return redeMock.escolas.find((escola) => escola.id === id);
 }
 
-export function etapasDaEscola(escola: EscolaRede) {
-  return ETAPAS.filter((etapa) => escola.resultados[etapa]);
+export function anosDaEscola(escola: EscolaRede) {
+  return ANOS_SAEB.filter((ano) => escola.resultados[ano]);
 }
 
-/** Resultado agregado da rede numa etapa (médias ponderadas pelo nº de alunos avaliados). */
-export function getResultadoRede(etapa: Etapa, escolas: EscolaRede[] = redeMock.escolas): ResultadoSaeb {
-  const resultados = escolas.flatMap((escola) => escola.resultados[etapa] ?? []);
+/** Resultado agregado da rede num ano (médias ponderadas pelo nº de alunos avaliados). */
+export function getResultadoRede(ano: AnoSaeb, escolas: EscolaRede[] = redeMock.escolas): ResultadoSaeb {
+  const resultados = escolas.flatMap((escola) => escola.resultados[ano] ?? []);
   const alunos = resultados.reduce((sum, r) => sum + r.alunosAvaliados, 0);
   const ponderado = (valor: (r: ResultadoSaeb) => number) =>
     resultados.reduce((sum, r) => sum + valor(r) * r.alunosAvaliados, 0) / Math.max(alunos, 1);
 
   return {
-    ano: ANO_POR_ETAPA[etapa],
+    ano,
     alunosAvaliados: alunos,
     participacao: ponderado((r) => r.participacao),
     aprovacao: ponderado((r) => r.aprovacao),
@@ -409,7 +406,6 @@ export type Turma = {
   id: string;
   nome: string;
   ano: AnoSaeb;
-  etapa: Etapa;
   turno: "Manhã" | "Tarde";
   escolaId: string;
   alunos: Aluno[];
@@ -473,16 +469,15 @@ const OSCILACOES_REDE = AVALIACOES.map((_, k) => {
   return k === ULTIMA_AVALIACAO ? Math.max(0, oscilacao) : oscilacao;
 });
 
-/** Turmas do ano avaliado da etapa, derivadas do resultado Saeb da escola. */
-export function getTurmas(escola: EscolaRede, etapa: Etapa): Turma[] {
-  const key = `${escola.id}:${etapa}`;
+/** Turmas do ano avaliado, derivadas do resultado Saeb da escola. */
+export function getTurmas(escola: EscolaRede, ano: AnoSaeb): Turma[] {
+  const key = `${escola.id}:${ano}`;
   const cached = cache.get(key);
   if (cached) return cached;
 
-  const resultado = escola.resultados[etapa];
+  const resultado = escola.resultados[ano];
   if (!resultado) return [];
 
-  const ano = ANO_POR_ETAPA[etapa];
   const matriculados = Math.round(resultado.alunosAvaliados / (resultado.participacao / 100));
   // Amostra demonstrativa de até três turmas, sem reproduzir todas as matrículas do Saeb.
   const quantidade = Math.min(3, Math.max(1, Math.round(matriculados / ALUNOS_POR_TURMA)));
@@ -542,7 +537,6 @@ export function getTurmas(escola: EscolaRede, etapa: Etapa): Turma[] {
       id: `${ano}${letra.toLowerCase()}`,
       nome: `${ano}º ano ${letra}`,
       ano,
-      etapa,
       turno: i % 2 === 0 ? "Manhã" : "Tarde",
       escolaId: escola.id,
       alunos: alunos.sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR")),
@@ -553,13 +547,17 @@ export function getTurmas(escola: EscolaRede, etapa: Etapa): Turma[] {
   return turmas;
 }
 
-export function etapaDoAno(escola: EscolaRede, ano: number): Etapa | undefined {
-  return etapasDaEscola(escola).find((etapa) => ANO_POR_ETAPA[etapa] === ano);
+function isAnoSaeb(ano: number): ano is AnoSaeb {
+  return ANOS_SAEB.includes(ano as AnoSaeb);
+}
+
+export function anoValidoDaEscola(escola: EscolaRede, ano: number): AnoSaeb | undefined {
+  return isAnoSaeb(ano) && anosDaEscola(escola).includes(ano) ? ano : undefined;
 }
 
 export function getTurma(escola: EscolaRede, ano: number, turmaId: string) {
-  const etapa = etapaDoAno(escola, ano);
-  return etapa ? getTurmas(escola, etapa).find((turma) => turma.id === turmaId) : undefined;
+  const anoValido = anoValidoDaEscola(escola, ano);
+  return anoValido ? getTurmas(escola, anoValido).find((turma) => turma.id === turmaId) : undefined;
 }
 
 export function resultadoAtual(aluno: Aluno) {
@@ -622,7 +620,7 @@ export function formatData(iso: string) {
   return new Date(`${iso}T12:00:00`).toLocaleDateString("pt-BR");
 }
 
-export type MotivoAtencao = { etapa: Etapa; motivo: string };
+export type MotivoAtencao = { ano: AnoSaeb; motivo: string };
 
 /**
  * Única fonte de verdade de "precisa de atenção" no app: participação
@@ -634,20 +632,19 @@ export type MotivoAtencao = { etapa: Etapa; motivo: string };
  * mostrados, nunca uma contagem separada.
  */
 export function motivosAtencaoAvaliacao(escola: EscolaRede, avaliacaoIndex: number): MotivoAtencao[] {
-  return etapasDaEscola(escola).flatMap((etapa) => {
-    const ano = ANO_POR_ETAPA[etapa];
-    const alunos = getTurmas(escola, etapa).flatMap((turma) => turma.alunos);
+  return anosDaEscola(escola).flatMap((ano) => {
+    const alunos = getTurmas(escola, ano).flatMap((turma) => turma.alunos);
     const resumo = resumir(alunos, ano, avaliacaoIndex);
-    const referencia = redeMock.referenciaNacional[etapa];
-    const motivosEtapa: MotivoAtencao[] = [];
+    const referencia = redeMock.referenciaNacional[ano];
+    const motivosAno: MotivoAtencao[] = [];
 
     if (resumo.participacao < PARTICIPACAO_MINIMA_SAEB) {
-      motivosEtapa.push({ etapa, motivo: `participação abaixo de ${PARTICIPACAO_MINIMA_SAEB}%` });
+      motivosAno.push({ ano, motivo: `participação abaixo de ${PARTICIPACAO_MINIMA_SAEB}%` });
     }
     if (resumo.media.LP < referencia.proficiencia.LP || resumo.media.MT < referencia.proficiencia.MT) {
-      motivosEtapa.push({ etapa, motivo: "Proficiência abaixo da referência nacional" });
+      motivosAno.push({ ano, motivo: "Proficiência abaixo da referência nacional" });
     }
-    return motivosEtapa;
+    return motivosAno;
   });
 }
 

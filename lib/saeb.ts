@@ -1,12 +1,7 @@
-export type Etapa = "Alfabetização" | "Anos Iniciais" | "Anos Finais";
 export type Disciplina = "LP" | "MT";
 export type AnoSaeb = 2 | 5 | 9;
 
-export const ANO_POR_ETAPA: Record<Etapa, AnoSaeb> = {
-  "Alfabetização": 2,
-  "Anos Iniciais": 5,
-  "Anos Finais": 9,
-};
+export const ANOS_SAEB: AnoSaeb[] = [2, 5, 9];
 
 export const DISCIPLINAS: { codigo: Disciplina; nome: string }[] = [
   { codigo: "LP", nome: "Língua Portuguesa" },
@@ -49,7 +44,7 @@ export type ResultadoSaeb = {
   ano: AnoSaeb;
   alunosAvaliados: number;
   participacao: number;
-  /** Taxa de aprovação da etapa no Censo Escolar (%). */
+  /** Taxa de aprovação do ano no Censo Escolar (%). */
   aprovacao: number;
   proficiencia: Record<Disciplina, number>;
 };
