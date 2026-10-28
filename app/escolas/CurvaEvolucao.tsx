@@ -50,7 +50,7 @@ export function CurvaEvolucao({ pontos }: { pontos: PontoEvolucao[] }) {
   const gridTicks: number[] = [];
   for (let v = primeiroTick; v <= ultimoTick; v += PASSO_TICK) gridTicks.push(v);
 
-  const opacidade = (chave: "LP" | "MT") => (emFoco === null || emFoco === chave ? 1 : 0.25);
+  const opacidade = (chave: "LP" | "MT") => (emFoco === null || emFoco === chave ? 1 : 0.1);
 
   return (
     <div>
@@ -76,7 +76,7 @@ export function CurvaEvolucao({ pontos }: { pontos: PontoEvolucao[] }) {
                 x={margemEsq - 14}
                 y={ly + 3}
                 textAnchor="end"
-                className="fill-gray-400 text-[7px]"
+                className="fill-gray-400 text-[9px]"
               >
                 {formatProficiencia(v)}
               </text>
@@ -142,7 +142,7 @@ export function CurvaEvolucao({ pontos }: { pontos: PontoEvolucao[] }) {
               stroke="white"
               strokeWidth={3}
               paintOrder="stroke"
-              className="fill-chart-mt text-[7px] font-medium"
+              className="fill-chart-mt text-[9px] font-medium"
               style={{ opacity: opacidade("MT"), transition: "opacity 150ms ease-out" }}
             >
               {formatProficiencia(p.MT)}
@@ -154,7 +154,7 @@ export function CurvaEvolucao({ pontos }: { pontos: PontoEvolucao[] }) {
               stroke="white"
               strokeWidth={3}
               paintOrder="stroke"
-              className="fill-brand text-[7px] font-medium"
+              className="fill-brand text-[9px] font-medium"
               style={{ opacity: opacidade("LP"), transition: "opacity 150ms ease-out" }}
             >
               {formatProficiencia(p.LP)}
