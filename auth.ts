@@ -133,13 +133,23 @@ export const authOptions = {
         select: { name: true, email: true },
       });
 
+      // A conta do token não existe mais (ex.: banco resetado/recriado) — não
+      // confiar no snapshot antigo gravado no JWT, invalida a sessão.
+      if (!user) {
+        return {
+          ...session,
+          user: { id: "", name: "", email: "" },
+          expires: new Date(0).toISOString(),
+        };
+      }
+
       return {
         ...session,
         user: {
           ...session.user,
           id: String(token.id),
-          name: user?.name ?? session.user?.name ?? "",
-          email: user?.email ?? session.user?.email ?? "",
+          name: user.name ?? "",
+          email: user.email,
         },
       };
     },
