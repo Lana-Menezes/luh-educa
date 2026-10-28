@@ -13,6 +13,8 @@ export function habilidadesDaAvaliacao(ano: AnoSaeb, disciplina: Disciplina, ava
   });
 }
 
+export type HabilidadeAplicada = ReturnType<typeof habilidadesDaAvaliacao>[number];
+
 export type DesempenhoHabilidade = "total" | "nao" | "ausente";
 
 /** Respostas fictícias por habilidade, independentes da proficiência e reproduzíveis. */

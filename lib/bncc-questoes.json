@@ -8,7 +8,13 @@
           1,
           2
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 101"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 101",
+        "descritores": [
+          {
+            "codigo": "D1",
+            "descricao": "Decodificar e ler palavras, inclusive por memorização de palavras frequentes."
+          }
+        ]
       },
       {
         "id": "EF12LP02",
@@ -17,7 +23,13 @@
           1,
           2
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 101"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 101",
+        "descritores": [
+          {
+            "codigo": "D2",
+            "descricao": "Selecionar e ler textos de acordo com o interesse e a necessidade de leitura."
+          }
+        ]
       },
       {
         "id": "EF12LP03",
@@ -26,7 +38,13 @@
           1,
           2
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 101"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 101",
+        "descritores": [
+          {
+            "codigo": "D3",
+            "descricao": "Copiar textos breves mantendo a grafia, o espaçamento e a pontuação originais."
+          }
+        ]
       },
       {
         "id": "EF12LP04",
@@ -35,7 +53,13 @@
           1,
           2
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 105"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 105",
+        "descritores": [
+          {
+            "codigo": "D4",
+            "descricao": "Compreender a função e a organização de gêneros do cotidiano (listas, avisos, receitas, convites)."
+          }
+        ]
       },
       {
         "id": "EF12LP05",
@@ -44,7 +68,13 @@
           1,
           2
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 105"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 105",
+        "descritores": [
+          {
+            "codigo": "D5",
+            "descricao": "Produzir recontagens de histórias, poemas e textos versificados."
+          }
+        ]
       },
       {
         "id": "EF12LP06",
@@ -53,7 +83,13 @@
           1,
           2
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 105"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 105",
+        "descritores": [
+          {
+            "codigo": "D6",
+            "descricao": "Produzir, oralmente ou por escrito, recados, avisos, convites e receitas."
+          }
+        ]
       },
       {
         "id": "EF12LP07",
@@ -62,7 +98,13 @@
           1,
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D7",
+            "descricao": "Identificar rimas, aliterações e assonâncias em cantigas e parlendas."
+          }
+        ]
       },
       {
         "id": "EF12LP08",
@@ -71,7 +113,13 @@
           1,
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D8",
+            "descricao": "Compreender notícias curtas, manchetes e fotolegendas."
+          }
+        ]
       },
       {
         "id": "EF12LP09",
@@ -80,7 +128,13 @@
           1,
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D9",
+            "descricao": "Compreender slogans e anúncios publicitários destinados ao público infantil."
+          }
+        ]
       },
       {
         "id": "EF12LP10",
@@ -89,7 +143,13 @@
           1,
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D10",
+            "descricao": "Compreender cartazes, avisos e regras da vida escolar."
+          }
+        ]
       },
       {
         "id": "EF12LP11",
@@ -98,7 +158,13 @@
           1,
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D11",
+            "descricao": "Produzir notícias curtas e fotolegendas para público infantil."
+          }
+        ]
       },
       {
         "id": "EF12LP12",
@@ -107,7 +173,13 @@
           1,
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D12",
+            "descricao": "Produzir slogans e textos de campanhas de conscientização."
+          }
+        ]
       },
       {
         "id": "EF12LP13",
@@ -116,7 +188,13 @@
           1,
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D13",
+            "descricao": "Planejar slogans e peças de campanha para divulgação oral ou digital."
+          }
+        ]
       },
       {
         "id": "EF12LP14",
@@ -125,7 +203,13 @@
           1,
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D14",
+            "descricao": "Reconhecer a formatação típica de notícias e cartas de leitor."
+          }
+        ]
       },
       {
         "id": "EF12LP15",
@@ -134,7 +218,13 @@
           1,
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D15",
+            "descricao": "Identificar a forma de composição de um slogan publicitário."
+          }
+        ]
       }
     ],
     "MT": [
@@ -144,7 +234,13 @@
         "anos": [
           2
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285",
+        "descritores": [
+          {
+            "codigo": "D1",
+            "descricao": "Comparar e ordenar números naturais até a ordem das centenas."
+          }
+        ]
       },
       {
         "id": "EF02MA02",
@@ -152,7 +248,13 @@
         "anos": [
           2
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285",
+        "descritores": [
+          {
+            "codigo": "D2",
+            "descricao": "Estimar e registrar quantidades de uma coleção de objetos."
+          }
+        ]
       },
       {
         "id": "EF02MA03",
@@ -160,7 +262,13 @@
         "anos": [
           2
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285",
+        "descritores": [
+          {
+            "codigo": "D3",
+            "descricao": "Comparar quantidades de dois conjuntos indicando quantos a mais ou a menos."
+          }
+        ]
       },
       {
         "id": "EF02MA04",
@@ -168,7 +276,13 @@
         "anos": [
           2
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285",
+        "descritores": [
+          {
+            "codigo": "D4",
+            "descricao": "Compor e decompor números naturais de até três ordens."
+          }
+        ]
       },
       {
         "id": "EF02MA05",
@@ -176,7 +290,13 @@
         "anos": [
           2
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285",
+        "descritores": [
+          {
+            "codigo": "D5",
+            "descricao": "Resolver fatos básicos de adição e subtração de cabeça ou por escrito."
+          }
+        ]
       },
       {
         "id": "EF02MA06",
@@ -184,7 +304,13 @@
         "anos": [
           2
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 285",
+        "descritores": [
+          {
+            "codigo": "D6",
+            "descricao": "Resolver problemas de adição e subtração com números de até três ordens."
+          }
+        ]
       },
       {
         "id": "EF02MA07",
@@ -192,7 +318,13 @@
         "anos": [
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D7",
+            "descricao": "Resolver problemas de multiplicação por meio da ideia de parcelas iguais."
+          }
+        ]
       },
       {
         "id": "EF02MA08",
@@ -200,7 +332,13 @@
         "anos": [
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D8",
+            "descricao": "Resolver problemas envolvendo dobro, metade, triplo e terça parte."
+          }
+        ]
       },
       {
         "id": "EF02MA09",
@@ -208,7 +346,13 @@
         "anos": [
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D9",
+            "descricao": "Construir sequências numéricas crescentes ou decrescentes."
+          }
+        ]
       },
       {
         "id": "EF02MA10",
@@ -216,7 +360,13 @@
         "anos": [
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D10",
+            "descricao": "Descrever o padrão de uma sequência repetitiva ou recursiva."
+          }
+        ]
       },
       {
         "id": "EF02MA11",
@@ -224,7 +374,13 @@
         "anos": [
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D11",
+            "descricao": "Completar elementos ausentes em sequências numéricas ou de figuras."
+          }
+        ]
       },
       {
         "id": "EF02MA12",
@@ -232,7 +388,13 @@
         "anos": [
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D12",
+            "descricao": "Descrever a localização e o deslocamento de objetos no espaço."
+          }
+        ]
       },
       {
         "id": "EF02MA13",
@@ -240,7 +402,13 @@
         "anos": [
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D13",
+            "descricao": "Esboçar roteiros ou plantas simples indicando pontos de referência."
+          }
+        ]
       },
       {
         "id": "EF02MA14",
@@ -248,7 +416,13 @@
         "anos": [
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D14",
+            "descricao": "Reconhecer e nomear figuras geométricas espaciais (cubo, cone, esfera etc.)."
+          }
+        ]
       },
       {
         "id": "EF02MA15",
@@ -256,7 +430,13 @@
         "anos": [
           2
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D15",
+            "descricao": "Reconhecer e nomear figuras planas (círculo, quadrado, triângulo etc.)."
+          }
+        ]
       }
     ]
   },
@@ -272,7 +452,13 @@
           4,
           5
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97",
+        "descritores": [
+          {
+            "codigo": "D1",
+            "descricao": "Reconhecer a função social de um texto e para quem ele foi produzido."
+          }
+        ]
       },
       {
         "id": "EF15LP02",
@@ -284,7 +470,13 @@
           4,
           5
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97",
+        "descritores": [
+          {
+            "codigo": "D2",
+            "descricao": "Antecipar o sentido e a função de um texto a partir de seus elementos gráficos."
+          }
+        ]
       },
       {
         "id": "EF15LP03",
@@ -296,7 +488,13 @@
           4,
           5
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97",
+        "descritores": [
+          {
+            "codigo": "D3",
+            "descricao": "Localizar informações explícitas em um texto."
+          }
+        ]
       },
       {
         "id": "EF15LP04",
@@ -308,7 +506,13 @@
           4,
           5
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97",
+        "descritores": [
+          {
+            "codigo": "D4",
+            "descricao": "Identificar o efeito de sentido de recursos gráfico-visuais em textos multissemióticos."
+          }
+        ]
       },
       {
         "id": "EF15LP05",
@@ -320,7 +524,13 @@
           4,
           5
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97",
+        "descritores": [
+          {
+            "codigo": "D5",
+            "descricao": "Planejar um texto considerando o objetivo, o interlocutor e o suporte de circulação."
+          }
+        ]
       },
       {
         "id": "EF15LP06",
@@ -332,7 +542,13 @@
           4,
           5
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 97",
+        "descritores": [
+          {
+            "codigo": "D6",
+            "descricao": "Revisar um texto corrigindo ortografia, pontuação e coesão."
+          }
+        ]
       },
       {
         "id": "EF15LP07",
@@ -344,7 +560,13 @@
           4,
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D7",
+            "descricao": "Editar a versão final de um texto em suporte impresso ou digital."
+          }
+        ]
       },
       {
         "id": "EF15LP08",
@@ -356,7 +578,13 @@
           4,
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D8",
+            "descricao": "Utilizar recursos digitais para editar e publicar um texto."
+          }
+        ]
       },
       {
         "id": "EF15LP09",
@@ -368,7 +596,13 @@
           4,
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D9",
+            "descricao": "Expressar-se oralmente com clareza para ser compreendido pelo interlocutor."
+          }
+        ]
       },
       {
         "id": "EF15LP10",
@@ -380,7 +614,13 @@
           4,
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D10",
+            "descricao": "Formular perguntas pertinentes a partir da escuta de uma fala."
+          }
+        ]
       },
       {
         "id": "EF15LP11",
@@ -392,7 +632,13 @@
           4,
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D11",
+            "descricao": "Reconhecer os turnos de fala numa conversação espontânea."
+          }
+        ]
       },
       {
         "id": "EF15LP12",
@@ -404,7 +650,13 @@
           4,
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D12",
+            "descricao": "Atribuir sentido a gestos, olhares e tom de voz numa interação oral."
+          }
+        ]
       },
       {
         "id": "EF15LP13",
@@ -416,7 +668,13 @@
           4,
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D13",
+            "descricao": "Identificar a finalidade de uma interação oral (informar, opinar, relatar)."
+          }
+        ]
       },
       {
         "id": "EF15LP14",
@@ -428,7 +686,13 @@
           4,
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D14",
+            "descricao": "Relacionar imagem e palavra para construir o sentido de uma história em quadrinhos."
+          }
+        ]
       },
       {
         "id": "EF15LP15",
@@ -440,7 +704,13 @@
           4,
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D15",
+            "descricao": "Reconhecer a dimensão lúdica e imaginária de um texto literário."
+          }
+        ]
       }
     ],
     "MT": [
@@ -450,7 +720,13 @@
         "anos": [
           5
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297",
+        "descritores": [
+          {
+            "codigo": "D1",
+            "descricao": "Ler, escrever e ordenar números naturais até a ordem das centenas de milhar."
+          }
+        ]
       },
       {
         "id": "EF05MA02",
@@ -458,7 +734,13 @@
         "anos": [
           5
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297",
+        "descritores": [
+          {
+            "codigo": "D2",
+            "descricao": "Ler, escrever e ordenar números decimais."
+          }
+        ]
       },
       {
         "id": "EF05MA03",
@@ -466,7 +748,13 @@
         "anos": [
           5
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297",
+        "descritores": [
+          {
+            "codigo": "D3",
+            "descricao": "Representar frações como parte de um todo ou resultado de uma divisão."
+          }
+        ]
       },
       {
         "id": "EF05MA04",
@@ -474,7 +762,13 @@
         "anos": [
           5
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297",
+        "descritores": [
+          {
+            "codigo": "D4",
+            "descricao": "Identificar frações equivalentes."
+          }
+        ]
       },
       {
         "id": "EF05MA05",
@@ -482,7 +776,13 @@
         "anos": [
           5
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297",
+        "descritores": [
+          {
+            "codigo": "D5",
+            "descricao": "Comparar e ordenar números racionais na reta numérica."
+          }
+        ]
       },
       {
         "id": "EF05MA06",
@@ -490,7 +790,13 @@
         "anos": [
           5
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 297",
+        "descritores": [
+          {
+            "codigo": "D6",
+            "descricao": "Calcular porcentagens simples (10%, 25%, 50%, 75%, 100%)."
+          }
+        ]
       },
       {
         "id": "EF05MA07",
@@ -498,7 +804,13 @@
         "anos": [
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D7",
+            "descricao": "Resolver problemas de adição e subtração com números naturais e decimais."
+          }
+        ]
       },
       {
         "id": "EF05MA08",
@@ -506,7 +818,13 @@
         "anos": [
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D8",
+            "descricao": "Resolver problemas de multiplicação e divisão com números naturais e decimais."
+          }
+        ]
       },
       {
         "id": "EF05MA09",
@@ -514,7 +832,13 @@
         "anos": [
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D9",
+            "descricao": "Resolver problemas de contagem usando o princípio multiplicativo."
+          }
+        ]
       },
       {
         "id": "EF05MA10",
@@ -522,7 +846,13 @@
         "anos": [
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D10",
+            "descricao": "Reconhecer a equivalência entre os dois membros de uma igualdade."
+          }
+        ]
       },
       {
         "id": "EF05MA11",
@@ -530,7 +860,13 @@
         "anos": [
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D11",
+            "descricao": "Resolver problemas com um termo desconhecido numa igualdade."
+          }
+        ]
       },
       {
         "id": "EF05MA12",
@@ -538,7 +874,13 @@
         "anos": [
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D12",
+            "descricao": "Resolver problemas de proporcionalidade direta entre duas grandezas."
+          }
+        ]
       },
       {
         "id": "EF05MA13",
@@ -546,7 +888,13 @@
         "anos": [
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D13",
+            "descricao": "Resolver problemas de partilha em partes desiguais."
+          }
+        ]
       },
       {
         "id": "EF05MA14",
@@ -554,7 +902,13 @@
         "anos": [
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D14",
+            "descricao": "Localizar objetos no plano usando coordenadas (mapas, planilhas)."
+          }
+        ]
       },
       {
         "id": "EF05MA15",
@@ -562,7 +916,13 @@
         "anos": [
           5
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D15",
+            "descricao": "Interpretar e representar a localização de pontos no plano cartesiano."
+          }
+        ]
       }
     ]
   },
@@ -577,7 +937,13 @@
           8,
           9
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 143"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 143",
+        "descritores": [
+          {
+            "codigo": "D1",
+            "descricao": "Diferenciar liberdade de expressão de discurso de ódio."
+          }
+        ]
       },
       {
         "id": "EF69LP02",
@@ -588,7 +954,13 @@
           8,
           9
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 143"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 143",
+        "descritores": [
+          {
+            "codigo": "D2",
+            "descricao": "Comparar peças publicitárias quanto ao público-alvo e à estratégia de persuasão."
+          }
+        ]
       },
       {
         "id": "EF69LP03",
@@ -599,7 +971,13 @@
           8,
           9
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 143"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 143",
+        "descritores": [
+          {
+            "codigo": "D3",
+            "descricao": "Identificar o fato central e as circunstâncias de uma notícia ou reportagem."
+          }
+        ]
       },
       {
         "id": "EF69LP04",
@@ -610,7 +988,13 @@
           8,
           9
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 143"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 143",
+        "descritores": [
+          {
+            "codigo": "D4",
+            "descricao": "Analisar os recursos linguísticos usados para persuadir num texto publicitário."
+          }
+        ]
       },
       {
         "id": "EF69LP05",
@@ -621,7 +1005,13 @@
           8,
           9
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 143"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 143",
+        "descritores": [
+          {
+            "codigo": "D5",
+            "descricao": "Inferir o efeito de humor, ironia ou crítica num texto multissemiótico (meme, tirinha, charge)."
+          }
+        ]
       },
       {
         "id": "EF69LP06",
@@ -632,7 +1022,13 @@
           8,
           9
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 145"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 145",
+        "descritores": [
+          {
+            "codigo": "D6",
+            "descricao": "Produzir um texto jornalístico (notícia, reportagem, entrevista) adequado ao gênero e à mídia."
+          }
+        ]
       },
       {
         "id": "EF69LP07",
@@ -643,7 +1039,13 @@
           8,
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D7",
+            "descricao": "Produzir um texto adequado ao contexto de produção e à variedade linguística exigida."
+          }
+        ]
       },
       {
         "id": "EF69LP08",
@@ -654,7 +1056,13 @@
           8,
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D8",
+            "descricao": "Revisar um texto considerando o gênero, a mídia e a norma culta."
+          }
+        ]
       },
       {
         "id": "EF69LP09",
@@ -665,7 +1073,13 @@
           8,
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D9",
+            "descricao": "Planejar uma campanha publicitária definindo público-alvo e estratégia de persuasão."
+          }
+        ]
       },
       {
         "id": "EF69LP10",
@@ -676,7 +1090,13 @@
           8,
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D10",
+            "descricao": "Produzir um texto oral (podcast, entrevista, vlog) sobre um tema de interesse."
+          }
+        ]
       },
       {
         "id": "EF69LP11",
@@ -687,7 +1107,13 @@
           8,
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D11",
+            "descricao": "Identificar posicionamentos defendidos e refutados num debate ou entrevista."
+          }
+        ]
       },
       {
         "id": "EF69LP12",
@@ -698,7 +1124,13 @@
           8,
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D12",
+            "descricao": "Planejar e avaliar um texto oral considerando entonação, ritmo e postura."
+          }
+        ]
       },
       {
         "id": "EF69LP13",
@@ -709,7 +1141,13 @@
           8,
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D13",
+            "descricao": "Contribuir com argumentos para uma conclusão comum sobre um tema polêmico."
+          }
+        ]
       },
       {
         "id": "EF69LP14",
@@ -720,7 +1158,13 @@
           8,
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D14",
+            "descricao": "Formular perguntas para investigar um tema ou questão polêmica."
+          }
+        ]
       },
       {
         "id": "EF69LP15",
@@ -731,7 +1175,13 @@
           8,
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D15",
+            "descricao": "Apresentar argumentos e contra-argumentos num debate sobre tema controverso."
+          }
+        ]
       }
     ],
     "MT": [
@@ -741,7 +1191,13 @@
         "anos": [
           9
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319",
+        "descritores": [
+          {
+            "codigo": "D1",
+            "descricao": "Reconhecer um segmento de reta cuja medida não é um número racional."
+          }
+        ]
       },
       {
         "id": "EF09MA02",
@@ -749,7 +1205,13 @@
         "anos": [
           9
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319",
+        "descritores": [
+          {
+            "codigo": "D2",
+            "descricao": "Reconhecer um número irracional e estimar sua posição na reta numérica."
+          }
+        ]
       },
       {
         "id": "EF09MA03",
@@ -757,7 +1219,13 @@
         "anos": [
           9
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319",
+        "descritores": [
+          {
+            "codigo": "D3",
+            "descricao": "Efetuar cálculos com números reais, inclusive potências fracionárias."
+          }
+        ]
       },
       {
         "id": "EF09MA04",
@@ -765,7 +1233,13 @@
         "anos": [
           9
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319",
+        "descritores": [
+          {
+            "codigo": "D4",
+            "descricao": "Resolver problemas com números reais em notação científica."
+          }
+        ]
       },
       {
         "id": "EF09MA05",
@@ -773,7 +1247,13 @@
         "anos": [
           9
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319",
+        "descritores": [
+          {
+            "codigo": "D5",
+            "descricao": "Resolver problemas envolvendo porcentagens e percentuais sucessivos."
+          }
+        ]
       },
       {
         "id": "EF09MA06",
@@ -781,7 +1261,13 @@
         "anos": [
           9
         ],
-        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319"
+        "fonte": "Base-Nacional-Comum-Curricular-BNCC.pdf, página PDF 319",
+        "descritores": [
+          {
+            "codigo": "D6",
+            "descricao": "Reconhecer uma função como relação de dependência entre duas variáveis."
+          }
+        ]
       },
       {
         "id": "EF09MA07",
@@ -789,7 +1275,13 @@
         "anos": [
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D7",
+            "descricao": "Resolver problemas envolvendo razão entre duas grandezas de espécies diferentes."
+          }
+        ]
       },
       {
         "id": "EF09MA08",
@@ -797,7 +1289,13 @@
         "anos": [
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D8",
+            "descricao": "Resolver problemas de proporcionalidade direta e inversa entre grandezas."
+          }
+        ]
       },
       {
         "id": "EF09MA09",
@@ -805,7 +1303,13 @@
         "anos": [
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D9",
+            "descricao": "Fatorar expressões algébricas para resolver equações do 2º grau."
+          }
+        ]
       },
       {
         "id": "EF09MA10",
@@ -813,7 +1317,13 @@
         "anos": [
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D10",
+            "descricao": "Reconhecer relações entre ângulos formados por retas paralelas e uma transversal."
+          }
+        ]
       },
       {
         "id": "EF09MA11",
@@ -821,7 +1331,13 @@
         "anos": [
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D11",
+            "descricao": "Resolver problemas envolvendo ângulos centrais e inscritos na circunferência."
+          }
+        ]
       },
       {
         "id": "EF09MA12",
@@ -829,7 +1345,13 @@
         "anos": [
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D12",
+            "descricao": "Reconhecer as condições de semelhança entre dois triângulos."
+          }
+        ]
       },
       {
         "id": "EF09MA13",
@@ -837,7 +1359,13 @@
         "anos": [
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D13",
+            "descricao": "Aplicar relações métricas do triângulo retângulo, como o teorema de Pitágoras."
+          }
+        ]
       },
       {
         "id": "EF09MA14",
@@ -845,7 +1373,13 @@
         "anos": [
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D14",
+            "descricao": "Resolver problemas de aplicação do teorema de Pitágoras."
+          }
+        ]
       },
       {
         "id": "EF09MA15",
@@ -853,7 +1387,13 @@
         "anos": [
           9
         ],
-        "fonte": "BNCC · MEC (2018)"
+        "fonte": "BNCC · MEC (2018)",
+        "descritores": [
+          {
+            "codigo": "D15",
+            "descricao": "Descrever um algoritmo para construção de um polígono regular."
+          }
+        ]
       }
     ]
   }

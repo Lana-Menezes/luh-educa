@@ -1,7 +1,15 @@
+"use client";
+
+import { useState } from "react";
 import { Check, ChevronDown, Minus, X } from "lucide-react";
 import { AVALIACOES, type Aluno } from "@/lib/mock-data";
-import { habilidadesDaAvaliacao, resultadoHabilidade, type DesempenhoHabilidade } from "@/lib/habilidades";
-import { DISCIPLINAS, formatPercent, formatProficiencia, type AnoSaeb } from "@/lib/saeb";
+import {
+  habilidadesDaAvaliacao,
+  resultadoHabilidade,
+  type DesempenhoHabilidade,
+  type HabilidadeAplicada,
+} from "@/lib/habilidades";
+import { DISCIPLINAS, formatPercent, formatProficiencia, type AnoSaeb, type Disciplina } from "@/lib/saeb";
 
 const ESTADOS = {
   total: { texto: "Acertou", classe: "bg-lime-50 text-lime-700", Icone: Check },
@@ -14,9 +22,55 @@ function Indicador({ status }: { status: DesempenhoHabilidade }) {
   return <span className={`inline-flex rounded-md p-1.5 ${classe}`}><Icone className="h-5 w-5" aria-hidden /><span className="sr-only">{texto}</span></span>;
 }
 
+/**
+ * Habilidade BNCC aplicada na questão e seu(s) descritor(es) — cada um com
+ * código e descrição próprios, igual à habilidade.
+ */
+function DescritorHabilidade({ habilidade }: { habilidade: HabilidadeAplicada }) {
+  return (
+    <div className="space-y-3">
+      <div>
+        <p className="text-sm font-bold text-gray-900">
+          Questão {String(habilidade.questao).padStart(2, "0")} · Habilidade {habilidade.id}
+        </p>
+        <p className="mt-1 text-sm leading-relaxed text-gray-800">{habilidade.descricao}</p>
+        <p className="mt-1 text-xs text-gray-600">
+          BNCC · {habilidade.anos.map((a) => `${a}º`).join(", ")} ano(s) · {habilidade.fonte}
+        </p>
+      </div>
+      <ul className="space-y-2">
+        {habilidade.descritores.map((descritor) => (
+          <li key={descritor.codigo}>
+            <p className="text-sm font-bold text-brand">Descritor {descritor.codigo}</p>
+            <p className="mt-0.5 text-sm leading-relaxed text-gray-800">{descritor.descricao}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+type Selecao =
+  | { tipo: "habilidade"; chave: string; codigo: Disciplina; habilidade: HabilidadeAplicada }
+  | { tipo: "aluno"; chave: string; codigo: Disciplina; aluno: Aluno };
+
 export default function HabilidadesResultados({ alunos, ano, avaliacao, matriz = false }: {
   alunos: Aluno[]; ano: AnoSaeb; avaliacao: number; matriz?: boolean;
 }) {
+  const [selecao, setSelecao] = useState<Selecao | null>(null);
+
+  // A seleção se refere a uma habilidade/questão de uma avaliação específica;
+  // ao trocar de avaliação ou ano, o painel aberto deixaria de corresponder.
+  const [contextoSelecao, setContextoSelecao] = useState({ ano, avaliacao });
+  if (contextoSelecao.ano !== ano || contextoSelecao.avaliacao !== avaliacao) {
+    setContextoSelecao({ ano, avaliacao });
+    setSelecao(null);
+  }
+
+  function alternar(nova: Selecao) {
+    setSelecao((atual) => (atual?.chave === nova.chave ? null : nova));
+  }
+
   return (
     <section className="mt-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
       <h2 className="text-lg font-semibold text-gray-900">Desempenho por habilidade · {ano}º ano</h2>
@@ -25,8 +79,10 @@ export default function HabilidadesResultados({ alunos, ano, avaliacao, matriz =
       {matriz && <ul className="mt-4 flex flex-wrap gap-4 text-xs text-gray-600" aria-label="Legenda de desempenho">
         {(Object.keys(ESTADOS) as DesempenhoHabilidade[]).map((status) => <li key={status} className="flex items-center gap-2"><Indicador status={status} />{ESTADOS[status].texto}</li>)}
       </ul>}
+      {matriz && <p className="mt-2 text-xs text-gray-700">Clique no nome do estudante ou na habilidade para ver os descritores completos.</p>}
       {DISCIPLINAS.map(({ codigo, nome }) => {
         const habilidades = habilidadesDaAvaliacao(ano, codigo, avaliacao);
+        const selecaoDaDisciplina = selecao && selecao.codigo === codigo ? selecao : null;
         return (
           <details key={codigo} className="group/disciplina mt-6 rounded-lg border border-gray-200 p-4">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand [&::-webkit-details-marker]:hidden">
@@ -39,35 +95,107 @@ export default function HabilidadesResultados({ alunos, ano, avaliacao, matriz =
                 <thead className="bg-brand text-white"><tr>
                   <th scope="col" className="sticky left-0 bg-brand px-4 py-3">Estudante</th>
                   <th scope="col" className="px-3 py-3">Proficiência</th>
-                  {habilidades.map((h) => <th key={h.id} scope="col" className="px-3 py-3 text-center" title={h.descricao}><span className="block">Q{String(h.questao).padStart(2, "0")}</span><span className="block whitespace-nowrap text-xs font-normal">{h.id}</span></th>)}
+                  {habilidades.map((h) => {
+                    const chave = `hab:${codigo}:${h.id}`;
+                    return (
+                      <th key={h.id} scope="col" className="px-3 py-3 text-center">
+                        <button
+                          type="button"
+                          onClick={() => alternar({ tipo: "habilidade", chave, codigo, habilidade: h })}
+                          aria-expanded={selecaoDaDisciplina?.chave === chave}
+                          className="block w-full rounded-sm hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                        >
+                          <span className="block">Q{String(h.questao).padStart(2, "0")}</span>
+                          <span className="block whitespace-nowrap text-xs font-normal">{h.id}</span>
+                        </button>
+                      </th>
+                    );
+                  })}
                 </tr></thead>
-                <tbody>{alunos.map((aluno, index) => <tr key={`${aluno.id}-${index}`} className="border-t border-gray-100">
-                  <th scope="row" className="sticky left-0 min-w-52 bg-white px-4 py-3 font-medium text-gray-900">{aluno.nome}</th>
+                <tbody>{alunos.map((aluno, index) => {
+                  const chaveAluno = `aluno:${codigo}:${aluno.id}-${index}`;
+                  return <tr key={`${aluno.id}-${index}`} className="border-t border-gray-100">
+                  <th scope="row" className="sticky left-0 min-w-52 bg-white px-4 py-3 font-medium text-gray-900">
+                    <button
+                      type="button"
+                      onClick={() => alternar({ tipo: "aluno", chave: chaveAluno, codigo, aluno })}
+                      aria-expanded={selecaoDaDisciplina?.chave === chaveAluno}
+                      className="rounded-sm text-left hover:text-brand hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                    >
+                      {aluno.nome}
+                    </button>
+                  </th>
                   <td className="px-3 py-3 font-semibold">{aluno.resultados[avaliacao] ? formatProficiencia(aluno.resultados[avaliacao]![codigo]) : "—"}</td>
                   {habilidades.map((h) => {
                     const r = resultadoHabilidade(aluno, avaliacao, h);
-                    return <td key={h.id} className="px-3 py-3 text-center" title={`${h.descricao} ${ESTADOS[r.status].texto}${r.itens ? ` · ${r.acertos}/${r.itens} acertos` : ""}`}><Indicador status={r.status} />{r.itens > 0 && <span className="block text-xs text-gray-700">{r.acertos}/{r.itens}</span>}</td>;
+                    const descritoresTexto = h.descritores.map((d) => `${d.codigo}: ${d.descricao}`).join(" · ");
+                    return <td key={h.id} className="px-3 py-3 text-center" title={`${h.descricao} | ${descritoresTexto} ${ESTADOS[r.status].texto}${r.itens ? ` · ${r.acertos}/${r.itens} acertos` : ""}`}><Indicador status={r.status} />{r.itens > 0 && <span className="block text-xs text-gray-700">{r.acertos}/{r.itens}</span>}</td>;
                   })}
-                </tr>)}</tbody>
+                </tr>;
+                })}</tbody>
               </table>
               {!alunos.length && <p className="p-4 text-sm text-gray-700">Nenhum estudante encontrado.</p>}
             </div>}
+            {matriz && selecaoDaDisciplina?.tipo === "habilidade" && (() => {
+              const { habilidade } = selecaoDaDisciplina;
+              const resultados = alunos.map((aluno) => resultadoHabilidade(aluno, avaliacao, habilidade));
+              const itens = resultados.reduce((s, r) => s + r.itens, 0);
+              const acertos = resultados.reduce((s, r) => s + r.acertos, 0);
+              return (
+                <div className="mt-4 rounded-lg border border-brand-muted bg-brand-soft/40 p-4">
+                  <DescritorHabilidade habilidade={habilidade} />
+                  <p className="mt-2 text-xs text-gray-700">
+                    {itens ? `${formatPercent(acertos / itens * 100)} de acertos entre os estudantes com resultado` : "Nenhum estudante com resultado nesta questão"}
+                  </p>
+                </div>
+              );
+            })()}
+            {matriz && selecaoDaDisciplina?.tipo === "aluno" && (() => {
+              const { aluno } = selecaoDaDisciplina;
+              return (
+                <div className="mt-4 rounded-lg border border-brand-muted bg-brand-soft/40 p-4">
+                  <p className="text-sm font-bold text-gray-900">{aluno.nome} · descritores de {nome}</p>
+                  <ul className="mt-3 space-y-3 divide-y divide-gray-200">
+                    {habilidades.map((h) => {
+                      const r = resultadoHabilidade(aluno, avaliacao, h);
+                      return (
+                        <li key={h.id} className="flex items-start gap-3 pt-3 first:pt-0">
+                          <Indicador status={r.status} />
+                          <DescritorHabilidade habilidade={h} />
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              );
+            })()}
             <div className="mt-3 overflow-x-auto rounded-lg border border-gray-200" tabIndex={0} role="region" aria-label={`Resumo de habilidades de ${nome}`}>
               <table className="w-full min-w-[42rem] text-left text-sm text-gray-900">
                 <caption className="sr-only">Habilidades aplicadas e desempenho em {nome}</caption>
-                
+
                 <thead className="bg-brand-soft text-gray-900"><tr>
-                  {["Questão / habilidade aplicada", "% de acertos", "Acertaram", "Erraram", "Sem resultado"].map((titulo) => <th key={titulo} scope="col" className="px-3 py-3 font-semibold">{titulo}</th>)}
+                  {["Questão / habilidade aplicada", "% de acertos", "Acertos", "Erros", "Abstinência"].map((titulo) => <th key={titulo} scope="col" className="px-3 py-3 font-semibold">{titulo}</th>)}
                 </tr></thead>
                 <tbody>{habilidades.map((habilidade) => {
                   const resultados = alunos.map((aluno) => resultadoHabilidade(aluno, avaliacao, habilidade));
                   const itens = resultados.reduce((s, r) => s + r.itens, 0);
                   const acertos = resultados.reduce((s, r) => s + r.acertos, 0);
                   return <tr key={habilidade.id} className="border-t border-gray-100">
-                    <th scope="row" className="min-w-64 px-3 py-3 font-normal text-gray-900">
-                      <span className="block text-sm font-bold text-gray-900">Questão {String(habilidade.questao).padStart(2, "0")} · {habilidade.id}</span>
-                      <span className="block leading-relaxed">{habilidade.descricao}</span>
-                      <span className="mt-1 block text-xs text-gray-700">BNCC · {habilidade.anos.map((ano) => `${ano}º`).join(", ")} ano(s) · {habilidade.fonte}</span>
+                    <th scope="row" className="min-w-72 px-3 py-3 font-normal text-gray-900">
+                      <span className="block text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        Questão {String(habilidade.questao).padStart(2, "0")}
+                      </span>
+                      <span className="mt-1 block text-sm font-bold text-gray-900">Habilidade {habilidade.id}</span>
+                      <span className="block leading-relaxed text-gray-800">{habilidade.descricao}</span>
+                      <span className="mt-1 block text-xs text-gray-600">BNCC · {habilidade.anos.map((ano) => `${ano}º`).join(", ")} ano(s) · {habilidade.fonte}</span>
+                      <span className="mt-2 block">
+                        {habilidade.descritores.map((descritor) => (
+                          <span key={descritor.codigo} className="block">
+                            <span className="text-sm font-bold text-brand">Descritor {descritor.codigo}</span>{" "}
+                            <span className="text-sm leading-relaxed text-gray-800">{descritor.descricao}</span>
+                          </span>
+                        ))}
+                      </span>
                     </th>
                     <td className="px-3 py-3">{itens ? formatPercent(acertos / itens * 100) : "—"}</td>
                     {(["total", "nao", "ausente"] as const).map((status) => <td key={status} className="px-3 py-3">{resultados.filter((r) => r.status === status).length}</td>)}
