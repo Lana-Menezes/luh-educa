@@ -25,6 +25,17 @@ import { AvaliacaoSync } from "../AvaliacaoSync";
 
 export const dynamic = "force-dynamic";
 
+/** Hora atual no fuso do Brasil (America/Sao_Paulo), independente do fuso do servidor. */
+function horaNoBrasil() {
+  return Number(
+    new Intl.DateTimeFormat("pt-BR", {
+      timeZone: "America/Sao_Paulo",
+      hour: "numeric",
+      hour12: false,
+    }).format(new Date()),
+  );
+}
+
 /** Saudação conforme o horário: madrugada e manhã (bom dia), tarde (boa tarde), noite (boa noite). */
 function saudacao(hora: number) {
   if (hora >= 5 && hora < 12) return "Bom dia";
@@ -112,7 +123,7 @@ export default async function DashboardPage({
             {rede.nome} · {rede.municipio}/{rede.uf}
           </p>
           <h1 className="mt-1 text-3xl font-bold text-gray-900">
-            {saudacao(new Date().getHours())}, {nomeUsuario}
+            {saudacao(horaNoBrasil())}, {nomeUsuario}
           </h1>
           <p className="mt-1 text-sm font-medium text-brand">Resumo das avaliações</p>
         </div>
