@@ -7,6 +7,7 @@ import { authOptions } from "@/auth";
 import { AVALIACAO_COOKIE } from "@/lib/avaliacao-cookie";
 import { ANOS_SAEB, APROVACAO_MINIMA_VAAR, PARTICIPACAO_MINIMA_SAEB, TETO_VAAR, formatDelta, formatPercent, formatProficiencia } from "@/lib/saeb";
 import {
+  alunosComAnoDaRede,
   AVALIACOES,
   getResultadoRede,
   getTurmas,
@@ -22,6 +23,7 @@ import {
 import AvaliacaoDropdown from "../escolas/AvaliacaoDropdown";
 import { CurvaEvolucao, rotuloAvaliacaoCurto } from "../escolas/ui";
 import { AvaliacaoSync } from "../AvaliacaoSync";
+import { CurvaComparativa } from "./CurvaComparativa";
 
 export const dynamic = "force-dynamic";
 
@@ -77,6 +79,37 @@ export default async function DashboardPage({
   });
 
   const escolasEmAtencao = rede.escolas.filter((escola) => precisaAtencaoAvaliacao(escola, avaliacaoIdx));
+
+  // Cruza, por avaliação, o % de estudantes do 5º/9º ano que cresceram em relação à
+  // Diagnóstica com o % de estudantes atingidos pela Condicionalidade III (média dos
+  // grupos PPI e baixo NSE com desempenho adequado).
+  const prioritarios = alunosComAnoDaRede(rede).filter((item) => item.ano !== 2);
+  const evolucaoComparativa = AVALIACOES.map((avaliacao, k) => {
+    let cresceram = 0;
+    let comparaveis = 0;
+    for (const { aluno } of prioritarios) {
+      const diagnostica = aluno.resultados[0];
+      const atual = aluno.resultados[k];
+      if (!diagnostica || !atual) continue;
+      comparaveis++;
+      if ((atual.LP + atual.MT) / 2 > (diagnostica.LP + diagnostica.MT) / 2) cresceram++;
+    }
+
+    const grupos = statusVaarDaRede(rede, k).condicionalidadeIII.grupos.filter(
+      (g) => g.proporcaoAtual !== null,
+    );
+    const condicionalIII = grupos.length
+      ? grupos.reduce((sum, g) => sum + (g.proporcaoAtual ?? 0), 0) / grupos.length
+      : 0;
+
+    return {
+      id: avaliacao.id,
+      rotulo: rotuloAvaliacaoCurto(avaliacao.nome),
+      selecionado: k === avaliacaoIdx,
+      crescimento: comparaveis ? (cresceram / comparaveis) * 100 : 0,
+      condicionalIII,
+    };
+  });
 
   const statusRedeVaar = statusVaarDaRede(rede, avaliacaoIdx);
   const statusEscolasVaar = rede.escolas.map((escola) => ({
@@ -206,68 +239,6 @@ export default async function DashboardPage({
       )}
 
       <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-gray-900">Censo Escolar</h2>
-        <p className="mt-1 text-sm text-gray-500">
-          Matrículas, taxa de aprovação e participação no Saeb por ano e por zona (fonte oficial
-          Inep).
-        </p>
-        <div className="mt-4 grid gap-4 sm:grid-cols-3">
-          {censoPorAno.map(({ ano, resultado }) => (
-            <div key={ano} className="rounded-lg border border-gray-100 bg-gray-50 p-4">
-              <p className="text-sm font-medium text-gray-900">{ano}º ano</p>
-              <p className="mt-2 text-2xl font-bold text-gray-900">
-                {resultado.alunosAvaliados.toLocaleString("pt-BR")}
-              </p>
-              <p className="text-xs text-gray-500">alunos avaliados no Saeb</p>
-              <dl className="mt-3 space-y-1.5 text-sm">
-                <div className="flex items-center justify-between">
-                  <dt className="text-gray-500">Aprovação</dt>
-                  <dd className="font-semibold text-gray-900">{formatPercent(resultado.aprovacao)}</dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-gray-500">Reprovação/abandono</dt>
-                  <dd className="font-semibold text-attention">{formatPercent(100 - resultado.aprovacao)}</dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-gray-500">Participação no Saeb</dt>
-                  <dd className="font-semibold text-gray-900">{formatPercent(resultado.participacao)}</dd>
-                </div>
-              </dl>
-            </div>
-          ))}
-        </div>
-        <div className="mt-5 overflow-x-auto">
-          <table className="w-full min-w-[28rem] text-left text-sm">
-            <caption className="sr-only">Censo Escolar por zona da rede municipal</caption>
-            <thead className="border-b border-gray-200 text-gray-500">
-              <tr>
-                <th className="py-2 pr-3 font-medium">Zona</th>
-                <th className="px-2 py-2 font-medium">Escolas</th>
-                <th className="px-2 py-2 text-right font-medium">Alunos avaliados</th>
-                <th className="px-2 py-2 text-right font-medium">Aprovação</th>
-                <th className="px-2 py-2 text-right font-medium">Participação no Saeb</th>
-              </tr>
-            </thead>
-            <tbody className="text-gray-700">
-              {censoPorZona.map((z) => (
-                <tr key={z.zona} className="border-b border-gray-100 last:border-0">
-                  <td className="py-2.5 pr-3 font-medium text-gray-900">{z.zona}</td>
-                  <td className="px-2 py-2.5">{z.escolas}</td>
-                  <td className="px-2 py-2.5 text-right">{z.alunosAvaliados.toLocaleString("pt-BR")}</td>
-                  <td className="px-2 py-2.5 text-right">{formatPercent(z.aprovacao)}</td>
-                  <td className="px-2 py-2.5 text-right">{formatPercent(z.participacao)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p className="mt-3 text-xs text-gray-500">
-          Dados de demonstração. &ldquo;Reprovação/abandono&rdquo; é o complemento da aprovação do
-          Censo Escolar (100% − aprovação), sem distinguir as duas causas.
-        </p>
-      </section>
-
-      <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">
@@ -288,49 +259,64 @@ export default async function DashboardPage({
             Sem estudantes do 5º/9º ano avaliados nesta rede.
           </p>
         ) : (
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            {statusRedeVaar.condicionalidadeIII.grupos.map((g) => (
-              <div key={g.grupo} className="rounded-lg border border-gray-100 bg-gray-50 p-4">
-                <p className="text-sm font-medium text-gray-900">
-                  {g.grupo === "ppi" ? "Pretos, pardos e indígenas (PPI)" : "Baixo nível socioeconômico"}
-                </p>
-                {g.dadosInsuficientes ? (
-                  <p className="mt-2 text-sm text-gray-500">
-                    Menos de 10 estudantes avaliados — grupo não conta na habilitação.
+          <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+              {statusRedeVaar.condicionalidadeIII.grupos.map((g) => (
+                <div key={g.grupo} className="rounded-lg border border-gray-100 bg-gray-50 p-4">
+                  <p className="text-sm font-medium text-gray-900">
+                    {g.grupo === "ppi" ? "Pretos, pardos e indígenas (PPI)" : "Baixo nível socioeconômico"}
                   </p>
-                ) : (
-                  <>
-                    <p className="mt-2 flex items-baseline gap-2">
-                      <span className="text-2xl font-bold text-gray-900">
-                        {formatPercent(g.proporcaoAtual ?? 0)}
-                      </span>
-                      <span className="text-xs text-gray-500">com desempenho adequado</span>
+                  {g.dadosInsuficientes ? (
+                    <p className="mt-2 text-sm text-gray-500">
+                      Menos de 10 estudantes avaliados — grupo não conta na habilitação.
                     </p>
-                    <p className="mt-1 text-xs text-gray-500">
-                      {formatPercent(g.proporcaoAnterior ?? 0)} na Diagnóstica · {g.participantesAtual}{" "}
-                      estudantes
-                    </p>
-                    <p
-                      className={`mt-2 inline-flex items-center gap-1 text-sm font-medium ${
-                        g.habilitadoGrupo ? "text-success" : "text-attention"
-                      }`}
-                    >
-                      {g.habilitadoGrupo ? (
-                        <CheckCircle2 className="h-4 w-4" aria-hidden />
-                      ) : (
-                        <XCircle className="h-4 w-4" aria-hidden />
-                      )}
-                      {formatDelta(g.indice ?? 0, formatProficiencia)} p.p.
-                      {g.tetoOk && (g.indice ?? 0) < 0
-                        ? " (efeito teto)"
-                        : g.dentroFaixa && (g.indice ?? 0) < 0
-                          ? " (dentro da faixa de flutuação)"
-                          : ""}
-                    </p>
-                  </>
-                )}
+                  ) : (
+                    <>
+                      <p className="mt-2 flex items-baseline gap-2">
+                        <span className="text-2xl font-bold text-gray-900">
+                          {formatPercent(g.proporcaoAtual ?? 0)}
+                        </span>
+                        <span className="text-xs text-gray-500">com desempenho adequado</span>
+                      </p>
+                      <p className="mt-1 text-xs text-gray-500">
+                        {formatPercent(g.proporcaoAnterior ?? 0)} na Diagnóstica · {g.participantesAtual}{" "}
+                        estudantes
+                      </p>
+                      <p
+                        className={`mt-2 inline-flex items-center gap-1 text-sm font-medium ${
+                          g.habilitadoGrupo ? "text-success" : "text-attention"
+                        }`}
+                      >
+                        {g.habilitadoGrupo ? (
+                          <CheckCircle2 className="h-4 w-4" aria-hidden />
+                        ) : (
+                          <XCircle className="h-4 w-4" aria-hidden />
+                        )}
+                        {formatDelta(g.indice ?? 0, formatProficiencia)} p.p.
+                        {g.tetoOk && (g.indice ?? 0) < 0
+                          ? " (efeito teto)"
+                          : g.dentroFaixa && (g.indice ?? 0) < 0
+                            ? " (dentro da faixa de flutuação)"
+                            : ""}
+                      </p>
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div className="rounded-lg border border-gray-100 bg-gray-50 p-4">
+              <h3 className="text-sm font-semibold text-gray-900">
+                Crescimento dos alunos × Atingidos pela Condicionalidade III
+              </h3>
+              <p className="mt-1 text-xs text-gray-500">
+                % de estudantes do 5º/9º ano que cresceram desde a Diagnóstica, comparado ao % de
+                estudantes com desempenho adequado nos grupos PPI e baixo NSE, por avaliação.
+              </p>
+              <div className="mt-3 overflow-x-auto">
+                <CurvaComparativa pontos={evolucaoComparativa} />
               </div>
-            ))}
+            </div>
           </div>
         )}
         <p className="mt-3 text-xs text-gray-500">
@@ -453,6 +439,68 @@ export default async function DashboardPage({
           habilitação oficial na Condicionalidade III é apurada no nível da rede, comparando Saeb
           2023 e Saeb 2025; aqui, por escola, usa-se a Diagnóstica e {avaliacaoSelecionada.nome} como
           referência de acompanhamento.
+        </p>
+      </section>
+
+      <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-gray-900">Censo Escolar</h2>
+        <p className="mt-1 text-sm text-gray-500">
+          Matrículas, taxa de aprovação e participação no Saeb por ano e por zona (fonte oficial
+          Inep).
+        </p>
+        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+          {censoPorAno.map(({ ano, resultado }) => (
+            <div key={ano} className="rounded-lg border border-gray-100 bg-gray-50 p-4">
+              <p className="text-sm font-medium text-gray-900">{ano}º ano</p>
+              <p className="mt-2 text-2xl font-bold text-gray-900">
+                {resultado.alunosAvaliados.toLocaleString("pt-BR")}
+              </p>
+              <p className="text-xs text-gray-500">alunos avaliados no Saeb</p>
+              <dl className="mt-3 space-y-1.5 text-sm">
+                <div className="flex items-center justify-between">
+                  <dt className="text-gray-500">Aprovação</dt>
+                  <dd className="font-semibold text-gray-900">{formatPercent(resultado.aprovacao)}</dd>
+                </div>
+                <div className="flex items-center justify-between">
+                  <dt className="text-gray-500">Reprovação/abandono</dt>
+                  <dd className="font-semibold text-attention">{formatPercent(100 - resultado.aprovacao)}</dd>
+                </div>
+                <div className="flex items-center justify-between">
+                  <dt className="text-gray-500">Participação no Saeb</dt>
+                  <dd className="font-semibold text-gray-900">{formatPercent(resultado.participacao)}</dd>
+                </div>
+              </dl>
+            </div>
+          ))}
+        </div>
+        <div className="mt-5 overflow-x-auto">
+          <table className="w-full min-w-[28rem] text-left text-sm">
+            <caption className="sr-only">Censo Escolar por zona da rede municipal</caption>
+            <thead className="border-b border-gray-200 text-gray-500">
+              <tr>
+                <th className="py-2 pr-3 font-medium">Zona</th>
+                <th className="px-2 py-2 font-medium">Escolas</th>
+                <th className="px-2 py-2 text-right font-medium">Alunos avaliados</th>
+                <th className="px-2 py-2 text-right font-medium">Aprovação</th>
+                <th className="px-2 py-2 text-right font-medium">Participação no Saeb</th>
+              </tr>
+            </thead>
+            <tbody className="text-gray-700">
+              {censoPorZona.map((z) => (
+                <tr key={z.zona} className="border-b border-gray-100 last:border-0">
+                  <td className="py-2.5 pr-3 font-medium text-gray-900">{z.zona}</td>
+                  <td className="px-2 py-2.5">{z.escolas}</td>
+                  <td className="px-2 py-2.5 text-right">{z.alunosAvaliados.toLocaleString("pt-BR")}</td>
+                  <td className="px-2 py-2.5 text-right">{formatPercent(z.aprovacao)}</td>
+                  <td className="px-2 py-2.5 text-right">{formatPercent(z.participacao)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-3 text-xs text-gray-500">
+          Dados de demonstração. &ldquo;Reprovação/abandono&rdquo; é o complemento da aprovação do
+          Censo Escolar (100% − aprovação), sem distinguir as duas causas.
         </p>
       </section>
 
