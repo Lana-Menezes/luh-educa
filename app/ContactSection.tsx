@@ -122,10 +122,10 @@ export default function ContactSection() {
               <div>
                 <p className="font-semibold text-gray-900">E-mail</p>
                 <a
-                  href="mailto:lucianamenezessouza@outlook.com"
+                  href="mailto:luciana.souza@luheducacional.com.br"
                   className="mt-1 inline-block text-brand hover:underline"
                 >
-                 lucianamenezessouza@outlook.com
+                 luciana.souza@luheducacional.com.br
                 </a>
               </div>
             </div>
