@@ -38,7 +38,7 @@ export default function GrowthInfographic() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.16em] text-brand">
-            Crescimento da aprendizagem
+            Crescimento da aprendizagem com equidade
           </p>
           <p className="mt-2 max-w-sm text-sm leading-relaxed text-gray-600">
             Evolução esperada de proficiência ao longo do ciclo LUH.
