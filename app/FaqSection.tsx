@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Container, Disclosure, SectionHeading } from "@/components/ui";
 
 type FaqItem = {
   question: string;
@@ -202,17 +203,12 @@ export default function FaqSection() {
 
   return (
     <section id="faq" className="border-t border-gray-200 bg-white">
-      <div className="mx-auto max-w-6xl px-6 py-20 md:px-8 md:py-28">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">
-          Perguntas frequentes
-        </p>
-        <h2 className="mt-3 max-w-2xl font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
-          Dúvidas comuns sobre a Metodologia LUH e a assessoria.
-        </h2>
-        <p className="mt-5 max-w-2xl text-lg leading-relaxed text-gray-600">
-          Respostas diretas sobre metodologia, entrega, tecnologia e contratação
-          para redes de ensino.
-        </p>
+      <Container className="py-20 md:py-28">
+        <SectionHeading
+          eyebrow="Perguntas frequentes"
+          title="Dúvidas comuns sobre a Metodologia LUH e a assessoria."
+          description="Respostas diretas sobre metodologia, entrega, tecnologia e contratação para redes de ensino."
+        />
 
         <div className="mt-12 space-y-12">
           {faqGroups.map((group) => (
@@ -227,49 +223,22 @@ export default function FaqSection() {
                   const isOpen = openKeys.has(key);
 
                   return (
-                    <button
+                    <Disclosure
                       key={key}
-                      type="button"
-                      aria-expanded={isOpen}
-                      onClick={() => toggleKey(key)}
-                      className={`w-full cursor-pointer rounded-2xl p-5 text-left transition-shadow duration-500 md:p-6 ${faq.tone} ${
-                        isOpen ? "shadow-md" : ""
-                      }`}
-                    >
-                      <span className="flex items-start justify-between gap-4 text-lg font-semibold">
-                        <span>{faq.question}</span>
-                        <span
-                          aria-hidden
-                          className={`mt-0.5 shrink-0 text-2xl leading-none transition-transform duration-500 ease-out ${
-                            faq.mark
-                          } ${isOpen ? "rotate-45" : "rotate-0"}`}
-                        >
-                          +
-                        </span>
-                      </span>
-
-                      <span
-                        className="grid transition-[grid-template-rows] duration-500 ease-out"
-                        style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
-                      >
-                        <span className="overflow-hidden">
-                          <span
-                            className={`block pt-4 font-normal leading-relaxed text-gray-700 transition-opacity duration-500 ease-out ${
-                              isOpen ? "opacity-100" : "opacity-0"
-                            }`}
-                          >
-                            {faq.answer}
-                          </span>
-                        </span>
-                      </span>
-                    </button>
+                      isOpen={isOpen}
+                      onToggle={() => toggleKey(key)}
+                      question={faq.question}
+                      answer={faq.answer}
+                      toneClassName={faq.tone}
+                      markClassName={faq.mark}
+                    />
                   );
                 })}
               </div>
             </div>
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

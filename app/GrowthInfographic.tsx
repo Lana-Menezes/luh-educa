@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Card } from "@/components/ui";
 
 const stages = [
   { label: "Baseline", value: 42, barClass: "bg-danger" },
@@ -34,7 +35,7 @@ export default function GrowthInfographic() {
   }, []);
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm md:p-8">
+    <Card>
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.16em] text-brand">
@@ -104,6 +105,6 @@ export default function GrowthInfographic() {
         Da leitura inicial ao avanço com equidade, a decisão pedagógica guiada
         por evidência.
       </p>
-    </div>
+    </Card>
   );
 }

@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { Metadata } from "next";
+import { Container, CTABanner, SectionHeading } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Quem somos | LUH Educa",
@@ -29,22 +29,19 @@ export default function QuemSomosPage() {
           />
         </div>
 
-        <div className="relative mx-auto max-w-6xl px-6 pb-16 pt-32 md:px-8 md:pb-20 md:pt-36">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-muted">
-            LUH Educa
-          </p>
-          <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            Quem somos
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/85">
-            Conheça as pessoas por trás da metodologia LUH Educacional e do
-            portal que torna as avaliações e os planejamentos por habilidade
-            acessíveis para escolas reais.
-          </p>
-        </div>
+        <Container className="relative pb-16 pt-32 md:pb-20 md:pt-36">
+          <SectionHeading
+            as="h1"
+            eyebrow="LUH Educa"
+            title="Quem somos"
+            description="Conheça as pessoas por trás da metodologia LUH Educacional e do portal que torna as avaliações e os planejamentos por habilidade acessíveis para escolas reais."
+            tone="inverted"
+            titleClassName=""
+          />
+        </Container>
       </header>
 
-      <div className="mx-auto max-w-6xl px-6 py-14 md:px-8 md:py-20">
+      <Container className="py-14 md:py-20">
         <section className="grid items-start gap-10 md:grid-cols-[minmax(0,280px)_minmax(0,1fr)] md:gap-14 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
           <figure className="mx-auto w-full max-w-[280px] md:mx-0 md:max-w-none">
             <div className="relative aspect-[801/1024] w-full overflow-hidden rounded-2xl bg-brand-soft shadow-[0_20px_50px_-16px_rgba(23,62,253,0.28)]">
@@ -68,9 +65,7 @@ export default function QuemSomosPage() {
           </figure>
 
           <div className="space-y-6 text-lg leading-relaxed text-gray-700">
-            <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold text-gray-900 md:text-3xl">
-              A pedagoga Luciana
-            </h2>
+            <SectionHeading as="h2" title="A pedagoga Luciana" titleClassName="" />
             <p>
               Autora do livro{" "}
               <strong className="font-semibold text-gray-900">
@@ -106,9 +101,7 @@ export default function QuemSomosPage() {
 
         <section className="mt-16 grid items-start gap-10 border-t border-gray-200 pt-16 md:grid-cols-[minmax(0,1fr)_minmax(0,280px)] md:gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,320px)]">
           <div className="order-2 space-y-6 text-lg leading-relaxed text-gray-700 md:order-1">
-            <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold text-gray-900 md:text-3xl">
-              A engenheira Lana
-            </h2>
+            <SectionHeading as="h2" title="A engenheira Lana" titleClassName="" />
             <p>
               Lana Menezes Fidelis é engenheira de software, mestranda em IA,
               responsável por transformar o método LUH Educacional em produto
@@ -151,9 +144,7 @@ export default function QuemSomosPage() {
         </section>
 
         <div className="mt-16 max-w-3xl space-y-8 text-lg leading-relaxed text-gray-700">
-          <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold text-gray-900 md:text-3xl">
-            Para quem trabalhamos
-          </h2>
+          <SectionHeading as="h2" title="Para quem trabalhamos" titleClassName="" />
           <p>
             Redes de publicas e privadas de educação e unidades escolares que
             querem construir uma cultura avaliativa mais justa, comparável e
@@ -166,29 +157,14 @@ export default function QuemSomosPage() {
           </p>
         </div>
 
-        <aside className="mt-14 rounded-2xl bg-brand-soft p-6 md:p-8">
-          <p className="font-[family-name:var(--font-display)] text-xl font-bold text-gray-900">
-            Quer conhecer o método na prática?
-          </p>
-          <p className="mt-3 leading-relaxed text-gray-700">
-            Solicite uma senha degustação e acesse o Portal LUH Educa
-          </p>
-          <div className="mt-5 flex flex-wrap gap-3">
-            <a
-              href="/#contato"
-              className="rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover"
-            >
-              Entrar em contato
-            </a>
-            <Link
-              href="/"
-              className="rounded-lg border border-brand/20 bg-white px-4 py-2.5 text-sm font-semibold text-brand transition hover:bg-brand-muted/40"
-            >
-              Voltar à home
-            </Link>
-          </div>
-        </aside>
-      </div>
+        <CTABanner
+          className="mt-14"
+          title="Quer conhecer o método na prática?"
+          description="Solicite uma senha degustação e acesse o Portal LUH Educa"
+          primaryAction={{ label: "Entrar em contato", href: "/#contato" }}
+          secondaryAction={{ label: "Voltar à home", href: "/" }}
+        />
+      </Container>
     </article>
   );
 }

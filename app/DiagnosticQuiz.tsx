@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { AlertTriangle } from "lucide-react";
+import { Button, Card, Container, IconTile, SectionHeading } from "@/components/ui";
 
 const questions = [
   "A sua rede conhece as condicionalidades do VAAR relacionadas à gestão e aos resultados educacionais?",
@@ -30,22 +31,14 @@ export default function DiagnosticQuiz() {
 
   return (
     <section id="autodiagnostico" className="bg-white">
-      <div className="mx-auto grid max-w-6xl items-start gap-10 px-6 py-16 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:gap-12 md:px-8 md:py-20">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">
-            O problema real
-          </p>
-          <h2 className="mt-3 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
-            A sua rede de ensino conhece a lacuna real da aprendizagem?
-          </h2>
-          <p className="mt-5 text-lg leading-relaxed text-gray-600">
-            Assessoria educacional para redes públicas e privadas que precisam
-            recompor aprendizagens com precisão, com apoio de tecnologia e IA a
-            favor dos resultados.
-          </p>
-        </div>
+      <Container className="grid items-start gap-10 py-16 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:gap-12 md:py-20">
+        <SectionHeading
+          eyebrow="O problema real"
+          title="A sua rede de ensino conhece a lacuna real da aprendizagem?"
+          description="Assessoria educacional para redes públicas e privadas que precisam recompor aprendizagens com precisão, com apoio de tecnologia e IA a favor dos resultados."
+        />
 
-        <div className="rounded-2xl border border-brand-muted/50 bg-[#f4f6ff] p-6 shadow-sm md:p-8">
+        <Card variant="outlined-brand">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">
             Autodiagnóstico
           </p>
@@ -67,9 +60,9 @@ export default function DiagnosticQuiz() {
                   className="flex flex-col gap-4 py-5 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
                 >
                   <div className="flex min-w-0 items-start gap-3">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-soft text-xs font-bold text-brand">
+                    <IconTile size="sm">
                       {String(index + 1).padStart(2, "0")}
-                    </span>
+                    </IconTile>
                     <p className="pt-1 text-sm leading-snug text-gray-800 sm:text-[15px]">
                       {question}
                     </p>
@@ -122,16 +115,16 @@ export default function DiagnosticQuiz() {
                   </p>
                 </div>
               </div>
-              <a
+              <Button
                 href="#contato"
-                className="inline-flex shrink-0 items-center justify-center self-stretch rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover sm:self-center"
+                className="shrink-0 self-stretch sm:self-center"
               >
                 Entrar em contato
-              </a>
+              </Button>
             </div>
           )}
-        </div>
-      </div>
+        </Card>
+      </Container>
     </section>
   );
 }

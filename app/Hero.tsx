@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { ArrowRight, BarChart3, Users, Target } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { Button, Container } from "@/components/ui";
 
 export default function Hero() {
   return (
@@ -12,7 +13,7 @@ export default function Hero() {
         }}
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl flex-1 px-4 sm:px-6 lg:px-8">
+      <Container size="wide" className="relative z-10 flex-1">
         <div className="grid h-full items-center gap-12 py-12 lg:grid-cols-2 lg:gap-16 lg:py-16">
           <div className="flex flex-col justify-center">
             <h1 className="mt-6 font-[family-name:var(--font-display)] text-4xl font-bold leading-[1.1] text-gray-900 sm:text-5xl lg:text-6xl">
@@ -26,19 +27,13 @@ export default function Hero() {
               equipe gestora.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <a
-                href="#metodo"
-                className="inline-flex items-center gap-2 rounded-md border border-brand-muted bg-white/80 px-6 py-3 text-base font-medium text-brand transition-colors hover:bg-brand-soft"
-              >
+              <Button href="#metodo" variant="secondary" size="lg">
                 Conheça a Trilha
-              </a>
-              <a
-                href="#autodiagnostico"
-                className="inline-flex items-center gap-2 rounded-md bg-brand px-6 py-3 text-base font-medium text-white transition-all hover:bg-brand-hover"
-              >
+              </Button>
+              <Button href="#autodiagnostico" size="lg">
                 Iniciar Diagnóstico
                 <ArrowRight className="h-4 w-4" />
-              </a>
+              </Button>
             </div>
           </div>
 
@@ -53,7 +48,7 @@ export default function Hero() {
             />
           </div>
         </div>
-      </div>
+      </Container>
 
       <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-0">
         <svg
