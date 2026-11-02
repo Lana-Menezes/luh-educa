@@ -14,9 +14,37 @@ const sans = Figtree({
   weight: ["400", "500", "600", "700"],
 });
 
+const siteUrl = "https://www.luheducacional.com.br";
+const title = "LUH Educa";
+const description =
+  "Assessoria educacional especializada com o método LUH Educa.";
+
 export const metadata = {
-  title: "LUH Educa",
-  description: "Assessoria educacional especializada com o método LUH Educa.",
+  metadataBase: new URL(siteUrl),
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+    url: siteUrl,
+    siteName: title,
+    locale: "pt_BR",
+    type: "website",
+    images: [
+      {
+        url: "/logo-luh.png",
+        width: 577,
+        height: 521,
+        alt: "Logo LUH Educa",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title,
+    description,
+    images: ["/logo-luh.png"],
+  },
 };
 
 export default function RootLayout({
