@@ -1,6 +1,5 @@
 import "./globals.css";
 import { Figtree, Fraunces } from "next/font/google";
-import Providers from "./providers";
 import AppShell from "./AppShell";
 
 const display = Fraunces({
@@ -28,9 +27,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${display.variable} ${sans.variable} antialiased`}>
-        <Providers>
-          <AppShell>{children}</AppShell>
-        </Providers>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );
