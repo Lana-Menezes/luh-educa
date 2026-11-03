@@ -20,7 +20,7 @@ const socialLinks = [
   },
   {
     label: "LinkedIn",
-    href: "https://www.linkedin.com/in/luciana-souza-963351a3/",
+    href: "https://www.linkedin.com/company/luh-educacional/about/",
     icon: Linkedin,
   },
 ] as const;
